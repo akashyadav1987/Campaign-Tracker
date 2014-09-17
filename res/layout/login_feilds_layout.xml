@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white" >
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:background="@drawable/user_icon_red_background_lightred_border"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/userLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/heading_textsize" />
+
+    <TextView
+        android:id="@+id/supervisorIcon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:gravity="center"
+        android:text="@string/supervisor_icon"
+        android:textColor="@android:color/white"
+        android:textSize="50dp" />
+
+    <TextView
+        android:id="@+id/promotorIcon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:gravity="center"
+        android:text="@string/promotor_icon"
+        android:textColor="@android:color/white"
+        android:textSize="50dp" />
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="0.10" />
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="0.35"
+            android:background="@drawable/white_button_selector"
+            android:text="@string/back"
+            android:textColor="@drawable/button_text_selector" />
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="0.10" />
+
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="0.35"
+            android:background="@drawable/white_button_selector"
+            android:text="@string/log_in"
+            android:textColor="@drawable/button_text_selector" />
+
+        <View
+            android:id="@+id/view4"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="0.10" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/password"
+        style="@style/CodeFont"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_above="@+id/buttonLayout"
+        android:layout_alignLeft="@+id/emailId"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/tracker_theme_edit_text_holo_light"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:paddingLeft="10dp" >
+    </EditText>
+
+    <EditText
+        android:id="@+id/emailId"
+        style="@style/CodeFont"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_above="@+id/password"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="15dp"
+        android:layout_toRightOf="@+id/emailIcon"
+        android:background="@drawable/tracker_theme_edit_text_holo_light"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:paddingLeft="10dp" />
+
+    <EditText
+        android:id="@+id/mobileNumber"
+        style="@style/CodeFont"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_above="@+id/emailId"
+        android:layout_alignLeft="@+id/emailId"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/tracker_theme_edit_text_holo_light"
+        android:cursorVisible="true"
+        android:hint="@string/phone_no"
+        android:inputType="number"
+        android:paddingLeft="10dp"
+        android:textCursorDrawable="@null" >
+    </EditText>
+
+    <TextView
+        android:id="@+id/emailIcon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/emailId"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:text="\ue602"
+        android:textColor="@color/RedButtonColor"
+        android:textSize="@dimen/small_icon" />
+
+    <TextView
+        android:id="@+id/phoneIcon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/mobileNumber"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:text="\ue604"
+        android:textColor="@color/RedButtonColor"
+        android:textSize="@dimen/small_icon" />
+
+    <TextView
+        android:id="@+id/passwordIcon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_above="@+id/buttonLayout"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:text="\ue601"
+        android:textColor="@color/RedButtonColor"
+        android:textSize="@dimen/small_icon" />
+
+</RelativeLayout>

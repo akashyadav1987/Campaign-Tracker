@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@android:color/white"
+	android:orientation="vertical" >
+
+	<RelativeLayout
+		android:id="@+id/campaignListItem"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@android:color/white"
+		android:padding="15dp" >
+
+		<TextView
+			android:id="@+id/campaignName"
+			android:layout_width="wrap_content"
+			android:layout_height="25dp"
+			android:layout_alignParentRight="true"
+			android:layout_alignTop="@+id/campaignImage"
+			android:layout_marginLeft="20dp"
+			android:layout_marginTop="10dp"
+			android:layout_toRightOf="@+id/campaignText"
+			android:maxLines="1"
+			android:text="TextView"
+			android:textColor="@android:color/black"
+			android:textSize="@dimen/heading_textsize" />
+
+		<TextView
+			android:id="@+id/campaignText"
+			android:layout_width="70dp"
+			android:layout_height="70dp"
+			android:layout_alignParentLeft="true"
+			android:layout_centerVertical="true"
+			android:gravity="center"
+			android:text="@string/campagin_placeholder"
+			android:textColor="@android:color/white"
+			android:textSize="40dp" />
+
+		<TextView
+			android:id="@+id/campaignStoreCount"
+			android:layout_width="wrap_content"
+			android:layout_height="18dp"
+			android:layout_alignLeft="@+id/campaignName"
+			android:layout_below="@+id/campaignName"
+			android:layout_marginTop="5dp"
+			android:maxLines="1"
+			android:text="Stores : 20"
+			android:textColor="@color/light_black_text"
+			android:textSize="@dimen/normal_text_size" />
+
+		<TextView
+			android:id="@+id/campaignPromotorCount"
+			android:layout_width="wrap_content"
+			android:layout_height="18dp"
+			android:layout_alignRight="@+id/campaignName"
+			android:layout_below="@+id/campaignName"
+			android:layout_marginLeft="10dp"
+			android:layout_marginTop="5dp"
+			android:layout_toRightOf="@+id/campaignStoreCount"
+			android:maxLines="1"
+			android:text="Promotors : 50"
+			android:textColor="@color/light_black_text"
+			android:textSize="@dimen/normal_text_size" />
+	</RelativeLayout>
+
+</LinearLayout>

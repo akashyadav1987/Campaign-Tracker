@@ -1,0 +1,16 @@
+{
+    "login": {
+        "success": "1",
+         "error": "0",
+        "error_message" : "",
+        "user" :
+        {
+        "id": 1,
+        "email": "efefe@gmail.com",
+        "name": " Udit Gupta",
+        "role": "supervisor",
+        "gcm_token": "fsfewfwefweefwef@@DF$%dfd",
+        "auth_token": "2a62162c002a4cb24cfca96d25034d1b"
+        }
+    }
+}

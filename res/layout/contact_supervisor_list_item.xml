@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/supervisorDetails"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@android:color/black" >
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@android:color/white"
+		android:padding="20dp" >
+
+		<TextView
+			android:id="@+id/firstLetterOfSecondLevel"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:background="@color/RedButtonColor"
+			android:gravity="center"
+			android:textColor="@android:color/white"
+			android:textSize="40dp" />
+
+		<TextView
+			android:id="@+id/supervisor"
+			android:layout_width="wrap_content"
+			android:layout_height="20dp"
+			android:layout_marginLeft="15dp"
+			android:layout_marginRight="10dp"
+			android:layout_marginTop="22dp"
+			android:layout_toLeftOf="@+id/phoneIcon"
+			android:textSize="@dimen/heading_textsize"
+			android:textColor="@android:color/black"
+			android:layout_toRightOf="@id/firstLetterOfSecondLevel"
+			 />
+
+		<TextView
+			android:id="@+id/emailIcon"
+			android:layout_width="30dp"
+			android:layout_height="30dp"
+			android:layout_alignParentRight="true"
+			android:layout_alignTop="@id/firstLetterOfSecondLevel"
+			android:layout_marginTop="5dp"
+			android:gravity="center"
+			android:text="@string/smsIcon"
+			android:textColor="@color/RedButtonColor"
+			android:textSize="@dimen/small_icon" />
+
+		<TextView
+			android:id="@+id/phoneIcon"
+			android:layout_width="30dp"
+			android:layout_height="30dp"
+			android:layout_alignLeft="@+id/emailIcon"
+			android:layout_below="@id/emailIcon"
+			android:layout_marginTop="5dp"
+			android:gravity="center"
+			android:text="@string/phone_icon"
+			android:textColor="@color/RedButtonColor"
+			android:textSize="@dimen/small_icon" />
+
+	</RelativeLayout>
+
+</LinearLayout>

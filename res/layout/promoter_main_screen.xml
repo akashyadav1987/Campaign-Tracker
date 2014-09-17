@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background_color" >
+
+    <include
+        android:id="@+id/storeDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_below="@+id/errorLayout"
+        layout="@layout/store_details" />
+
+    <include
+        android:id="@+id/errorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        layout="@layout/no_internet_connection_layout"
+        android:background="@drawable/transparent"
+        android:visibility="invisible" />
+
+    <ListView
+        android:id="@+id/supervisorList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/storeDetails"
+        android:layout_marginTop="15dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10dp" >
+    </ListView>
+
+    <ListView
+        android:id="@+id/userForm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/mapFrame_ref"
+        android:descendantFocusability="beforeDescendants"
+        android:divider="@color/app_background_color"
+        android:dividerHeight="10dp"
+        android:paddingTop="20dp" />
+
+    <include
+        android:id="@+id/mapFrame_ref"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/storeDetails"
+        layout="@layout/mapframe" />
+
+    <include
+        android:id="@+id/checkInLayout_ref"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/storeDetails"
+        layout="@layout/checkinlayout"
+        android:background="@drawable/dropshadow_blue" />
+
+</RelativeLayout>

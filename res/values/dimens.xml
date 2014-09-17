@@ -1,0 +1,15 @@
+<resources>
+
+	<!-- Default screen margins, per the Android Design guidelines. -->
+	<dimen name="activity_horizontal_margin">16dp</dimen>
+	<dimen name="activity_vertical_margin">16dp</dimen>
+	<dimen name="campaig_details_screen_margin">25dp</dimen>
+	<dimen name="heading_textsize">18dp</dimen>
+	<dimen name="normal_text_size">14dp</dimen>
+	<dimen name="small_text_size">12dp</dimen>
+	<dimen name="normal_icon">35dp</dimen>
+	<dimen name="huge_icon">50dp</dimen>
+	<dimen name="small_icon">20dp</dimen>
+	<dimen name="medium_icon">28dp</dimen>
+
+</resources>

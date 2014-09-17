@@ -1,0 +1,119 @@
+{
+    "fetch": {
+        "total": "400",
+        "last_count": "20",
+        "start_count": "0",
+        "number": "20",
+        "user_list": [
+            {
+                "id": 1,
+                "name": "Mahesh",
+                "store_id": 1,
+                "role": "promotor",
+                "contact_no": "882607755",
+                "email": "sdbsb@sndjsn.com",
+                "address": "308 Raleigh Place, West Bengal, 4317",
+                "gender": "male",
+                "campagin":"Intel Campagin",
+                "store":"Chrome Store"
+                
+            },
+            {
+                "id": 1,
+                "name": "Nikhil",
+                "store_id": 1,
+                "role": "promotor",
+                "contact_no": "9711670601",
+                "email": "sdbsb@sndjsn.com",
+                "address": "308 Raleigh Place, West Bengal, 4317",
+                "gender": "male",
+                "campagin":"Intel Campagin",
+                "store":"Chrome Store"
+            },
+            {
+                "id": 1,
+                "name": "Udit",
+                "store_id": 1,
+                "role": "promotor",
+                "contact_no": "91-981223332",
+                "email": "sdbsb@sndjsn.com",
+                "address": "308 Raleigh Place, West Bengal, 4317",
+                "gender": "male",
+                "campagin":"Intel Campagin",
+                "store":"Chrome Store"
+            },
+            {
+                "id": 1,
+                "name": "Akhilesh",
+                "store_id": 1,
+                "role": "promotor",
+                "contact_no": "91-981223332",
+                "email": "sdbsb@sndjsn.com",
+                "address": "308 Raleigh Place, West Bengal, 4317",
+                "gender": "male",
+                "campagin":"Intel Campagin",
+                "store":"Chrome Store"
+            },
+            {
+                "id": 2,
+                "name": "Ramesh",
+                "store_id": 2,
+                "role": "promotor",
+                "contact_no": "91-981223332",
+                "email": "sdbsb@sndjsn.com",
+                "address": "308 Raleigh Place, West Bengal, 4317",
+                "gender": "male",
+                "campagin":"Intel Campagin",
+                "store":"Chrome Store"
+            },
+            {
+                "id": 1,
+                "name": "Suresh",
+                "store_id": 3,
+                "role": "promotor",
+                "contact_no": "91-981223332",
+                "email": "sdbsb@sndjsn.com",
+                "address": "308 Raleigh Place, West Bengal, 4317",
+                "gender": "male",
+                "campagin":"Intel Campagin",
+                "store":"Chrome Store"
+            },       
+            {
+                "id": 1,
+                "name": "Mahesh",
+                "store_id": 1,
+                "role": "promotor",
+                "contact_no": "91-981223332",
+                "email": "sdbsb@sndjsn.com",
+                "address": "308RaleighPlace,WestBengal,4317",
+                "gender": "male",
+                "campagin":"Intel Campagin",
+                "store":"Chrome Store"
+            },
+            {
+                "id": 2,
+                "name": "Ramesh",
+                "store_id": 2,
+                "role": "promotor",
+                "contact_no": "91-981223332",
+                "email": "sdbsb@sndjsn.com",
+                "address": "308RaleighPlace,WestBengal,4317",
+                "gender": "male",
+                "campagin":"Intel Campagin",
+                "store":"Chrome Store"
+            },
+            {
+                "id": 1,
+                "name": "Suresh",
+                "store_id": 3,
+                "role": "promotor",
+                "contact_no": "91-981223332",
+                "email": "sdbsb@sndjsn.com",
+                "address": "308RaleighPlace,WestBengal,4317",
+                "gender": "male",
+                "campagin":"Intel Campagin",
+                "store":"Chrome Store"
+            }
+        ]
+    }
+}

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical" >
+
+	<include
+		android:id="@+id/campaignSupervisorDetails"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="20dp"
+		android:layout_marginLeft="15dp"
+		android:layout_marginRight="15dp"
+		android:layout_marginTop="20dp"
+		layout="@layout/supervisor_details" />
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_below="@id/campaignSupervisorDetails"
+		android:layout_marginLeft="15dp"
+		android:layout_marginRight="15dp"
+		android:alpha=".6"
+		android:background="@color/RedButtonColor" />
+
+	<ListView
+		android:id="@+id/campaignStoreList"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_above="@+id/checkinButton"
+		android:layout_below="@id/campaignSupervisorDetails"
+		android:layout_marginBottom="20dp"
+		android:layout_marginLeft="15dp"
+		android:layout_marginRight="15dp"
+		android:layout_marginTop="20dp"
+		android:divider="@color/RedButtonColor"
+		android:dividerHeight="1dp" />
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_below="@id/campaignStoreList"
+		android:layout_marginLeft="15dp"
+		android:layout_marginRight="15dp"
+		android:alpha=".6"
+		android:background="@color/RedButtonColor" />
+
+	<Button
+		android:id="@+id/checkinButton"
+		android:layout_width="match_parent"
+		android:layout_height="50dp"
+		android:layout_alignParentBottom="true"
+		android:layout_marginBottom="20dp"
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="10dp"
+		android:background="@color/RedButtonColor"
+		android:text="@string/check_in"
+		android:textColor="@android:color/white"
+		android:textSize="@dimen/normal_icon" />
+
+</RelativeLayout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<color name="RedButtonColor">#e74c36</color>
+	<color name="GreyLineColor">#c9c9c9</color>
+	<color name="BlueColor">#6fc3f3</color>
+	<color name="CardsBackgroundColor">#e9eff1</color>
+	<color name="app_background_color">#eef2f3</color>
+	<color name="lightest_orange">#f6b178</color>
+	<color name="lightblue">#69c4ee</color>
+	<color name="light_black_text">#434040</color>
+	<color name="green">#00FF00</color>
+	<color name="red">#FF0000</color>
+
+	<!-- Text Colors -->
+
+	<color name="heading_color: ">#FF0000</color>
+	<color name="normal_color: ">#9d9d9d</color>
+	<color name="theme_red_color">#d8271f</color>
+	<color name="light_red_color">#f3837e</color>
+	<color name="stroke_light_red_color">#a61711</color>
+	<color name="blue_stroke">#5bbaf1</color>
+	<color name="textboxstroke">#d2dce4</color>
+	<color name="black_transparent_color">#c0000000</color>
+	<color name="black_60_transparent_color">#99000000</color>
+
+	<!-- PlaceHolders -->
+	<color name="placeHolderBlue">#6fc3f2</color>
+	<color name="placeHolderBlueStroke">#55b2e6</color>
+	<color name="placeHolderRed">#e74c3c</color>
+	<color name="placeHolderRedStroke">#e13f2e</color>
+	<color name="placeHolderOrange">#f3b36e</color>
+	<color name="placeHolderOrangeStroke">#eda75b</color>
+	<color name="placeHolderYellow">#f9bf3b</color>
+	<color name="placeHolderYellowStroke">#f6b82b</color>
+
+</resources>

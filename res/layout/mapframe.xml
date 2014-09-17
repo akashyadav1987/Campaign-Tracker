@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/mapFrame"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
+	<fragment
+		android:id="@+id/map"
+		android:name="com.google.android.gms.maps.SupportMapFragment"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent" />
+
+	<TextView
+		android:id="@+id/tvDistanceDuration"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="15dp"
+		android:layout_marginRight="15dp"
+		android:layout_marginTop="10dp"
+		android:background="@drawable/user_form_editbox_background"
+		android:gravity="center|top"
+		android:paddingBottom="10dp"
+		android:paddingTop="10dp"
+		android:textColor="@color/GreyLineColor"
+		android:textSize="@dimen/heading_textsize" />
+
+</FrameLayout>

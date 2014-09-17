@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white" >
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/user_icon_red_background_lightred_border"
+        android:gravity="center" />
+
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="150dp"
+        android:layout_height="175dp"
+        android:layout_centerInParent="true"
+        android:overScrollMode="never" />
+
+    <TextView
+        android:id="@+id/chooseAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="66dp"
+        android:text="@string/choose_an_account"
+        android:textSize="@dimen/heading_textsize" />
+
+    <TextView
+        android:id="@+id/backwardIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignBaseline="@+id/forwardIcon"
+        android:layout_alignBottom="@+id/forwardIcon"
+        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/icon_circle_white_backround_red_border"
+        android:gravity="center"
+        android:text="@string/icon_circle_back_previous"
+        android:textColor="@color/theme_red_color"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/forwardIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/icon_circle_white_backround_red_border"
+        android:gravity="center"
+        android:text="@string/icon_circle_forward_next"
+        android:textColor="@color/theme_red_color"
+        android:textSize="20dp" />
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="0.10" />
+
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_weight="0.35"
+            android:background="@drawable/white_button_selector"
+            android:text="@string/next"
+            android:textColor="@drawable/button_text_selector" />
+
+        <View
+            android:id="@+id/view4"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="0.10" />
+    </LinearLayout>
+
+</RelativeLayout>

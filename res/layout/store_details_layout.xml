@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="15dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="15dp" >
+
+        <TextView
+            android:id="@+id/storeName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/storeState"
+            android:layout_alignRight="@+id/storeRegion"
+            android:text="@string/store_name"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/heading_textsize" />
+
+        <TextView
+            android:id="@+id/storeState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/storeName"
+            android:layout_marginTop="5dp"
+            android:text="@string/state"
+            android:textColor="@color/light_black_text"
+            android:textSize="@dimen/normal_text_size" />
+
+        <TextView
+            android:id="@+id/storeRegion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/storeName"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@+id/storeMapImage"
+            android:layout_toRightOf="@+id/storeState"
+            android:text="@string/region"
+            android:textColor="@color/light_black_text"
+            android:textSize="@dimen/normal_text_size" />
+
+        <TextView
+            android:id="@+id/forwardIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/storeMapImage"
+            android:layout_below="@+id/storeMapImage"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="@string/route_map" />
+
+        <TextView
+            android:id="@+id/storeMapImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/storeName"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_launcher"
+            android:text="@string/route_icon"
+            android:textColor="@color/lightest_orange"
+            android:textSize="35dp" />
+    </RelativeLayout>
+
+</LinearLayout>

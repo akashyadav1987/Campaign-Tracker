@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/campaginStoreDetails"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@android:color/white" >
+
+	<TextView
+		android:id="@+id/compaginLogo"
+		android:layout_width="116dp"
+		android:layout_height="116dp"
+		android:layout_marginLeft="30dp"
+		android:layout_marginTop="30dp"
+		android:background="@color/lightest_orange"
+		android:gravity="center"
+		android:text="@string/campagin_placeholder"
+		android:textColor="@android:color/white"
+		android:textSize="60dp" />
+
+	<TextView
+		android:id="@+id/storeAddress"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignTop="@id/compaginLogo"
+		android:layout_marginLeft="15dp"
+		android:layout_toRightOf="@id/compaginLogo"
+		android:text="@string/venue_address"
+		android:textStyle="bold" />
+
+	<TextView
+		android:id="@+id/storeName"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/storeAddress"
+		android:layout_marginLeft="15dp"
+		android:layout_toRightOf="@id/compaginLogo"
+		android:text="@string/store_name_chrome_" />
+
+	<TextView
+		android:id="@+id/addLine1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/storeName"
+		android:layout_marginLeft="15dp"
+		android:layout_toRightOf="@id/compaginLogo"
+		android:text="@string/a_51_kalkaji" />
+
+	<TextView
+		android:id="@+id/storeState"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/addLine1"
+		android:layout_marginLeft="15dp"
+		android:layout_toRightOf="@id/compaginLogo"
+		android:text="@string/delhi" />
+
+	<TextView
+		android:id="@+id/storePincode"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/storeState"
+		android:layout_marginLeft="15dp"
+		android:layout_toRightOf="@id/compaginLogo"
+		android:text="@string/_110095" />
+
+	<TextView
+		android:id="@+id/storeRouteMapText"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignBottom="@+id/storeCheckInText"
+		android:layout_marginLeft="20dp"
+		android:layout_toRightOf="@+id/storeCheckInText"
+		android:paddingBottom="10dp"
+		android:text="Route Map" />
+
+	<TextView
+		android:id="@+id/storeCheckInText"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignLeft="@+id/storeAddress"
+		android:layout_below="@+id/storeCheckInIcon"
+		android:paddingBottom="10dp"
+		android:text="CheckIn" />
+
+	<TextView
+		android:id="@+id/storeCheckInIcon"
+		android:layout_width="40dp"
+		android:layout_height="40dp"
+		android:layout_alignLeft="@+id/storeAddress"
+		android:layout_alignRight="@+id/storeCheckInText"
+		android:layout_below="@+id/compaginLogo"
+		android:gravity="center"
+		android:text="@string/checkinIcon"
+		android:textColor="@color/lightest_orange"
+		android:textSize="35dp" />
+
+	<TextView
+		android:id="@+id/storeRouteMapIcon"
+		android:layout_width="40dp"
+		android:layout_height="40dp"
+		android:layout_above="@+id/storeRouteMapText"
+		android:layout_alignLeft="@+id/storeRouteMapText"
+		android:layout_alignRight="@+id/storeRouteMapText"
+		android:gravity="center"
+		android:text="@string/route_icon"
+		android:textColor="@color/lightest_orange"
+		android:textSize="35dp" />
+
+</RelativeLayout>

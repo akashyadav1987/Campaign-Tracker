@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="200dp" >
+
+	<TextView
+		android:id="@+id/promotorIcon"
+		android:layout_width="120dp"
+		android:layout_height="120dp"
+		android:layout_centerHorizontal="true"
+		android:layout_centerVertical="true"
+		android:gravity="center"
+		android:paddingBottom="10dp"
+		android:text="@string/promotor_icon"
+		android:textColor="@android:color/white"
+		android:textSize="60dp" />
+
+	<TextView
+		android:id="@+id/promoterLabel"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/promotorIcon"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="5dp"
+		android:text="@string/promoter"
+		android:textSize="@dimen/heading_textsize" />
+
+</RelativeLayout>

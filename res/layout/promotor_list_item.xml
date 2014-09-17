@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/promotorNameDetails"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@android:color/black" >
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@android:color/white"
+		android:paddingBottom="10dp"
+		android:paddingLeft="20dp"
+		android:paddingRight="20dp" >
+
+		<TextView
+			android:id="@+id/promotorNameIcon"
+			android:layout_width="75dp"
+			android:layout_height="75dp"
+			android:layout_marginTop="10dp"
+			android:background="#6fc3f3"
+			android:gravity="center"
+			android:text="S"
+			android:textColor="@android:color/white"
+			android:textSize="40dp" />
+
+		<TextView
+			android:id="@+id/emailIcon"
+			android:layout_width="30dp"
+			android:layout_height="30dp"
+			android:layout_alignParentRight="true"
+			android:layout_alignTop="@id/promotorNameIcon"
+			android:layout_marginTop="5dp"
+			android:gravity="center"
+			android:text="@string/smsIcon"
+			android:textColor="@color/RedButtonColor"
+			android:textSize="@dimen/small_icon" />
+
+		<TextView
+			android:id="@+id/phoneIcon"
+			android:layout_width="30dp"
+			android:layout_height="30dp"
+			android:layout_alignLeft="@+id/emailIcon"
+			android:layout_below="@id/emailIcon"
+			android:layout_marginTop="5dp"
+			android:gravity="center"
+			android:text="@string/phone_icon"
+			android:textColor="@color/RedButtonColor"
+			android:textSize="@dimen/small_icon" />
+
+		<TextView
+			android:id="@+id/promotorName"
+			android:layout_width="wrap_content"
+			android:layout_height="20dp"
+			android:layout_alignTop="@+id/promotorNameIcon"
+			android:layout_centerHorizontal="true"
+			android:layout_marginLeft="15dp"
+			android:layout_marginTop="10dp"
+			android:layout_toRightOf="@+id/promotorNameIcon"
+			android:text="promotorName"
+			android:textColor="@android:color/black"
+			android:textSize="@dimen/heading_textsize" />
+
+		<TextView
+			android:id="@+id/promotorCheckinTime"
+			android:layout_width="wrap_content"
+			android:layout_height="20dp"
+			android:layout_below="@id/promotorName"
+			android:layout_marginLeft="15dp"
+			android:layout_marginTop="15dp"
+			android:layout_toRightOf="@+id/promotorNameIcon"
+			android:text="Time In"
+			android:textColor="@color/light_black_text"
+			android:textSize="@dimen/normal_text_size" />
+
+		<View
+			android:id="@+id/status"
+			android:layout_width="20dp"
+			android:layout_height="20dp"
+			android:layout_marginLeft="65dp"
+			android:background="@drawable/circle_active" />
+	</RelativeLayout>
+
+</LinearLayout>

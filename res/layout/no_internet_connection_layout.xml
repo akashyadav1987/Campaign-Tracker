@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/black_transparent"
+    android:paddingBottom="10dp" >
+
+    <TextView
+        android:id="@+id/errorImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/error_icon"
+        android:textColor="#fff"
+        android:textSize="@dimen/medium_icon" />
+
+    <TextView
+        android:id="@+id/internetConnection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/errorImage"
+        android:text="Internet Not Available"
+        android:textColor="#fff"
+        android:textSize="@dimen/heading_textsize" />
+
+    <View
+        android:id="@+id/verticalLine"
+        android:layout_width="1dp"
+        android:layout_height="25dp"
+        android:layout_alignTop="@+id/retryButton"
+        android:layout_alignBottom="@+id/retryButton"
+        android:layout_marginRight="5dp"
+     
+        android:layout_toLeftOf="@id/retryButton"
+        android:background="#fff" />
+    
+    <Button
+        android:id="@+id/retryButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/internetConnection"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/transparent"
+        android:text="Retry"
+        android:textColor="#fff"
+        android:textSize="@dimen/heading_textsize" />
+
+</RelativeLayout>

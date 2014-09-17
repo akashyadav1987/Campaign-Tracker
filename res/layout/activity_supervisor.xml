@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/dsupervisor_layout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="#e9eff1" >
+
+	<!--
+         As the main content view, the view below consumes the entire
+space available using match_parent in both dimensions	
+
+	 Use the Same for Promotor Mother Activity Also
+	-->
+
+	<FrameLayout
+		android:id="@+id/supervisor_fragment_holder"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent" >
+	</FrameLayout>
+
+</LinearLayout>

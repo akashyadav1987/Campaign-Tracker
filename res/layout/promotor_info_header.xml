@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background_color"
+    android:orientation="vertical"
+     >
+
+    <RelativeLayout
+        android:id="@+id/promotorDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white" >
+
+        <TextView
+            android:id="@+id/nameLogo"
+            android:layout_width="115dp"
+            android:layout_height="115dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/place_holder_orange"
+            android:gravity="center"
+            android:text="@string/campagin_placeholder"
+            android:textColor="@android:color/white"
+            android:textSize="50dp" />
+
+        <TextView
+            android:id="@+id/addressHeadingTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/nameLogo"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/nameLogo"
+            android:text="@string/venue_address"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/addressLines"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_below="@id/addressHeadingTitle"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="30dp"
+            android:layout_toRightOf="@id/nameLogo"
+            android:maxLines="4"
+            android:text="@string/store_name_chrome_" />
+
+        <LinearLayout
+            android:id="@+id/promotersIconsLayout"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/nameLogo"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <View
+                android:id="@+id/view1"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="0.080" />
+
+            <LinearLayout
+                android:id="@+id/callIconText"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="0.280"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/callIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/call_icon"
+                    android:textColor="@color/lightest_orange"
+                    android:textSize="@dimen/medium_icon" />
+
+                <TextView
+                    android:id="@+id/contactNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:maxLines="1"
+                    android:text="9899123456" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="0.080" />
+
+            <LinearLayout
+                android:id="@+id/messageIconText"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="0.200"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/messageIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smsIcon"
+                    android:textColor="@color/lightest_orange"
+                    android:textSize="@dimen/medium_icon" />
+
+                <TextView
+                    android:id="@+id/sendText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Message" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="0.080" />
+
+            <LinearLayout
+                android:id="@+id/promoterfillReportIconText"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.226"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/fillReportIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/fill_report_icon"
+                    android:textColor="@color/lightest_orange"
+                    android:textSize="@dimen/medium_icon" />
+
+                <TextView
+                    android:id="@+id/fillReport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/fill_reports" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/view4"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="0.080" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

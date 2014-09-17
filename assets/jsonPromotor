@@ -1,0 +1,153 @@
+{
+    "campaign_list": {
+        "campaign_details": {
+            "id": 1,
+            "code": "123",
+            "isActive": false,
+            "name": "Intel Hired Campaign",
+            "company": "Intel",
+            "phone": "+1 (831) 459-3600",
+            "address": "308 Raleigh Place, Chloride, North Dakota, 4317",
+            "registered": "1989-10-01T12:19:49 +05:00"
+        },
+        "immediate_manager_details": {
+            "id": 2,
+            "name": "Mahesh Arora",
+            "store_id": 1,
+            "role": "supervisor",
+            "contact_no": "91-981223332",
+            "email": "sdbsb@sndjsn.com",
+            "address": "308 Raleigh Place, West Bengal, 4317",
+            "gender": "male"
+        },
+        "store_list": [
+            {
+                "id": 1,
+                "name": "NimbusComputerPvt.Ltd.(1)",
+                "city": "Kolkata",
+                "state": "WestBangal",
+                "region": "East",
+                "pincode": "110054",
+                "latitude": "28.673406",
+                "longitude": "77.318207",
+                "code": 1,
+                "agent": 30,
+                "category": "A",
+                "phone": "9823828323"
+            },
+            {
+                "id": 2,
+                "name": "NimbusComputerPvt.Ltd.(1)",
+                "city": "Kolkata",
+                "state": "WestBangal",
+                "region": "East",
+                "pincode": "110065",
+                "code": 2,
+                "agent": 20,
+                "category": "B",
+                "phone": "9823828323"
+            },
+            {
+                "id": 3,
+                "name": "NimbusComputerPvt.Ltd.(1)",
+                "city": "Kolkata",
+                "state": "WestBangal",
+                "region": "East",
+                "pincode": "110095",
+                "code": 3,
+                "agent": 10,
+                "category": "C",
+                "phone": "9823828323"
+            }
+        ],
+        "user_list": [
+            {
+                "id": 1,
+                "name": "Mahesh",
+                "store_id": 1,
+                "role": "promotor",
+                "contact_no": "91-981223332",
+                "email": "sdbsb@sndjsn.com",
+                "address": "308 Raleigh Place, West Bengal, 4317",
+                "gender": "male"
+            },
+            {
+                "id": 1,
+                "name": "Nikhil",
+                "store_id": 1,
+                "role": "promotor",
+                "contact_no": "91-981223332",
+                "email": "sdbsb@sndjsn.com",
+                "address": "308 Raleigh Place, West Bengal, 4317",
+                "gender": "male"
+            },
+            {
+                "id": 1,
+                "name": "Udit",
+                "store_id": 1,
+                "role": "promotor",
+                "contact_no": "91-981223332",
+                "email": "sdbsb@sndjsn.com",
+                "address": "308 Raleigh Place, West Bengal, 4317",
+                "gender": "male"
+            },
+            {
+                "id": 1,
+                "name": "Akhilesh",
+                "store_id": 1,
+                "role": "promotor",
+                "contact_no": "91-981223332",
+                "email": "sdbsb@sndjsn.com",
+                "address": "308 Raleigh Place, West Bengal, 4317",
+                "gender": "male"
+            },
+            {
+                "id": 2,
+                "name": "Ramesh",
+                "store_id": 2,
+                "role": "promotor",
+                "contact_no": "91-981223332",
+                "email": "sdbsb@sndjsn.com",
+                "address": "308 Raleigh Place, West Bengal, 4317",
+                "gender": "male"
+            },
+            {
+                "id": 1,
+                "name": "Suresh",
+                "store_id": 3,
+                "role": "promotor",
+                "contact_no": "91-981223332",
+                "email": "sdbsb@sndjsn.com",
+                "address": "308 Raleigh Place, West Bengal, 4317",
+                "gender": "male"
+            }
+        ],
+        "form_list": [
+            {
+                "field_name": "Foot falls1",
+                "field_type": "number",
+                "field_length": "100"
+            },
+            {
+                "field_name": "Foot falls2",
+                "field_type": "date",
+                "field_length": "1"
+            },
+            {
+                "field_name": "Foot falls3",
+                "field_type": "number",
+                "field_length": "100"
+            },
+            {
+                "field_name": "Foot falls4",
+                "field_type": "number",
+                "field_length": "100"
+            },
+            {
+                "field_name": "Foot falls5",
+                "field_type": "number",
+                "field_length": "100"
+            }
+        ]
+    }
+}

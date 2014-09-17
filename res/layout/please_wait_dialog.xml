@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_60_transparent_color"
+    android:gravity="center" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/progress_dialog"
+        android:padding="10dp" >
+
+        <ProgressBar
+            android:id="@+id/wait_progress_bar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:background="@android:color/white"
+            android:indeterminateDrawable="@drawable/progress_custom" />
+
+        <TextView
+            android:id="@+id/wait_dialog_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/wait_progress_bar"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/wait_progress_bar"
+            android:background="@android:color/white"
+            android:gravity="center|left"
+            android:paddingLeft="20dp"
+            android:text="@string/please_wait"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black"
+            android:textSize="16dp" />
+    </RelativeLayout>
+
+</RelativeLayout>

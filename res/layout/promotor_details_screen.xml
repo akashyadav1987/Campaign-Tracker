@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/app_background_color" >
+
+    <include
+        android:id="@+id/promotorDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        layout="@layout/promotor_info_header"
+        android:paddingBottom="10dp" />
+
+    <ListView
+        android:id="@+id/promotorNotificationList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/promotorDetails"
+        android:layout_marginTop="15dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="5dp" >
+    </ListView>
+
+    <ListView
+        android:id="@+id/userForm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/mapFrame_ref"
+        android:layout_below="@id/promotorDetails"
+        android:divider="@color/app_background_color"
+        android:dividerHeight="10dp"
+        android:paddingTop="20dp" />
+
+</RelativeLayout>

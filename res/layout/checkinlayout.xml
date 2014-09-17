@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/checkInLayout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/lightblue" >
+
+	<TextView
+		android:id="@+id/postImageText"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_above="@+id/userIcon"
+		android:layout_centerHorizontal="true"
+		android:layout_marginBottom="5dp"
+		android:text="@string/tap_to_post_an_image"
+		android:textColor="@android:color/white"
+		android:textSize="@dimen/heading_textsize" />
+
+	<TextView
+		android:id="@+id/userIcon"
+		android:layout_width="120dp"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true"
+		android:gravity="center"
+		android:text="@string/user_icon"
+		android:textColor="@android:color/white"
+		android:textSize="110dp" />
+
+	<ImageView
+		android:id="@+id/imageCaptured"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_centerInParent="true"
+		android:gravity="center" />
+
+</RelativeLayout>

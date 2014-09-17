@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/checkInDetails"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_alignParentLeft="true"
+	android:layout_alignParentTop="true"
+	android:background="@android:color/white" >
+
+	<TextView
+		android:id="@+id/promotoruserImage"
+		android:layout_width="116dp"
+		android:layout_height="116dp"
+		android:layout_alignParentRight="true"
+		android:layout_marginRight="30dp"
+		android:layout_marginTop="30dp"
+		android:background="@color/BlueColor"
+		android:gravity="center"
+		android:text="\ue607"
+		android:textSize="110dp" />
+
+	<View
+		android:layout_width="wrap_content"
+		android:layout_height="30dp"
+		android:layout_below="@id/promotoruserImage"
+		android:background="@android:color/white" />
+
+	<TextView
+		android:id="@+id/checkInText"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignLeft="@+id/routeMapText"
+		android:layout_marginRight="40dp"
+		android:layout_marginTop="60dp"
+		android:layout_toLeftOf="@+id/promotoruserImage"
+		android:text="Check In"
+		android:textSize="@dimen/normal_text_size" />
+
+	<TextView
+		android:id="@+id/storeCheckInIcon"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignBottom="@id/checkInText"
+		android:layout_marginRight="10dp"
+		android:layout_toLeftOf="@+id/checkInText"
+		android:gravity="center"
+		android:text="\ue606"
+		android:textColor="@color/RedButtonColor"
+		android:textSize="@dimen/normal_icon" />
+
+	<TextView
+		android:id="@+id/storeRouteMapIcon"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignBottom="@+id/routeMapText"
+		android:layout_marginRight="10dp"
+		android:layout_toLeftOf="@+id/routeMapText"
+		android:gravity="center"
+		android:text="\ue609"
+		android:textColor="@color/RedButtonColor"
+		android:textSize="@dimen/normal_icon" />
+
+	<TextView
+		android:id="@+id/routeMapText"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/checkInText"
+		android:layout_marginRight="40dp"
+		android:layout_marginTop="20dp"
+		android:layout_toLeftOf="@id/promotoruserImage"
+		android:text="Route Map"
+		android:textSize="@dimen/normal_text_size" />
+
+</RelativeLayout>
