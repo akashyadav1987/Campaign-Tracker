@@ -26,6 +26,7 @@ import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.background.PeriodicService;
 import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.beans.LoginErrorData;
+import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
 import com.pulp.campaigntracker.listeners.LoginDataRecieved;
 import com.pulp.campaigntracker.parser.JsonLoginDataParser;
 import com.pulp.campaigntracker.utils.ConstantUtils;
@@ -122,7 +123,7 @@ public class LoginActivity extends ActionBarActivity implements
 			userLabel.setText("Supervisor");
 		}
 
-		UtilityMethods.setLoginActivity(this);
+		LoginData.setLoginActivity(this);
 		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
 	}
@@ -282,7 +283,7 @@ public class LoginActivity extends ActionBarActivity implements
 		switch (arg0.getId()) {
 		case R.id.loginButton:
 
-			if (!UtilityMethods.isNetworkAvailable(LoginActivity.this))
+			if (!HTTPConnectionWrapper.isNetworkAvailable(LoginActivity.this))
 				UtilityMethods.ShowAlertDialog(LoginActivity.this);
 			else {
 				if (!PhoneNumberUtils.isGlobalPhoneNumber(mobileNo.getText()

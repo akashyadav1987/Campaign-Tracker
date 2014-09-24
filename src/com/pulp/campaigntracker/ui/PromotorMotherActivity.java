@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +22,6 @@ import com.pulp.campaigntracker.beans.InitData;
 import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.listeners.FragmentListener;
 import com.pulp.campaigntracker.listeners.InitializeApp;
-import com.pulp.campaigntracker.listeners.PromoterActivityFinish;
 import com.pulp.campaigntracker.parser.JsonInitDataParser;
 import com.pulp.campaigntracker.utils.ConstantUtils;
 import com.pulp.campaigntracker.utils.TLog;
@@ -62,7 +60,6 @@ public class PromotorMotherActivity extends ActionBarActivity implements
 
 		// Print Logcat to file.
 		try {
-			// String fileName = "logcat_"+System.currentTimeMillis()+".txt";
 
 			String fullPath = Environment.getExternalStorageDirectory()
 					.getAbsolutePath();
@@ -76,26 +73,20 @@ public class PromotorMotherActivity extends ActionBarActivity implements
 
 		mActionBar = createActionBarHelper();
 		mActionBar.init();
-		mActionBar.setTitle("Campaign");
+		mActionBar.setTitle("Promoter Login");
 		mFragmentHolder = R.id.supervisor_fragment_holder;
 
 		mPromoterMainScreenFragment = new PromotorMainScreenFragment();
 		onItemSelected(mPromoterMainScreenFragment, false);
 
-		LoginData.getInstance().setMotherActivity(this);
-		UtilityMethods.setPromotorMotherActivity(this);
+		LoginData.getInstance();
+		LoginData.setMotherActivity(this);
+		
 
 		executeQuery();
 	}
 
-	public void restartapp() {
 
-		// restart app
-		Intent i = getBaseContext().getPackageManager()
-				.getLaunchIntentForPackage(getBaseContext().getPackageName());
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(i);
-	}
 
 	public void setActionBarTitle(String title) {
 
@@ -204,37 +195,14 @@ public class PromotorMotherActivity extends ActionBarActivity implements
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	private class ActionBarHelper {
-		private final android.support.v7.app.ActionBar mActionBar;
-		private CharSequence mDrawerTitle;
-		private CharSequence mTitle;
 
-		private ActionBarHelper() {
-			mActionBar = getSupportActionBar();
-		}
-
-		public void init() {
-
-			mActionBar.setDisplayHomeAsUpEnabled(false);
-			mActionBar.setHomeButtonEnabled(false);
-			mActionBar.setDisplayUseLogoEnabled(false);
-			mActionBar.setDisplayShowHomeEnabled(false);
-
-		}
-
-		public void setTitle(CharSequence title) {
-			mTitle = title;
-			mActionBar.setTitle(mTitle);
-		}
-
-	}
 
 	/**
 	 * Create a compatible helper that will manipulate the action bar if
 	 * available.
 	 */
 	private ActionBarHelper createActionBarHelper() {
-		return new ActionBarHelper();
+		return new ActionBarHelper(this);
 	}
 
 	public Fragment getCurrentFragment() {
@@ -251,8 +219,8 @@ public class PromotorMotherActivity extends ActionBarActivity implements
 					initData.getLocationBatteryStatus());
 			editor.putInt(ConstantUtils.LOCATION_INTERVAL,
 					initData.getLocationPeriodicInterval());
-			editor.putInt(ConstantUtils.SYNC_INTERVAL,
-					initData.getSyncUnsentDataInterval());
+//			editor.putInt(ConstantUtils.SYNC_INTERVAL,
+//					initData.getSyncUnsentDataInterval());
 			editor.putString(ConstantUtils.LOCATION_START_TIME,
 					initData.getLocationStartInterval());
 			editor.putString(ConstantUtils.LOCATION_END_TIME,
@@ -265,14 +233,16 @@ public class PromotorMotherActivity extends ActionBarActivity implements
 	@Override
 	public void requestStartActivity(Intent intent) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void requestStartActivityForResult(Intent intent, int requestCode) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
-//	
+
+
+	
 }

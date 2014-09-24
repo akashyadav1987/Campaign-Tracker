@@ -1,30 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <!-- Editext for Search -->
 
+    <TextView
+        android:id="@+id/searchIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:text="@string/searchIcon"
+        android:textColor="@color/GreyLineColor"
+        android:textSize="@dimen/small_icon" />
+
     <EditText
         android:id="@+id/inputSearch"
         android:layout_width="fill_parent"
         android:layout_height="35dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/searchIcon"
         android:background="@android:color/white"
         android:hint="Search promoters"
         android:inputType="textVisiblePassword"
-        android:paddingLeft="20dp" />
+        android:paddingLeft="10dp" />
 
     <View
         android:id="@+id/horizontalLine"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="1dp"
+        android:layout_below="@id/searchIcon"
         android:background="@drawable/search_border" />
 
     <ListView
         android:id="@+id/allPromotorList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_below="@id/horizontalLine" >
     </ListView>
 
-</LinearLayout>
+</RelativeLayout>

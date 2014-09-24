@@ -27,7 +27,7 @@ public class StoreDetailsAdapter extends BaseAdapter {
 	private Context mContext;
 	private List<StoreDetails> mStoreList;
 	private LayoutInflater layoutInflater;
-	private ImageLoader imageLoader;
+
 	private Typeface icomoon;
 	private double storeLan;
 	private double storeLat;
@@ -38,7 +38,7 @@ public class StoreDetailsAdapter extends BaseAdapter {
 		this.mStoreList = mStoreList;
 		this.layoutInflater = (LayoutInflater) mContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		imageLoader = ImageLoader.getInstance();
+	
 		icomoon = Typeface.createFromAsset(mContext.getAssets(), "icomoon.ttf");
 
 	}

@@ -1,24 +1,15 @@
 package com.pulp.campaigntracker.ui;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.app.Dialog;
-import android.app.FragmentManager.BackStackEntry;
-import android.app.PendingIntent.OnFinished;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
@@ -26,10 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
-import android.widget.Toast;
-
 import com.pulp.campaigntracker.R;
-import com.pulp.campaigntracker.background.PeriodicService;
 import com.pulp.campaigntracker.beans.CampaignDetails;
 import com.pulp.campaigntracker.beans.InitData;
 import com.pulp.campaigntracker.beans.LoginData;
@@ -37,7 +25,6 @@ import com.pulp.campaigntracker.beans.UserProfile;
 import com.pulp.campaigntracker.listeners.CampaignDetailsRecieved;
 import com.pulp.campaigntracker.listeners.FragmentListener;
 import com.pulp.campaigntracker.listeners.InitializeApp;
-import com.pulp.campaigntracker.listeners.PromoterActivityFinish;
 import com.pulp.campaigntracker.parser.JsonGetCampaignDetails;
 import com.pulp.campaigntracker.parser.JsonInitDataParser;
 import com.pulp.campaigntracker.utils.ConstantUtils;
@@ -98,7 +85,7 @@ public class SupervisorMotherActivity extends ActionBarActivity implements
 		mFragmentHolder = R.id.supervisor_fragment_holder;
 
 		executeQuery();
-		UtilityMethods.setSupervisorMotherActivity(this);
+		LoginData.setMotherActivity(this);
 	}
 
 	@Override
@@ -154,43 +141,19 @@ public class SupervisorMotherActivity extends ActionBarActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
-	private class ActionBarHelper {
+	
+	public void setActionBarTitle(String title) {
 
-		private final android.support.v7.app.ActionBar mActionBar;
-		private CharSequence mDrawerTitle;
-		private CharSequence mTitle;
+		mActionBar.setTitle(title);
 
-		private ActionBarHelper() {
-			mActionBar = getSupportActionBar();
-		}
-
-		public void init() {
-			// mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE
-			// | ActionBar.DISPLAY_SHOW_HOME
-			// | ActionBar.DISPLAY_HOME_AS_UP);
-
-			mActionBar.setDisplayHomeAsUpEnabled(false);
-			mActionBar.setHomeButtonEnabled(false);
-			mActionBar.setDisplayShowHomeEnabled(false);
-			// mActionBar.setCustomView(R.layout.new_action_bar_custom);
-			// mActionBar.setDisplayShowCustomEnabled(true);
-			// mActionBar.setLogo(R.drawable.ic);
-			mActionBar.setDisplayUseLogoEnabled(false);
-			// actionBarCustomView = mActionBar.getCustomView();
-		}
-
-		public void setTitle(CharSequence title) {
-			mTitle = title;
-			mActionBar.setTitle(mTitle);
-		}
 	}
-
+	
 	/**
 	 * Create a compatible helper that will manipulate the action bar if
 	 * available.
 	 */
 	private ActionBarHelper createActionBarHelper() {
-		return new ActionBarHelper();
+		return new ActionBarHelper(this);
 	}
 
 	public android.support.v4.app.Fragment getCurrentFragment() {
@@ -248,8 +211,7 @@ public class SupervisorMotherActivity extends ActionBarActivity implements
 
 			mCampaignFragment = new CampaignListFragment();
 			mCampaignFragment.setArguments(mBundle);
-			if (mCampaignFragment != null)
-				onItemSelected(mCampaignFragment, false);
+		    onItemSelected(mCampaignFragment, false);
 		}
 
 	}
@@ -262,14 +224,17 @@ public class SupervisorMotherActivity extends ActionBarActivity implements
 				.beginTransaction();
 
 		if (animate)
+		{
 			ft.setCustomAnimations(R.anim.slide_left_to_right,
 					R.anim.slide_right_to_left, R.anim.slide_out_right_to_left,
 					R.anim.slide_out_left_to_right);
 
-		ft.addToBackStack(null);
+		    
+		}
 
-		ft.replace(mFragmentHolder, frg);
-		ft.commit();
+		ft.addToBackStack(null);
+	    ft.replace(mFragmentHolder, frg);
+		ft.commitAllowingStateLoss();
 		mCurrentFragment = frg;
 		TLog.i(TAG,
 				"showFragment mCurrentFragment " + mCurrentFragment.getClass());
@@ -290,8 +255,8 @@ public class SupervisorMotherActivity extends ActionBarActivity implements
 					initData.getLocationBatteryStatus());
 			editor.putInt(ConstantUtils.LOCATION_INTERVAL,
 					initData.getLocationPeriodicInterval());
-			editor.putInt(ConstantUtils.SYNC_INTERVAL,
-					initData.getSyncUnsentDataInterval());
+//			editor.putInt(ConstantUtils.SYNC_INTERVAL,
+//					initData.getSyncUnsentDataInterval());
 			editor.putString(ConstantUtils.LOCATION_START_TIME,
 					initData.getLocationStartInterval());
 			editor.putString(ConstantUtils.LOCATION_END_TIME,

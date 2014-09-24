@@ -4,7 +4,6 @@
         "location_time_end": "1800",
         "location_interval": "30",
         "battery_status": "10",
-                "sync_interval": "30"
-        
+		"sync_interval": "30"
     }
 }

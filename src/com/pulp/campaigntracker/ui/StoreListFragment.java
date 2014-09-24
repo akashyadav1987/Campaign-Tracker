@@ -36,6 +36,7 @@ import com.pulp.campaigntracker.beans.UserProfile;
 import com.pulp.campaigntracker.controllers.CampaignListAdapter;
 import com.pulp.campaigntracker.controllers.PromotorListAdapter;
 import com.pulp.campaigntracker.controllers.StoreDetailsAdapter;
+import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
 import com.pulp.campaigntracker.listeners.CampaignDetailsRecieved;
 import com.pulp.campaigntracker.listeners.PromotorDetailsRecieved;
 import com.pulp.campaigntracker.parser.JsonGetCampaignDetails;
@@ -56,12 +57,9 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 	StoreDetailsAdapter storeDetailsListAdapter;
 	private CampaignDetails mCampaignDetails;
 
-	private List<CampaignDetails> campaignDetailsList;
 	ArrayList<UserProfile> promotorList = new ArrayList<UserProfile>();
 	private ProgressBar promotorListProgressBar;
-	private Object promotorListAdapter;
 	private String storeId;
-	private SinglePromotorData mSinglePromotorData;
 	private RelativeLayout errorLayout;
 	private TextView errorImage;
 	private Button retryButton;
@@ -114,7 +112,7 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 		retryButton.setOnClickListener(this);
 		errorImage.setTypeface(iconFonts);
 
-		if (!UtilityMethods.isNetworkAvailable(mContext))
+		if (!HTTPConnectionWrapper.isNetworkAvailable(mContext))
 			errorLayout.setVisibility(View.VISIBLE);
 		else
 			errorLayout.setVisibility(View.INVISIBLE);
@@ -196,7 +194,6 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 
 	@Override
 	public void onPromotorDetailsRecieved(SinglePromotorData mSinglePromotorData) {
-		this.mSinglePromotorData = mSinglePromotorData;
 		if (mSinglePromotorData.getPersonalDetails() != null
 				&& mSinglePromotorData.getPersonalDetails().size() > 0) {
 			promotorListProgressBar.setVisibility(View.GONE);
