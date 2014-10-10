@@ -1,7 +1,6 @@
 package com.pulp.campaigntracker.ui;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -10,7 +9,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,24 +24,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pulp.campaigntracker.R;
-import com.pulp.campaigntracker.beans.AllPromoterData;
 import com.pulp.campaigntracker.beans.CampaignDetails;
-import com.pulp.campaigntracker.beans.FetchData;
 import com.pulp.campaigntracker.beans.SinglePromotorData;
 import com.pulp.campaigntracker.beans.StoreDetails;
 import com.pulp.campaigntracker.beans.UserFormDetails;
 import com.pulp.campaigntracker.beans.UserProfile;
-import com.pulp.campaigntracker.controllers.CampaignListAdapter;
-import com.pulp.campaigntracker.controllers.PromotorListAdapter;
+import com.pulp.campaigntracker.controllers.NotificationListFragment;
 import com.pulp.campaigntracker.controllers.StoreDetailsAdapter;
-import com.pulp.campaigntracker.listeners.CampaignDetailsRecieved;
+import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
 import com.pulp.campaigntracker.listeners.PromotorDetailsRecieved;
-import com.pulp.campaigntracker.parser.JsonGetCampaignDetails;
 import com.pulp.campaigntracker.parser.JsonGetPromotorDetails;
 import com.pulp.campaigntracker.utils.ConstantUtils;
-import com.pulp.campaigntracker.utils.UtilityMethods;
-import com.pulp.campaigntracker.utils.ConstantUtils.LoginType;
-import com.pulp.campaigntracker.utils.TLog;
 
 public class StoreListFragment extends android.support.v4.app.Fragment
 		implements android.widget.AdapterView.OnItemClickListener,
@@ -56,17 +47,16 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 	StoreDetailsAdapter storeDetailsListAdapter;
 	private CampaignDetails mCampaignDetails;
 
-	private List<CampaignDetails> campaignDetailsList;
 	ArrayList<UserProfile> promotorList = new ArrayList<UserProfile>();
 	private ProgressBar promotorListProgressBar;
-	private Object promotorListAdapter;
 	private String storeId;
-	private SinglePromotorData mSinglePromotorData;
 	private RelativeLayout errorLayout;
 	private TextView errorImage;
 	private Button retryButton;
 	private Typeface iconFonts;
 	private View view;
+	private ArrayList<CampaignDetails> campaignDetailsList;
+	private ArrayList<StoreDetails> storeDetailsList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -94,7 +84,8 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 			Bundle mBundle = getArguments();
 			mCampaignDetails = mBundle
 					.getParcelable(ConstantUtils.CAMPAIGN_DETAILS);
-
+			campaignDetailsList = mBundle
+					.getParcelableArrayList(ConstantUtils.CAMPAIGN_LIST);
 			setActionBarTitle();
 
 		}
@@ -114,7 +105,7 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 		retryButton.setOnClickListener(this);
 		errorImage.setTypeface(iconFonts);
 
-		if (!UtilityMethods.isNetworkAvailable(mContext))
+		if (!HTTPConnectionWrapper.isNetworkAvailable(mContext))
 			errorLayout.setVisibility(View.VISIBLE);
 		else
 			errorLayout.setVisibility(View.INVISIBLE);
@@ -156,7 +147,8 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 					promotorList);
 			mBundle.putParcelableArrayList(ConstantUtils.USER_FORM_LIST,
 					userFormList);
-
+			mBundle.putParcelableArrayList(ConstantUtils.CAMPAIGN_LIST,
+					campaignDetailsList);
 			sf.setArguments(mBundle);
 			((SupervisorMotherActivity) mActivity).onItemSelected(sf, true);
 
@@ -165,20 +157,6 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 		default:
 			break;
 		}
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-
-		switch (item.getItemId()) {
-		case R.id.action_all_promotors:
-			executeQuery();
-			break;
-
-		default:
-			break;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	public void executeQuery() {
@@ -196,7 +174,6 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 
 	@Override
 	public void onPromotorDetailsRecieved(SinglePromotorData mSinglePromotorData) {
-		this.mSinglePromotorData = mSinglePromotorData;
 		if (mSinglePromotorData.getPersonalDetails() != null
 				&& mSinglePromotorData.getPersonalDetails().size() > 0) {
 			promotorListProgressBar.setVisibility(View.GONE);
@@ -204,6 +181,8 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 
 			AllPromotorListFragment allPromotorListFragment = new AllPromotorListFragment();
 			Bundle mBundle = new Bundle();
+			mBundle.putParcelableArrayList(ConstantUtils.CAMPAIGN_LIST,
+					campaignDetailsList);
 			mBundle.putParcelableArrayList(ConstantUtils.PROMOTOR_LIST,
 					mSinglePromotorData.getPersonalDetails());
 			allPromotorListFragment.setArguments(mBundle);
@@ -235,7 +214,7 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 		switch (v.getId()) {
 		case R.id.retryButton:
 			executeQuery();
-		//	view.requestLayout();
+			// view.requestLayout();
 			break;
 
 		default:
@@ -243,4 +222,24 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 		}
 
 	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+		case R.id.action_all_promotors:
+			executeQuery();
+			break;
+
+		case R.id.notifications:
+			NotificationListFragment notificationListFragment = new NotificationListFragment();
+			((SupervisorMotherActivity) mActivity).onItemSelected(
+					notificationListFragment, true);
+
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 }

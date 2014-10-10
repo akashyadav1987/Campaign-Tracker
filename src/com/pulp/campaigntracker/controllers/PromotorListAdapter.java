@@ -10,20 +10,18 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.Telephony;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.beans.UserProfile;
+import com.pulp.campaigntracker.controllers.UserFormAdapter.ViewHolder;
 import com.pulp.campaigntracker.utils.ConstantUtils;
 
 public class PromotorListAdapter extends BaseAdapter {
@@ -101,28 +99,33 @@ public class PromotorListAdapter extends BaseAdapter {
 	@Override
 	public View getView(final int position, View convertView, ViewGroup arg2) {
 
-		if (convertView == null) {
-			viewHolder = new ViewHolder();
-			convertView = layoutInflater.inflate(R.layout.promotor_list_item,
-					null);
-			viewHolder.promotorName = (TextView) convertView
-					.findViewById(R.id.promotorName);
-			viewHolder.promotorNameIcon = (TextView) convertView
-					.findViewById(R.id.promotorNameIcon);
-			viewHolder.phoneIcon = (TextView) convertView
-					.findViewById(R.id.phoneIcon);
-			viewHolder.emailIcon = (TextView) convertView
-					.findViewById(R.id.emailIcon);
-			viewHolder.campaignImage = (ImageView) convertView
-					.findViewById(R.id.campaignImage);
-			viewHolder.promotorLocationOrTime = (TextView) convertView
-					.findViewById(R.id.promotorCheckinTime);
-			viewHolder.status = (View) convertView.findViewById(R.id.status);
+		// if (convertView == null) {
+		// viewHolder = new ViewHolder();
+		// convertView = layoutInflater.inflate(R.layout.promotor_list_item,
+		// null);
 
-			convertView.setTag(viewHolder);
-		} else {
-			viewHolder = (ViewHolder) convertView.getTag();
-		}
+		convertView = layoutInflater.inflate(R.layout.promotor_list_item, null);
+		viewHolder = new ViewHolder();
+		// convertView.setTag(viewHolder);
+
+		viewHolder.promotorName = (TextView) convertView
+				.findViewById(R.id.promotorName);
+		viewHolder.promotorNameIcon = (TextView) convertView
+				.findViewById(R.id.promotorNameIcon);
+		viewHolder.phoneIcon = (TextView) convertView
+				.findViewById(R.id.phoneIcon);
+		viewHolder.emailIcon = (TextView) convertView
+				.findViewById(R.id.emailIcon);
+		viewHolder.campaignImage = (ImageView) convertView
+				.findViewById(R.id.campaignImage);
+		viewHolder.promotorLocationOrTime = (TextView) convertView
+				.findViewById(R.id.promotorCheckinTime);
+		viewHolder.status = (View) convertView.findViewById(R.id.status);
+
+		convertView.setTag(viewHolder);
+		// } else {
+		// viewHolder = (ViewHolder) convertView.getTag();
+		// }
 
 		if (mPromotorList.get(position).getName() != null)
 			viewHolder.promotorName.setText(getItem(position).getName());
@@ -132,26 +135,28 @@ public class PromotorListAdapter extends BaseAdapter {
 					.substring(0, 1).toUpperCase());
 		viewHolder.promotorNameIcon
 				.setBackgroundResource(placeholders[(position % 4)]);
-		if (ConstantUtils.ReferList) {
-			viewHolder.promotorLocationOrTime.setText(getItem(position)
-					.getCurrentCampagin());
-		} else {
-			viewHolder.promotorLocationOrTime.setText(getItem(position)
-					.getCurrentStore());
-		}
 
 		viewHolder.emailIcon.setTypeface(icomoon);
 		viewHolder.phoneIcon.setTypeface(icomoon);
 
-		if (position % 2 == 0)
+		if (getItem(position).getStatus().equalsIgnoreCase("active")) {
 
 			// if (android.os.Build.VERSION.SDK_INT >=
 			// android.os.Build.VERSION_CODES.JELLY_BEAN){
 			setStatusBackground(R.drawable.circle_active);
 
+			if (ConstantUtils.ReferList) {
+				viewHolder.promotorLocationOrTime.setText(getItem(position)
+						.getCurrentCampagin());
+			} else {
+				viewHolder.promotorLocationOrTime.setText(getItem(position)
+						.getCurrentStore());
+			}
+		}
+
 		else
 			setStatusBackground(R.drawable.circle_inactive);
-	
+
 		viewHolder.phoneIcon.setOnClickListener(new OnClickListener() {
 
 			@Override

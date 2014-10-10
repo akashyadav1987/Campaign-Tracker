@@ -3,8 +3,6 @@ package com.pulp.campaigntracker.beans;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.pulp.campaigntracker.dao.UserLoginStatusDatabase;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 

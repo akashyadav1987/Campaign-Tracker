@@ -2,10 +2,12 @@ package com.pulp.campaigntracker.listeners;
 
 
 	
-import com.pulp.campaigntracker.beans.LoginData;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import com.pulp.campaigntracker.beans.LoginData;
+import com.pulp.campaigntracker.utils.UtilityMethods;
 
 
 	public class PhoneCallListener extends PhoneStateListener {
@@ -25,7 +27,7 @@ import android.util.Log;
 
 	                   // Log.i(LOG_TAG, "restart app");
 	                	if(LoginData.getInstance()!=null && LoginData.getInstance().getMotherActivity()!=null)
-	                		LoginData.getInstance().getMotherActivity().restartapp();
+	                		UtilityMethods.restartapp(LoginData.getMotherActivity().getBaseContext(), LoginData.getMotherActivity());
 	
 	                    phoneRinging = false;
 	                }

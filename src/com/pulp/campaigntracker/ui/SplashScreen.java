@@ -19,22 +19,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -140,12 +132,12 @@ public class SplashScreen extends Activity {
 		// GCM registration.
 		if (checkPlayServices()) {
 			gcm = GoogleCloudMessaging.getInstance(this);
-
+			registerInBackground();
 			regid = UtilityMethods.getRegistrationId(context);
 
 			TLog.v(TAG, "regid : " + regid);
 			if (regid == null || regid.equals("")) {
-				registerInBackground();
+				// This condition should never be true
 			}
 		} else {
 			Log.i(TAG, "No valid Google Play Services APK found.");
@@ -270,9 +262,11 @@ public class SplashScreen extends Activity {
 					msg = "Device registered, registration ID=" + regid;
 					TLog.v(TAG, "msg" + msg);
 
-					// sendRegistrationIdToBackend();
-					UtilityMethods.storeRegistrationId(context, regid);
-
+					if(!regid.equals(UtilityMethods.getRegistrationId(context)))
+					{
+						
+						UtilityMethods.storeRegistrationId(context, regid);
+					}
 					// For this demo: we don't need to send it because the
 					// device will send
 					// upstream messages to a server that echo back the message

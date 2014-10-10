@@ -8,6 +8,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.pulp.campaigntracker.utils.ConstantUtils;
 import com.pulp.campaigntracker.utils.TLog;
@@ -25,29 +26,33 @@ public class PeriodicService extends Service {
 		/*
 		 * Check if app is initialized
 		 */
-		SharedPreferences prefs = UtilityMethods.getInitPreferences(getBaseContext());
+		SharedPreferences prefs = UtilityMethods
+				.getInitPreferences(getBaseContext());
 		TLog.d(TAG, "AlarmManager");
 
-		if(prefs.getBoolean(ConstantUtils.INIT, false))
+		// if(prefs.getBoolean(ConstantUtils.INIT, false))
 		{
-			TLog.d(TAG, "App Initialized");
+
+			Log.e("Service", "Intailised");
 
 			/*
 			 * Check if the location interval is set.
 			 */
-			if(prefs.getInt(ConstantUtils.LOCATION_INTERVAL, 1)!=1)
-			{
-				TLog.d(TAG, "LOCATION_INTERVAL Initialized");
+			// if(prefs.getInt(ConstantUtils.LOCATION_INTERVAL, 1)!=1)
+			// {
 
-				long updateInterval = ConstantUtils.INTERVAL_UPDATE * prefs.getInt(ConstantUtils.LOCATION_INTERVAL, 1);
-				
-				Intent serviceIntent = new Intent(PeriodicService.this, PeriodicLocation.class);
-				PendingIntent pendingIntent = PendingIntent.getService(PeriodicService.this, 0, serviceIntent,
-						0);
-				AlarmManager alarmManager = (AlarmManager) PeriodicService.this.getSystemService(PeriodicService.this.ALARM_SERVICE);
-				alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-						TRIGGER_TIME, updateInterval, pendingIntent);
-			}
+			long updateInterval = ConstantUtils.INTERVAL_UPDATE
+					* prefs.getInt(ConstantUtils.LOCATION_INTERVAL, 1);
+
+			Intent serviceIntent = new Intent(PeriodicService.this,
+					PeriodicLocation.class);
+			PendingIntent pendingIntent = PendingIntent.getService(
+					PeriodicService.this, 0, serviceIntent, 0);
+			AlarmManager alarmManager = (AlarmManager) PeriodicService.this
+					.getSystemService(PeriodicService.this.ALARM_SERVICE);
+			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+					System.currentTimeMillis(), ConstantUtils.SYNC_INTERVAL, pendingIntent);
+			// }
 		}
 		stopSelf();
 		return super.onStartCommand(intent, flags, startId);

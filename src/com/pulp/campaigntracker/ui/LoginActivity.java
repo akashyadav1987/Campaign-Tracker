@@ -26,6 +26,7 @@ import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.background.PeriodicService;
 import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.beans.LoginErrorData;
+import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
 import com.pulp.campaigntracker.listeners.LoginDataRecieved;
 import com.pulp.campaigntracker.parser.JsonLoginDataParser;
 import com.pulp.campaigntracker.utils.ConstantUtils;
@@ -54,7 +55,7 @@ public class LoginActivity extends ActionBarActivity implements
 	private TextView errorText;
 	private String role;
 	private TextView supervisorIcon;
-	private TextView promotorIcon;
+	private TextView promoterIcon;
 
 	private TextView userLabel;
 
@@ -65,6 +66,7 @@ public class LoginActivity extends ActionBarActivity implements
 	private View activityRootView;
 
 	private View view1;
+	private ActionBarHelper mActionBar;
 
 	// private ViewPager roleSelector;
 
@@ -77,7 +79,7 @@ public class LoginActivity extends ActionBarActivity implements
 				"icomoon.ttf");
 
 		mobileNo = (EditText) findViewById(R.id.mobileNumber);
-		mobileNo.requestFocus();
+		// mobileNo.requestFocus();
 		emailId = (EditText) findViewById(R.id.emailId);
 		supervisorPassword = (EditText) findViewById(R.id.password);
 
@@ -98,8 +100,8 @@ public class LoginActivity extends ActionBarActivity implements
 		supervisorIcon = (TextView) findViewById(R.id.supervisorIcon);
 		supervisorIcon.setTypeface(iconFonts);
 
-		promotorIcon = (TextView) findViewById(R.id.promotorIcon);
-		promotorIcon.setTypeface(iconFonts);
+		promoterIcon = (TextView) findViewById(R.id.promotorIcon);
+		promoterIcon.setTypeface(iconFonts);
 
 		loginButton = (Button) findViewById(R.id.loginButton);
 		loginButton.setOnClickListener(this);
@@ -117,18 +119,26 @@ public class LoginActivity extends ActionBarActivity implements
 			userLabel.setText("Promoter");
 
 		} else if (role.equals(LoginType.supervisor.toString())) {
-			promotorIcon.setVisibility(View.GONE);
+			promoterIcon.setVisibility(View.GONE);
 			supervisorPassword.setVisibility(View.VISIBLE);
 			userLabel.setText("Supervisor");
 		}
 
-		UtilityMethods.setLoginActivity(this);
+		mActionBar = createActionBarHelper();
+		mActionBar.init();
+		mActionBar.setTitle("Campaign Tracker");
+
+		LoginData.setLoginActivity(this);
 		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
 	}
 
+	private ActionBarHelper createActionBarHelper() {
+		return new ActionBarHelper(this);
+	}
+
 	public void executeQuery(String email, String password, String number,
-			LoginType promotor, String gcm_Token) {
+			LoginType promoter, String gcm_Token) {
 
 		mProgressDialog = new Dialog(LoginActivity.this,
 				R.style.transparent_dialog_no_titlebar);
@@ -149,7 +159,7 @@ public class LoginActivity extends ActionBarActivity implements
 
 		jsonLoginDataParser = new JsonLoginDataParser();
 		jsonLoginDataParser.getLoginDataFromURL(ConstantUtils.LOGIN_URL, this,
-				email, password, number, promotor, gcm_Token, device_id);
+				email, password, number, promoter, gcm_Token, device_id);
 	}
 
 	private void storeLoginInfo() {
@@ -194,8 +204,8 @@ public class LoginActivity extends ActionBarActivity implements
 					| Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(intent);
 		}
-		Intent intent = new Intent(this, PeriodicService.class);
-		startService(intent);
+		// Intent intent = new Intent(this, PeriodicService.class);
+		// startService(intent);
 		finish();
 
 	}
@@ -282,7 +292,7 @@ public class LoginActivity extends ActionBarActivity implements
 		switch (arg0.getId()) {
 		case R.id.loginButton:
 
-			if (!UtilityMethods.isNetworkAvailable(LoginActivity.this))
+			if (!HTTPConnectionWrapper.isNetworkAvailable(LoginActivity.this))
 				UtilityMethods.ShowAlertDialog(LoginActivity.this);
 			else {
 				if (!PhoneNumberUtils.isGlobalPhoneNumber(mobileNo.getText()
@@ -336,12 +346,12 @@ public class LoginActivity extends ActionBarActivity implements
 		if (heightDiff > 120) { // if more than 100 pixels, its probably a
 								// keyboard...
 			userLabel.setVisibility(View.INVISIBLE);
-			promotorIcon.setVisibility(View.INVISIBLE);
+			promoterIcon.setVisibility(View.INVISIBLE);
 			supervisorIcon.setVisibility(View.INVISIBLE);
 			view1.setVisibility(View.INVISIBLE);
 		} else {
 			userLabel.setVisibility(View.VISIBLE);
-			promotorIcon.setVisibility(View.VISIBLE);
+			promoterIcon.setVisibility(View.VISIBLE);
 			supervisorIcon.setVisibility(View.VISIBLE);
 			view1.setVisibility(View.VISIBLE);
 		}

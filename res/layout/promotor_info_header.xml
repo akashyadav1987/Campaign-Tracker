@@ -3,26 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_background_color"
-    android:orientation="vertical"
-     >
+    android:orientation="vertical" >
 
     <RelativeLayout
         android:id="@+id/promotorDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white" >
+        android:background="@android:color/white"
+        android:paddingBottom="10dp" >
 
         <TextView
             android:id="@+id/nameLogo"
-            android:layout_width="115dp"
-            android:layout_height="115dp"
-            android:layout_marginLeft="30dp"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_marginLeft="35dp"
             android:layout_marginTop="30dp"
-            android:background="@drawable/place_holder_orange"
+            android:background="@drawable/place_holder_blue"
             android:gravity="center"
-            android:text="@string/campagin_placeholder"
+            android:text="@string/user_placeholder"
             android:textColor="@android:color/white"
-            android:textSize="50dp" />
+            android:textSize="60dp" />
 
         <TextView
             android:id="@+id/addressHeadingTitle"
@@ -31,7 +31,7 @@
             android:layout_alignTop="@id/nameLogo"
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@id/nameLogo"
-            android:text="@string/venue_address"
+            android:text="@string/address"
             android:textStyle="bold" />
 
         <TextView
@@ -42,11 +42,10 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="30dp"
             android:layout_toRightOf="@id/nameLogo"
-            android:maxLines="4"
-            android:text="@string/store_name_chrome_" />
+            android:maxLines="4" />
 
         <LinearLayout
-            android:id="@+id/promotersIconsLayout"
+            android:id="@+id/iconsLayout"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_alignParentLeft="true"
@@ -58,105 +57,138 @@
             android:orientation="horizontal" >
 
             <View
-                android:id="@+id/view1"
+                android:id="@+id/view8"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_weight="0.080" />
+                android:layout_weight="0.05" />
 
             <LinearLayout
-                android:id="@+id/callIconText"
+                android:id="@+id/timeLineIconText"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_weight="0.280"
+                android:layout_weight="0.125"
                 android:gravity="center"
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/callIcon"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/timeLineIcon"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/call_icon"
-                    android:textColor="@color/lightest_orange"
-                    android:textSize="@dimen/medium_icon" />
+                    android:gravity="center"
+                    android:text="@string/timeLineIcon"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/normal_icon" />
 
                 <TextView
-                    android:id="@+id/contactNo"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/timeLineText"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:maxLines="1"
-                    android:text="9899123456" />
+                    android:gravity="center"
+                    android:text="@string/timeLine"
+                    android:textSize="@dimen/small_text_size" />
             </LinearLayout>
 
             <View
                 android:id="@+id/view2"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_weight="0.080" />
+                android:layout_weight="0.00" />
 
             <LinearLayout
-                android:id="@+id/messageIconText"
+                android:id="@+id/campaignDescIconText"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_weight="0.200"
+                android:layout_weight="0.125"
                 android:gravity="center"
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/messageIcon"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/campaignDescIcon"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/smsIcon"
+                    android:gravity="center"
+                    android:text="@string/campaignDescIcon"
                     android:textColor="@color/lightest_orange"
-                    android:textSize="@dimen/medium_icon" />
+                    android:textSize="@dimen/normal_icon" />
 
                 <TextView
-                    android:id="@+id/sendText"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/campaignDescText"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Message" />
+                    android:gravity="center"
+                    android:text="@string/campaignDesc"
+                    android:textSize="@dimen/small_text_size" />
             </LinearLayout>
 
             <View
                 android:id="@+id/view3"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_weight="0.080" />
+                android:layout_weight="0" />
 
             <LinearLayout
-                android:id="@+id/promoterfillReportIconText"
+                android:id="@+id/contactIconText"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="0.226"
-                android:gravity="center"
+                android:layout_weight="0.125"
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/fillReportIcon"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/contactIcon"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/fill_report_icon"
+                    android:text="@string/contactIcon"
                     android:textColor="@color/lightest_orange"
-                    android:textSize="@dimen/medium_icon" />
+                    android:textSize="@dimen/normal_icon" />
 
                 <TextView
-                    android:id="@+id/fillReport"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/contactText"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/fill_reports" />
+                    android:gravity="center"
+                    android:text="@string/contact"
+                    android:textSize="@dimen/small_text_size" />
             </LinearLayout>
 
             <View
                 android:id="@+id/view4"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_weight="0.080" />
+                android:layout_weight="0" />
+
+            <LinearLayout
+                android:id="@+id/fillReportIconText"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.125"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/fillReportIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/fill_report_icon"
+                    android:textColor="@color/lightest_orange"
+                    android:textSize="@dimen/normal_icon" />
+
+                <TextView
+                    android:id="@+id/fillReportText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/fill_report"
+                    android:textSize="@dimen/small_text_size" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/view6"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="0.05" />
         </LinearLayout>
     </RelativeLayout>
 

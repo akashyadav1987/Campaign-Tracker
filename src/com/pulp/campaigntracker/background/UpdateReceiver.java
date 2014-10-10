@@ -1,6 +1,4 @@
 package com.pulp.campaigntracker.background;
-import java.util.Date;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -67,21 +65,21 @@ public class UpdateReceiver extends BroadcastReceiver {
 						 * Check if the sync interval is not set.
 						 */
 
-						if(prefs.getInt(ConstantUtils.SYNC_INTERVAL, 1)!=1)
-						{
-							TLog.v(TAG, "SYNC_INTERVAL Initialized : ");
-
-							/*
-							 * Check the difference if more than the expected time .
-							 */
-							long syncInterval = ConstantUtils.INTERVAL_UPDATE * prefs.getInt(ConstantUtils.SYNC_INTERVAL, 1);
-
-							if (diff > syncInterval) {
-								TLog.v(TAG, "diff Started: "+diff);
-								context.startService(syncIntent);
-							}
-
-						}
+//						if(prefs.getInt(ConstantUtils.SYNC_INTERVAL, 1)!=1)
+//						{
+//							TLog.v(TAG, "SYNC_INTERVAL Initialized : ");
+//
+//							/*
+//							 * Check the difference if more than the expected time .
+//							 */
+//							long syncInterval = ConstantUtils.INTERVAL_UPDATE * prefs.getInt(ConstantUtils.SYNC_INTERVAL, 1);
+//
+//							if (diff > syncInterval) {
+//								TLog.v(TAG, "diff Started: "+diff);
+//								context.startService(syncIntent);
+//							}
+//
+//						}
 					}
 				}
 

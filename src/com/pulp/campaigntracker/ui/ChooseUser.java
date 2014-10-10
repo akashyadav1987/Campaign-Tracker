@@ -1,43 +1,38 @@
 package com.pulp.campaigntracker.ui;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.pulp.campaigntracker.R;
-import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.controllers.ScreenPagerAdapter;
 import com.pulp.campaigntracker.utils.ConstantUtils;
-import com.pulp.campaigntracker.utils.TLog;
-import com.pulp.campaigntracker.utils.UtilityMethods;
 import com.pulp.campaigntracker.utils.ConstantUtils.LoginType;
 import com.pulp.campaigntracker.utils.TypeFaceUtil;
 import com.pulp.campaigntracker.utils.TypeFaceUtil.EnumCustomTypeFace;
+import com.pulp.campaigntracker.utils.UtilityMethods;
 
-public class ChooseUser extends FragmentActivity implements
+public class ChooseUser extends ActionBarActivity implements
 OnPageChangeListener, OnClickListener{
 
 	private static final String TAG = ChooseUser.class.getSimpleName();
-	private Button loginBuuton;
-	private int index;
 	private ViewPager roleSelector;
 	private TextView backwardIcon;
 	private TextView forwardIcon;
-	private Button loginButton;
+	private Button nextButton;
 	private String role = LoginType.promotor.toString();
-	private Button refreshButton;
 	private ScreenPagerAdapter mPagerAdapter;
 	private TextView chooseAccount;
 	private int mCurrentPosition;
 	private int mScrollState;
+	
+	private ActionBarHelper mActionBar;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,16 +50,31 @@ OnPageChangeListener, OnClickListener{
 		TypeFaceUtil.getInstance(getBaseContext()).setCustomTypeFaceText(EnumCustomTypeFace.ICOMOON, forwardIcon);
 		forwardIcon.setOnClickListener(this);
 
-		loginButton = (Button) findViewById(R.id.loginButton);
-		loginButton.setOnClickListener(this);
+		nextButton = (Button) findViewById(R.id.nextButton);
+		nextButton.setOnClickListener(this);
 
 	
-		TypeFaceUtil.getInstance(getBaseContext()).setCustomTypeFaceButton(EnumCustomTypeFace.TITILLIUM_DARK, loginButton);
+		//TypeFaceUtil.getInstance(getBaseContext()).setCustomTypeFaceButton(EnumCustomTypeFace.TITILLIUM_DARK, nextButton);
 	
 		chooseAccount = (TextView) findViewById(R.id.chooseAccount);
-		TypeFaceUtil.getInstance(getBaseContext()).setCustomTypeFaceText(EnumCustomTypeFace.TITILLIUM_DARK, chooseAccount);
+		//TypeFaceUtil.getInstance(getBaseContext()).setCustomTypeFaceText(EnumCustomTypeFace.TITILLIUM_DARK, chooseAccount);
 
+		
+		//if(UtilityMethods.isHoneycombOrHigher())
+		{
+		mActionBar = createActionBarHelper();
+		mActionBar.init();
+		mActionBar.setTitle("Campaign Tracker");
+		}
 
+	}
+	
+	/**
+	 * Create a compatible helper that will manipulate the action bar if
+	 * available.
+	 */
+	private ActionBarHelper createActionBarHelper() {
+		return new ActionBarHelper(this);
 	}
 
 	@Override
@@ -135,7 +145,7 @@ OnPageChangeListener, OnClickListener{
 
 
 		switch (v.getId()) {
-		case R.id.loginButton:
+		case R.id.nextButton:
 			
 			Intent loginIntent = new Intent(ChooseUser.this,
 					LoginActivity.class);

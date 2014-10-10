@@ -1,6 +1,6 @@
 package com.pulp.campaigntracker.beans;
 
-import com.pulp.campaigntracker.ui.PromotorMotherActivity;
+import android.support.v7.app.ActionBarActivity;
 
 public class LoginData {
 //Single instance for Login
@@ -21,19 +21,31 @@ public static LoginData getInstance() {
 	String phoneNo;
 	String authToken;
 	String role;
-	PromotorMotherActivity mPromoActivity=null;
-
+	static ActionBarActivity mMotherActivity=null;
+	static ActionBarActivity mLoginActivity=null;
 	
-	public void setMotherActivity(PromotorMotherActivity activity)
+	public static void setLoginActivity(ActionBarActivity activity)
 	{
-		 mPromoActivity=activity;
+		mLoginActivity=activity;
 		
 	}
 	
-	public PromotorMotherActivity getMotherActivity()
+	public static ActionBarActivity getLoginActivity()
 	{
 		
-		return mPromoActivity; 
+		return mLoginActivity; 
+	}
+	
+	public static void setMotherActivity(ActionBarActivity activity)
+	{
+		mMotherActivity=activity;
+		
+	}
+	
+	public static ActionBarActivity getMotherActivity()
+	{
+		
+		return mMotherActivity; 
 	}
 	
 	public String getRole() {

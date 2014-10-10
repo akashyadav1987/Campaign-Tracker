@@ -3,6 +3,8 @@
 
 	<color name="RedButtonColor">#e74c36</color>
 	<color name="GreyLineColor">#c9c9c9</color>
+	<color name="ListDevider">#e7e7e7</color>
+	
 	<color name="BlueColor">#6fc3f3</color>
 	<color name="CardsBackgroundColor">#e9eff1</color>
 	<color name="app_background_color">#eef2f3</color>

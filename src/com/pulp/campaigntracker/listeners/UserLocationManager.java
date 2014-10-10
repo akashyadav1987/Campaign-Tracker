@@ -14,9 +14,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.utils.TLog;
 
 public class UserLocationManager implements LocationListener {
@@ -43,7 +46,8 @@ public class UserLocationManager implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
-		// TODO Auto-generated method stub
+		GetAddress getaddress = new GetAddress();
+		getaddress.execute(location);
 
 	}
 
@@ -70,63 +74,80 @@ public class UserLocationManager implements LocationListener {
 		protected MyLocation doInBackground(Location... params) {
 			List<Address> addresses = null;
 			location = params[0];
-			try {
-				Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
-				addresses = geocoder.getFromLocation(location.getLatitude(),
-						location.getLongitude(),1);
+			loc = new MyLocation();
 
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			if (addresses != null && addresses.size() > 0) {
-				Address add = addresses.get(0);
-
-				TLog.v(TAG, "address : "+add);
-
-				loc = new MyLocation();
-
-
-
-				if(add.getLocality()!=null)
-					loc.setLocality(add.getLocality());
-
-				if(add.getPostalCode()!=null)
-					loc.setPostalCode(add.getPostalCode());
-
-				if(add.getMaxAddressLineIndex()>0)
-				{
-					StringBuilder sb = new StringBuilder();
-					for(int i=0;i<add.getMaxAddressLineIndex();i++)
-					{
-						sb.append(add.getAddressLine(i));
-						if(i!=add.getMaxAddressLineIndex())
-							sb.append(",");
-					}
-					loc.setAddressLine(sb.toString());
+			if(location!=null)
+			{
+				try {
+					Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
+					addresses = geocoder.getFromLocation(location.getLatitude(),
+							location.getLongitude(),1);
+	
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-
-
-				if(add.getLatitude()!=0)
-					loc.setLatitude(location.getLatitude());
-
-				if(add.getLongitude()!=0)
-					loc.setLongitude(location.getLongitude());
-
-				if(add.getLongitude()!=0)
-					loc.setLongitude(location.getLongitude());
-
-				if(add.getSubAdminArea()!=null)
-					loc.setSubAdmin(add.getSubAdminArea());
-
-				if(add.getAdminArea()!=null)
-					loc.setAdmin(add.getAdminArea());
-
-
-				loc.setTimeStamp(getCurrentTimeStamp());
-
-
-			} else {
-				Log.v(TAG, "address  == null");
+				if (addresses != null && addresses.size() > 0) {
+					Address add = addresses.get(0);
+	
+					TLog.v(TAG, "address : "+add);
+	
+					
+	
+	
+					if(add.getLocality()!=null)
+						loc.setLocality(add.getLocality());
+	
+					if(add.getPostalCode()!=null)
+						loc.setPostalCode(add.getPostalCode());
+	
+					if(add.getMaxAddressLineIndex()>0)
+					{
+						StringBuilder sb = new StringBuilder();
+						for(int i=0;i<add.getMaxAddressLineIndex();i++)
+						{
+							sb.append(add.getAddressLine(i));
+							if(i!=add.getMaxAddressLineIndex())
+								sb.append(",");
+						}
+						loc.setAddressLine(sb.toString());
+					}
+	
+	
+					if(add.getLatitude()!=0)
+						loc.setLatitude(location.getLatitude());
+	
+					if(add.getLongitude()!=0)
+						loc.setLongitude(location.getLongitude());
+	
+					if(add.getLongitude()!=0)
+						loc.setLongitude(location.getLongitude());
+	
+					if(add.getSubAdminArea()!=null)
+						loc.setSubAdmin(add.getSubAdminArea());
+	
+					if(add.getAdminArea()!=null)
+						loc.setAdmin(add.getAdminArea());
+	
+	
+					loc.setTimeStamp(getCurrentTimeStamp());
+	
+	
+				} else {
+					Log.v(TAG, "address  == null");
+				}
+			}
+			else
+			{
+				  //retrieve a reference to an instance of TelephonyManager
+			      TelephonyManager telephonyManager = (TelephonyManager)LoginData.getMotherActivity().getSystemService(Context.TELEPHONY_SERVICE);
+			      GsmCellLocation cellLocation = (GsmCellLocation) telephonyManager.getCellLocation();
+			     
+			      int cid = cellLocation.getCid();
+			      int lac = cellLocation.getLac();
+			      loc.setCellId(String.valueOf(cid));
+			      loc.setLacId(String.valueOf(lac));
+					
+				
 			}
 			return loc;
 		}
@@ -156,7 +177,10 @@ public class UserLocationManager implements LocationListener {
 		if (!isGPSEnabled && !isNetworkEnabled) {
 			// no network provider is enabled
 			Toast.makeText(mContext, "Error In Getting Location",
-					Toast.LENGTH_LONG).show();
+					Toast.LENGTH_SHORT).show();
+			
+			return null;
+		      
 		} else {
 			if (isNetworkEnabled) {
 				locationManager.requestLocationUpdates(
@@ -182,14 +206,10 @@ public class UserLocationManager implements LocationListener {
 	// get address of location object
 	public void getAddress() {
 
-		Location location = getLocationObjecct();
-
-		if (location != null) {
+			Location location = getLocationObjecct();
 			GetAddress getaddress = new GetAddress();
 			getaddress.execute(location);
-		} else {
-			System.out.println("Error");
-		}
+	
 	}
 
 	// show location on map

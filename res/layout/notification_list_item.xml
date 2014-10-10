@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="2dp" >
+
+    <TextView
+        android:id="@+id/notifyTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="Title"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/heading_textsize" />
+
+    <TextView
+        android:id="@+id/notifyMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/notifyTitle"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:text="message"
+        android:textColor="@color/light_black_text"
+        android:textSize="@dimen/normal_text_size" />
+
+    <TextView
+        android:id="@+id/clockTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/notifyTitle"
+        android:layout_marginRight="20dp"
+        android:textColor="@color/light_black_text"
+        android:textSize="@dimen/normal_text_size" />
+
+</RelativeLayout>

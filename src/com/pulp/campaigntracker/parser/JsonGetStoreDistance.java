@@ -8,16 +8,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.pulp.campaigntracker.listeners.GetStoreDistanceRecieved;
 import com.pulp.campaigntracker.utils.UtilityMethods;
 
@@ -36,8 +33,8 @@ public class JsonGetStoreDistance {
 
 		DownloadTask downloadTask = new DownloadTask();
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+		if (UtilityMethods.isHoneycombOrHigher())
+			downloadTask.executeForHoneyComb(url);
 		else
 			downloadTask.execute(url);
 
@@ -45,6 +42,14 @@ public class JsonGetStoreDistance {
 
 	private class DownloadTask extends AsyncTask<String, Void, String>{
 
+		
+		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+		private void executeForHoneyComb(String url)
+		{
+			executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+			
+		}
+		
 		// Downloading data in non-ui thread
 		@Override
 		protected String doInBackground(String... url) {

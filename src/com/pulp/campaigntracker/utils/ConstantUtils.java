@@ -8,8 +8,11 @@ public class ConstantUtils {
 	public static String STAGING_SERVER = "http://182.74.47.179/";
 
 	// URL for the api's
-	 public static String LOGIN_URL = SERVER + "LFRTrack/api/Login/";
-//	public static String LOGIN_URL = "http://www.promotadka.in/track/api/auth/login/index.php";
+	public static String LOGIN_URL = SERVER + "LFRTrack/api/Login/";
+
+	// public static String LOGIN_URL =
+	// "http://www.promotadka.in/task_manager/api1/index.php/login";
+
 	// public static String LOGIN_URL =
 	// "http://www.drikpanchang.com/dp-api/xml/panchangam-data.xml";
 	public static String SUBMIT_FORM_URL = SERVER + "LFRTrack/api/SubmitForm/";
@@ -55,13 +58,14 @@ public class ConstantUtils {
 	public static final String GCM = "GCM";
 	public static final String INIT = "INIT";
 	public static final String BATTERY_STATUS = "battery_status";
-	public static final String SYNC_INTERVAL = "sync_interval";
+	public static int SYNC_INTERVAL = 0;
 	public static final String LOCATION_INTERVAL = "location_interval";
 	public static final String LOCATION_START_TIME = "location_start_time";
 	public static final String LOCATION_END_TIME = "location_end_time";
 	public static final long INTERVAL_UPDATE = 1000 * 60;
 	public static final String CAMPAIGN_DETAILS_CACHE = "campaign_cache";
 	public static final String IS_CACHED = "is_cached";
+	public static final String NOTIFICATION = "notification";
 	public static final String CACHED_DATA = "cached_data";
 	public static final String CACHED_TIME = "cached_time";
 
@@ -70,13 +74,25 @@ public class ConstantUtils {
 	public static final String USER_EMAIL = "email";
 	public static final String USER_ROLE = "role";
 	public static final String USER_NUMBER = "number";
-
+	public static boolean CheckinStatus;
+	public static boolean afterCheckinButtonClicked;
 	public static boolean ReferList = false;
 
 	public static final String START_COUNT = "0";
 	public static final String NUMBER = "20";
 	public static final String USER_FORM_LIST = "user_form_list";
 	public static final String PROMOTER_DETAILS_CACHE = "PROMOTER_DETAILS_CACHE";
+	public static final String NOTIFICATION_CACHE = "NOTIFICATION_CACHE";
+	public static final String CHECKIN_DETAILS = "Checkin";
+	public static final String STORE_CHECKIN = "STORE_CHECKIN";
+	public static final int NOTIFI_ID = 1;
+	public static final String CAMPAIGN_NAME = "CAMPAIGN_NAME";
+	public static final String ASSIGN_CAMPAIGN_NAME = "ASSIGN_CAMPAIGN_NAME";
+	public static final String ASSIGN_STORE_NAME = "ASSIGN_STORE_NAME";
+	public static final String STORE_LIST = null;
+	public static final String ASSIGN_PREF = "ASSIGN_PREF";
+	public static final String ASSIGN_CAMAIGN_PREF = "ASSIGN_CAMAIGN_PREF";
+	public static final String ASSIGN_STORE_PREF = "ASSIGN_STORE_PREF";
 
 	public static enum LoginType {
 		promotor, supervisor

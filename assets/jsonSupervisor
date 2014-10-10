@@ -91,7 +91,7 @@
             "form_list": [
                 {
                     "field_name": "Foot falls1",
-                    "field_type": "number",
+                     "field_type": "number",
                     "field_length": "100"
                 },
                 {
