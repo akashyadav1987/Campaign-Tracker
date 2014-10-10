@@ -5,9 +5,13 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONObject;
 
-import com.pulp.campaigntracker.*;
+import android.app.Service;
+import android.content.Intent;
+import android.database.Cursor;
+import android.os.IBinder;
+import android.util.Base64;
+
 import com.pulp.campaigntracker.beans.UserFormDetails;
 import com.pulp.campaigntracker.dao.LocationDatabase;
 import com.pulp.campaigntracker.dao.UserFormUploadDatabase;
@@ -15,12 +19,6 @@ import com.pulp.campaigntracker.listeners.MyLocation;
 import com.pulp.campaigntracker.utils.ConstantUtils;
 import com.pulp.campaigntracker.utils.TLog;
 import com.pulp.campaigntracker.utils.UtilityMethods;
-
-import android.app.Service;
-import android.content.Intent;
-import android.database.Cursor;
-import android.os.IBinder;
-import android.util.Base64;
 
 public class PeriodicallySyncData extends Service{
 

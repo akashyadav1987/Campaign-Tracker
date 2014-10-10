@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/promoterContactLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/CardsBackgroundColor" >
+
+        <RelativeLayout
+            android:id="@+id/callSupervisorLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@android:color/white"
+            android:paddingBottom="20dp" >
+
+            <TextView
+                android:id="@+id/supervisorCallIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="@string/call_icon"
+                android:textColor="@color/lightest_orange"
+                android:textSize="@dimen/normal_icon" />
+
+            <TextView
+                android:id="@+id/callText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_toRightOf="@id/supervisorCallIcon"
+                android:text="Call"
+                android:textSize="@dimen/heading_textsize" />
+
+            <TextView
+                android:id="@+id/callSupervisorNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/callText"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@id/supervisorCallIcon"
+                android:text="9999999999"
+                android:textColor="@color/GreyLineColor"
+                android:textSize="@dimen/small_text_size" />
+
+            <TextView
+                android:id="@+id/callrightArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:text="@string/right_arrow_icon"
+                android:textColor="@color/GreyLineColor"
+                android:textSize="@dimen/small_icon" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/msgSupervisorLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/callSupervisorLayout"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/white"
+            android:paddingBottom="20dp" >
+
+            <TextView
+                android:id="@+id/msgSupervisorIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="@string/smsIcon"
+                android:textColor="@color/lightest_orange"
+                android:textSize="@dimen/normal_icon" />
+
+            <TextView
+                android:id="@+id/msgSupervisorText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_toRightOf="@id/msgSupervisorIcon"
+                android:text="Message"
+                android:textSize="@dimen/heading_textsize" />
+
+            <TextView
+                android:id="@+id/msgSupervisorNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/msgSupervisorText"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@id/msgSupervisorIcon"
+                android:text="9999999999"
+                android:textColor="@color/GreyLineColor"
+                android:textSize="@dimen/small_text_size" />
+
+            <TextView
+                android:id="@+id/msgrightArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:text="@string/right_arrow_icon"
+                android:textColor="@color/GreyLineColor"
+                android:textSize="@dimen/small_icon" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</ScrollView>

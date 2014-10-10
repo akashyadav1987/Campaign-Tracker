@@ -1,6 +1,5 @@
 package com.pulp.campaigntracker.parser;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.R.string;
-import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -30,15 +27,15 @@ import com.pulp.campaigntracker.beans.UserFormDetails;
 import com.pulp.campaigntracker.beans.UserProfile;
 import com.pulp.campaigntracker.controllers.JsonResponseAdapter;
 import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
-import com.pulp.campaigntracker.listeners.PromoterActivityFinish;
 import com.pulp.campaigntracker.listeners.CampaignDetailsRecieved;
-import com.pulp.campaigntracker.ui.CampaignDetailsActivity;
+import com.pulp.campaigntracker.listeners.PromoterActivityFinish;
 import com.pulp.campaigntracker.ui.SupervisorMotherActivity;
 import com.pulp.campaigntracker.utils.ConstantUtils;
 import com.pulp.campaigntracker.utils.ConstantUtils.LoginType;
 import com.pulp.campaigntracker.utils.TLog;
 import com.pulp.campaigntracker.utils.UtilityMethods;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class JsonGetCampaignDetails {
 
 	private final String TAG = JsonGetCampaignDetails.class.getSimpleName();
@@ -103,8 +100,20 @@ public class JsonGetCampaignDetails {
 	}
 
 	public void killAsyncTask() {
-		if (getJson != null)
+		if (getJson != null) {
+
+			mCampaignDetailsList = null;
+			mCampaignDetails = null;
+
+			if (role == LoginType.promotor)
+				listener.onCampaignDetailsRecieved(mCampaignDetails);
+			else
+
+			if (role == LoginType.supervisor)
+				listener.onCampaignDetailsRecieved(mCampaignDetailsList);
+
 			getJson.cancel(true);
+		}
 	}
 
 	/**
@@ -117,7 +126,7 @@ public class JsonGetCampaignDetails {
 	 * @param role
 	 *            : Login type enum for promotor/supervisor
 	 */
-	@SuppressLint("NewApi")
+
 	public void getCampaignDetailsFromURL(String url,
 			CampaignDetailsRecieved listener, String id, String AuthToken,
 			ConstantUtils.LoginType role, Context mContext) {
@@ -134,12 +143,17 @@ public class JsonGetCampaignDetails {
 				AuthToken));
 		promotorCampaginParams.add(new BasicNameValuePair("role", role
 				.toString()));
+		//
+		// String promotorCampaginParamsString = (URLEncodedUtils.format(
+		// promotorCampaginParams, "utf-8")).toLowerCase();
+		// url += promotorCampaginParamsString;
 
-		String promotorCampaginParamsString = (URLEncodedUtils.format(
-				promotorCampaginParams, "utf-8")).toLowerCase();
-		url += promotorCampaginParamsString;
+		// url="http://www.promotadka.in/task_manager/api/userlist.php/userslist?start=0&end=10&number=10";
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		// url="http://www.promotadka.in/task_manager/api3/campaign.php/campaignlist?user_id=2&auth_token=123456789&role=2";
+
+		url = "http://www.promotadka.in/task_manager/api3/campaign.php/campaignlist?user_id=3&auth_token=987654321&role=promoter";
+		if (UtilityMethods.isHoneycombOrHigher())
 			getJson.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
 		else
 			getJson.execute(url);
@@ -173,11 +187,11 @@ public class JsonGetCampaignDetails {
 									ConstantUtils.CAMPAIGN_DETAILS_CACHE, 0)
 							.getString(ConstantUtils.CACHED_DATA, ""));
 					buildCampaignJson(jCampaignObject);
-			
+
 				} catch (Exception e) {
 					killAsyncTask();
-					UtilityMethods.ShowAlertDialog(mContext);
-					
+					// UtilityMethods.ShowAlertDialog(mContext);
+
 				}
 			}
 			/*
@@ -189,13 +203,25 @@ public class JsonGetCampaignDetails {
 					jCampaignObject = JsonResponseAdapter.campaignJsonResponse(
 							params[0], mContext);
 					buildCampaignJson(jCampaignObject);
-					mContext.getSharedPreferences(
-							ConstantUtils.CAMPAIGN_DETAILS_CACHE, 0)
-							.edit()
-							.putString(ConstantUtils.CACHED_DATA,
-									jCampaignObject.toString()).commit();
+					if (jCampaignObject == null) {
+						Toast.makeText(mContext, "Connection Timed Out",
+								Toast.LENGTH_LONG).show();
+						jCampaignObject = new JSONObject(
+								mContext.getSharedPreferences(
+										ConstantUtils.CAMPAIGN_DETAILS_CACHE, 0)
+										.getString(ConstantUtils.CACHED_DATA,
+												""));
+						buildCampaignJson(jCampaignObject);
+					} else {
+						mContext.getSharedPreferences(
+								ConstantUtils.CAMPAIGN_DETAILS_CACHE, 0)
+								.edit()
+								.putString(ConstantUtils.CACHED_DATA,
+										jCampaignObject.toString()).commit();
+					}
 				} catch (Exception e) {
-					UtilityMethods.ShowAlertDialog(mContext);
+					// UtilityMethods.ShowAlertDialog(mContext);
+					killAsyncTask();
 				}
 			}
 
@@ -249,7 +275,7 @@ public class JsonGetCampaignDetails {
 						i++;
 						campaingTag = "c" + i;
 					}
-					
+
 				}
 
 			}

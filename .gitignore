@@ -34,3 +34,23 @@ Icon
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+
+bin/AndroidManifest.xml
+
+gen/android/support/v7/appcompat/R.java
+
+gen/com/pulp/campaigntracker/R.java
+
+project.properties
+
+res/drawable-mdpi/search_border.9.png
+
+res/drawable-xhdpi/notification_app_icon.png
+
+res/drawable-mdpi/search_border.9.png
+
+res/drawable-mdpi/notification_app_icon.png
+
+res/drawable-hdpi/search_border.9.png
+
+res/drawable-hdpi/search_border.9.png

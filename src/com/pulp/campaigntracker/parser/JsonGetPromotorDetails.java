@@ -1,6 +1,5 @@
 package com.pulp.campaigntracker.parser;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,22 +15,17 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.pulp.campaigntracker.beans.FetchData;
-import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.beans.SinglePromotorData;
 import com.pulp.campaigntracker.beans.UserProfile;
-import com.pulp.campaigntracker.controllers.JsonResponseAdapter;
 import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
 import com.pulp.campaigntracker.listeners.CallPromoterListner;
 import com.pulp.campaigntracker.listeners.PromotorDetailsRecieved;
-import com.pulp.campaigntracker.utils.ConstantUtils;
-import com.pulp.campaigntracker.utils.TLog;
 import com.pulp.campaigntracker.utils.UtilityMethods;
 
-public class JsonGetPromotorDetails implements CallPromoterListner{
+public class JsonGetPromotorDetails implements CallPromoterListner {
 
 	private final String TAG = JsonGetPromotorDetails.class.getSimpleName();
 	private PromotorDetailsRecieved listener;
@@ -57,6 +51,12 @@ public class JsonGetPromotorDetails implements CallPromoterListner{
 	private String KEY_LAST_COUNT = "last_count";
 	private String KEY_NUMBER = "number";
 	private String KEY_FETCH = "fetch";
+
+	private String KEY_STATUS = "status";
+	private String KEY_CAMPAIGN_START_DATE = "campaign_start_date";
+	private String KEY_CAMPAIGN_END_DATE = "campaign_end_date";
+	private String KEY_STORE_START_DATE = "store_start_date";
+	private String KEY_STORE_END_DATE = "store_end_date";
 
 	private Context mContext;
 	private ArrayList<UserProfile> userProfile;
@@ -87,9 +87,9 @@ public class JsonGetPromotorDetails implements CallPromoterListner{
 		this.mContext = mContext;
 		this.url = url;
 		this.listener = listener;
-		this.campagin_id=campagin_id;
-		this.store_id=store_id;
-		this.number=number;
+		this.campagin_id = campagin_id;
+		this.store_id = store_id;
+		this.number = number;
 		GetJson getJson = new GetJson();
 
 		List<NameValuePair> fetchPromotorsParams = new ArrayList<NameValuePair>();
@@ -99,7 +99,6 @@ public class JsonGetPromotorDetails implements CallPromoterListner{
 		fetchPromotorsParams.add(new BasicNameValuePair("start_count",
 				start_count));
 		fetchPromotorsParams.add(new BasicNameValuePair("number", number));
-	
 
 		String fetchPromotorsParamsString = (URLEncodedUtils.format(
 				fetchPromotorsParams, "utf-8")).toLowerCase();
@@ -118,30 +117,31 @@ public class JsonGetPromotorDetails implements CallPromoterListner{
 		protected String doInBackground(String... params) {
 
 			JSONObject jPromoterObject = null;
-			
-			//If network is not available
+
+			// If network is not available
 
 			if ((HTTPConnectionWrapper.isNetworkAvailable(mContext))) {
-			try {
-				
-//				try
-//				{
-//					//jPromoterObject = new JSONObject(mContext.getSharedPreferences(ConstantUtils.PROMOTER_DETAILS_CACHE, 0).getString(ConstantUtils.CACHED_DATA, ""));
-//				} catch (JSONException e) {
-//					Toast.makeText(mContext, "Error", Toast.LENGTH_SHORT).show();
-//				}
-				
-				jPromoterObject =UtilityMethods.AssetJSONFile("userList",mContext);
-				buildFetchPromotorJson(jPromoterObject);
-					
+				try {
+
+					// try
+					// {
+					// //jPromoterObject = new
+					// JSONObject(mContext.getSharedPreferences(ConstantUtils.PROMOTER_DETAILS_CACHE,
+					// 0).getString(ConstantUtils.CACHED_DATA, ""));
+					// } catch (JSONException e) {
+					// Toast.makeText(mContext, "Error",
+					// Toast.LENGTH_SHORT).show();
+					// }
+
+					jPromoterObject = UtilityMethods.AssetJSONFile("userList",
+							mContext);
+					buildFetchPromotorJson(jPromoterObject);
 
 				} catch (Exception e) {
-					Toast.makeText(mContext, "Error", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, "Error", Toast.LENGTH_SHORT)
+							.show();
 				}
 			}
-			
-	
-
 
 			return null;
 		}
@@ -180,7 +180,7 @@ public class JsonGetPromotorDetails implements CallPromoterListner{
 	 * @throws JSONException
 	 */
 	private void getUserList(JSONObject jsonObject) throws JSONException {
-		 mSinglePromotorData = new SinglePromotorData();
+		mSinglePromotorData = new SinglePromotorData();
 		if (jsonObject != null && !jsonObject.isNull(KEY_FETCH)) {
 
 			JSONObject jPromoterObject = jsonObject.getJSONObject(KEY_FETCH);
@@ -228,17 +228,36 @@ public class JsonGetPromotorDetails implements CallPromoterListner{
 					if (!jUserObject.isNull(KEY_STORE_ID))
 						userDetails.setStoreId(jUserObject
 								.getString(KEY_STORE_ID));
-					
+
 					if (!jUserObject.isNull(KEY_CAMPAGIN))
 						userDetails.setCurrentCampagin(jUserObject
 								.getString(KEY_CAMPAGIN));
-					
+
 					if (!jUserObject.isNull(KEY_STORE))
 						userDetails.setCurrentStore(jUserObject
 								.getString(KEY_STORE));
 
 					if (!jUserObject.isNull(KEY_ROLE))
 						userDetails.setRole(jUserObject.getString(KEY_ROLE));
+
+					if (!jUserObject.isNull(KEY_STATUS))
+						userDetails
+								.setStatus(jUserObject.getString(KEY_STATUS));
+					if (!jUserObject.isNull(KEY_CAMPAIGN_START_DATE))
+						userDetails.setCampaign_start_date(jUserObject
+								.getString(KEY_CAMPAIGN_START_DATE));
+
+					if (!jUserObject.isNull(KEY_CAMPAIGN_END_DATE))
+						userDetails.setCampaign_end_date(jUserObject
+								.getString(KEY_CAMPAIGN_END_DATE));
+
+					if (!jUserObject.isNull(KEY_STORE_START_DATE))
+						userDetails.setStore_start_date(jUserObject
+								.getString(KEY_STORE_START_DATE));
+
+					if (!jUserObject.isNull(KEY_STORE_END_DATE))
+						userDetails.setStore_end_date(jUserObject
+								.getString(KEY_STORE_END_DATE));
 
 					// if(!jUserObject.isNull(KEY_STORE_ID))
 					// userDetails.setAddress(jUserObject.getString(KEY_STORE_ID));
@@ -254,16 +273,15 @@ public class JsonGetPromotorDetails implements CallPromoterListner{
 	@Override
 	public void CallNextSet(int previousTotal) {
 		GetJson getJson = new GetJson();
-		
-		
+
 		List<NameValuePair> fetchNextPromotorsParams = new ArrayList<NameValuePair>();
 		fetchNextPromotorsParams.add(new BasicNameValuePair("campagin_id",
 				campagin_id));
-		fetchNextPromotorsParams.add(new BasicNameValuePair("store_id", store_id));
+		fetchNextPromotorsParams.add(new BasicNameValuePair("store_id",
+				store_id));
 		fetchNextPromotorsParams.add(new BasicNameValuePair("start_count",
 				String.valueOf(previousTotal)));
 		fetchNextPromotorsParams.add(new BasicNameValuePair("number", number));
-	
 
 		String fetchPromotorsParamsString = (URLEncodedUtils.format(
 				fetchNextPromotorsParams, "utf-8")).toLowerCase();
@@ -274,8 +292,6 @@ public class JsonGetPromotorDetails implements CallPromoterListner{
 		else
 			getJson.execute(url);
 
-		
 	}
 
-	
 }

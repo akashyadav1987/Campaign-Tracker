@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.NameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,15 +13,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 
-import com.pulp.campaigntracker.beans.CampaignDetails;
-import com.pulp.campaigntracker.beans.StoreDetails;
 import com.pulp.campaigntracker.beans.UserNotification;
-import com.pulp.campaigntracker.beans.UserProfile;
-import com.pulp.campaigntracker.listeners.CampaignDetailsRecieved;
 import com.pulp.campaigntracker.listeners.UserNotificationsRecieved;
-import com.pulp.campaigntracker.ui.CampaignDetailsActivity;
-import com.pulp.campaigntracker.utils.ConstantUtils;
-import com.pulp.campaigntracker.utils.ConstantUtils.LoginType;
 import com.pulp.campaigntracker.utils.TLog;
 import com.pulp.campaigntracker.utils.UtilityMethods;
 

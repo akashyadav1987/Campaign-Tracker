@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.beans.InitData;
 import com.pulp.campaigntracker.beans.LoginData;
+import com.pulp.campaigntracker.controllers.NotificationListFragment;
 import com.pulp.campaigntracker.listeners.FragmentListener;
 import com.pulp.campaigntracker.listeners.InitializeApp;
 import com.pulp.campaigntracker.parser.JsonInitDataParser;
@@ -195,6 +197,21 @@ public class PromotorMotherActivity extends ActionBarActivity implements
 		return super.onCreateOptionsMenu(menu);
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+		
+		case R.id.notifications:
+			NotificationListFragment notificationListFragment = new NotificationListFragment();
+			this.onItemSelected(notificationListFragment, true);
+			break;
+	
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
 
 	/**

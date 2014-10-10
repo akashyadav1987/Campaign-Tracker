@@ -2,6 +2,7 @@ package com.pulp.campaigntracker.controllers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import com.pulp.campaigntracker.utils.ConstantUtils;
 
 
@@ -86,15 +87,19 @@ public class CheckInStatusController {
 		String store_id_str = preferences.getString(ConstantUtils.STORE_CHECKIN,"");
 		
 		if(store_id_str.equals(store_id))
-			return preferences.getBoolean(store_id_str, false);
+		{
+			return preferences.getBoolean(store_id, false);
+		}
 		else
+		{
 			return false;
+		}
 	}
 	/**
 	 * Clear check in Status for Store
-	 * @param store_id
+	 * @param string
 	 */
-	public void clearCheckInStatusForStore(int store_id)
+	public void clearCheckInStatusForStore(String string)
 	{
 		
 		preferences.edit()
@@ -102,7 +107,7 @@ public class CheckInStatusController {
 		.commit();
 		
 		preferences.edit()
-		.putBoolean(String.valueOf(store_id), false )
+		.putBoolean(String.valueOf(string), false )
 		.commit();
 		
 	}

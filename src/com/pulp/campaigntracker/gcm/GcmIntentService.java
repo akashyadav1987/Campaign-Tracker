@@ -20,13 +20,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -42,6 +40,7 @@ import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.background.PeriodicService;
 import com.pulp.campaigntracker.beans.GCM;
 import com.pulp.campaigntracker.beans.UserNotification;
+import com.pulp.campaigntracker.controllers.NotificationListFragment;
 import com.pulp.campaigntracker.ui.PromotorMotherActivity;
 import com.pulp.campaigntracker.ui.SplashScreen;
 import com.pulp.campaigntracker.ui.SupervisorMotherActivity;
@@ -69,6 +68,9 @@ public class GcmIntentService extends IntentService {
 	private UserNotification notification;
 	private int num;
 	ArrayList<UserNotification> notifyList;
+
+	// GCMNotificationReceived listener=(GCMNotificationReceived)
+	// getApplicationContext();
 
 	public GcmIntentService() {
 		super("GcmIntentService");
@@ -172,15 +174,16 @@ public class GcmIntentService extends IntentService {
 			Uri uri = RingtoneManager
 					.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-			num = getApplicationContext().getSharedPreferences("NOTIFI_NUMBER",
+			num = getApplicationContext().getSharedPreferences("NOTIFY_NUMBER",
 					0).getInt("Notif_Number_Constant", 0);
 			int x = num + 1;
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 					this).setSmallIcon(R.drawable.notification_app_icon)
-					.setContentTitle(msg.getTitle()).setStyle(bigText)
+
+			.setContentTitle(msg.getTitle()).setStyle(bigText)
 					.setContentText(msg.getMessage()).setSound(uri)
 					.setNumber(x);
-			getApplicationContext().getSharedPreferences("NOTIFI_NUMBER", 0)
+			getApplicationContext().getSharedPreferences("NOTIFY_NUMBER", 0)
 					.edit().putInt("Notif_Number_Constant", x).commit();
 			// Save Notification To Preferences
 
@@ -209,6 +212,7 @@ public class GcmIntentService extends IntentService {
 			notification.setMessage(msg.getMessage());
 			notification.setNotifyTime(mBuilder.getNotification().when);
 			notifyList.add(notification);
+
 			try {
 				getApplicationContext()
 						.getSharedPreferences(ConstantUtils.NOTIFICATION_CACHE,
@@ -217,6 +221,7 @@ public class GcmIntentService extends IntentService {
 						.putString(ConstantUtils.NOTIFICATION,
 								ObjectSerializer.serialize(notifyList))
 						.commit();
+
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -224,8 +229,7 @@ public class GcmIntentService extends IntentService {
 
 			Intent newIntent = null;
 
-		
-			ConstantUtils.SYNC_INTERVAL = 5 * 1000;
+			ConstantUtils.SYNC_INTERVAL = 30 * 60 * 1000;
 
 			if (UtilityMethods.getLoginPreferences(getApplicationContext())
 					.getString(ConstantUtils.USER_ROLE, "")
@@ -233,10 +237,8 @@ public class GcmIntentService extends IntentService {
 				newIntent = new Intent(getBaseContext(),
 						SupervisorMotherActivity.class);
 				Intent i = new Intent(this, PeriodicService.class);
-				getApplicationContext()
-						.getSharedPreferences("NOTIFI_NUMBER", 0).edit()
-						.putInt("Notif_Number_Constant", 0).commit();
 				this.startService(i);
+
 			} else if (UtilityMethods
 					.getLoginPreferences(getApplicationContext())
 					.getString(ConstantUtils.USER_ROLE, "")
@@ -244,25 +246,24 @@ public class GcmIntentService extends IntentService {
 				newIntent = new Intent(getBaseContext(),
 						PromotorMotherActivity.class);
 				Intent i = new Intent(this, PeriodicService.class);
-				getApplicationContext()
-						.getSharedPreferences("NOTIFI_NUMBER", 0).edit()
-						.putInt("Notif_Number_Constant", 0).commit();
 				this.startService(i);
+
 			} else {
 				newIntent = new Intent(getBaseContext(), SplashScreen.class);
 				Intent i = new Intent(this, PeriodicService.class);
-				getApplicationContext()
-						.getSharedPreferences("NOTIFI_NUMBER", 0).edit()
-						.putInt("Notif_Number_Constant", 0).commit();
 				this.startService(i);
+
 			}
+
 			PendingIntent contentIntent = PendingIntent.getActivity(
 					GcmIntentService.this, 0, newIntent, 0);
-
 			mBuilder.setAutoCancel(true);
 			mBuilder.setContentIntent(contentIntent);
-			mNotificationManager.notify(1, mBuilder.build());
-			
+			mNotificationManager.notify(ConstantUtils.NOTIFI_ID,
+					mBuilder.build());
+			Intent intent = new Intent();
+			intent.setAction("googleCloudMessage");
+			sendBroadcast(intent);
 			// nManager.notify((int)System.currentTimeMillis(),ncomp.build());
 		}
 	}

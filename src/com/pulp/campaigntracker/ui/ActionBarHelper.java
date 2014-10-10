@@ -16,8 +16,8 @@ public class ActionBarHelper {
 
 		mActionBar.setDisplayHomeAsUpEnabled(false);
 		mActionBar.setHomeButtonEnabled(false);
-		mActionBar.setDisplayUseLogoEnabled(true);
-		mActionBar.setDisplayShowHomeEnabled(true);
+		mActionBar.setDisplayUseLogoEnabled(false);
+		mActionBar.setDisplayShowHomeEnabled(false);
 
 	}
 

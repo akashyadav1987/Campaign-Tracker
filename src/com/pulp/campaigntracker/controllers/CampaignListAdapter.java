@@ -9,24 +9,32 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.beans.CampaignDetails;
 
-public class CampaignListAdapter extends BaseAdapter{
+public class CampaignListAdapter extends BaseAdapter {
 
-
+	private Context mContext;
 	private List<CampaignDetails> mCampaignList;
 	private LayoutInflater layoutInflater;
+	private ImageLoader imageLoader;
 	public final String STORES = "Stores : ";
 	public final String PROMOTORS = "Promotors : ";
-	int[] placeholders = {R.drawable.place_holder_blue, R.drawable.place_holder_red,R.drawable.place_holder_orange, R.drawable.place_holder_yellow};
-	public CampaignListAdapter(Context mContext,List<CampaignDetails> mCampaignList)
-	{
+	int[] placeholders = { R.drawable.place_holder_blue,
+			R.drawable.place_holder_red, R.drawable.place_holder_orange,
+			R.drawable.place_holder_yellow };
+
+	public CampaignListAdapter(Context mContext,
+			List<CampaignDetails> mCampaignList) {
+		this.mContext = mContext;
 		this.mCampaignList = mCampaignList;
-		this.layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
+		this.layoutInflater = (LayoutInflater) mContext
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		imageLoader = ImageLoader.getInstance();
 
 	}
+
 	@Override
 	public int getCount() {
 		return mCampaignList.size();
@@ -43,7 +51,6 @@ public class CampaignListAdapter extends BaseAdapter{
 		return 0;
 	}
 
-
 	@Override
 	public View getView(final int position, View convertView, ViewGroup arg2) {
 		ViewHolder viewHolder = null;
@@ -59,36 +66,47 @@ public class CampaignListAdapter extends BaseAdapter{
 			viewHolder.campaignPromotorCount = (TextView) convertView
 					.findViewById(R.id.campaignPromotorCount);
 			viewHolder.campaignText = (TextView) convertView
-					.findViewById(R.id.campaignText);
+					.findViewById(R.id.campainText);
 
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 
-		if(mCampaignList.get(position).getName()!=null)
+		if (mCampaignList.get(position).getName() != null)
 			viewHolder.campaignName.setText(getItem(position).getName());
 		else
 			viewHolder.campaignName.setVisibility(View.GONE);
 
-		if(mCampaignList.get(position).getStoreList()!=null && getItem(position).getStoreList().size()>0)
-			viewHolder.campaignStoreCount.setText(STORES + getItem(position).getStoreList().size());
+		if (mCampaignList.get(position).getStoreList() != null
+				&& getItem(position).getStoreList().size() > 0)
+			viewHolder.campaignStoreCount.setText(STORES
+					+ getItem(position).getStoreList().size());
 		else
 			viewHolder.campaignStoreCount.setVisibility(View.GONE);
 
-		if(mCampaignList.get(position).getUserList()!=null && getItem(position).getUserList().size()>0)
-			viewHolder.campaignPromotorCount.setText(PROMOTORS + getItem(position).getUserList().size());
+		if (mCampaignList.get(position).getUserList() != null
+				&& getItem(position).getUserList().size() > 0)
+			viewHolder.campaignPromotorCount.setText(PROMOTORS
+					+ getItem(position).getUserList().size());
 		else
 			viewHolder.campaignPromotorCount.setVisibility(View.GONE);
 
-		if(mCampaignList.get(position).getName()!=null && mCampaignList.get(position).getName().length()>0)
-		{	
-			viewHolder.campaignText.setText(getItem(position).getName().substring(0, 1).toUpperCase());
-			viewHolder.campaignText.setBackgroundResource(placeholders[(position % 4)]);
-			
+		if (mCampaignList.get(position).getName() != null
+				&& mCampaignList.get(position).getName().length() > 0) {
+			viewHolder.campaignText.setText(getItem(position).getName()
+					.substring(0, 1).toUpperCase());
+			viewHolder.campaignText
+					.setBackgroundResource(placeholders[(position % 4)]);
+
 		}
 
+		// else
+		// viewHolder.campaignPromotorCount.setVisibility(View.GONE);
 
+		// imageLoader.displayImage(
+		// mCampaignList.get(position).getImageUrl(),
+		// viewHolder.campaignImage, null, null);
 
 		return convertView;
 	}

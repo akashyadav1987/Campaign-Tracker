@@ -1,9 +1,6 @@
 package com.pulp.campaigntracker.beans;
 
 import java.io.Serializable;
-import java.util.Date;
-
-import android.widget.DigitalClock;
 
 public class UserNotification implements Serializable {
 

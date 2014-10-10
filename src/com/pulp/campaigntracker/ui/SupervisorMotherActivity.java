@@ -7,9 +7,9 @@ import java.util.List;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
@@ -17,11 +17,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
+
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.beans.CampaignDetails;
 import com.pulp.campaigntracker.beans.InitData;
 import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.beans.UserProfile;
+import com.pulp.campaigntracker.controllers.NotificationListFragment;
 import com.pulp.campaigntracker.listeners.CampaignDetailsRecieved;
 import com.pulp.campaigntracker.listeners.FragmentListener;
 import com.pulp.campaigntracker.listeners.InitializeApp;
@@ -50,6 +52,7 @@ public class SupervisorMotherActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_supervisor);
 
@@ -83,7 +86,6 @@ public class SupervisorMotherActivity extends ActionBarActivity implements
 		mActionBar = createActionBarHelper();
 		mActionBar.init();
 		mFragmentHolder = R.id.supervisor_fragment_holder;
-
 		executeQuery();
 		LoginData.setMotherActivity(this);
 	}
@@ -107,47 +109,50 @@ public class SupervisorMotherActivity extends ActionBarActivity implements
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu items for use in the action bar
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.promoter_action_bar, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// // Inflate the menu items for use in the action bar
+	// MenuInflater inflater = getMenuInflater();
+	// inflater.inflate(R.menu.promoter_action_bar, menu);
+	// return super.onCreateOptionsMenu(menu);
+	// }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	// @Override
+	// public boolean onOptionsItemSelected(MenuItem item) {
+	//
+	// switch (item.getItemId()) {
+	// case R.id.action_all_promotors:
+	//
+	// if (campaignDetailsList != null && campaignDetailsList.size() > 0) {
+	// AllPromotorListFragment allPromotorListFragment = new
+	// AllPromotorListFragment();
+	// Bundle mBundle = new Bundle();
+	// mBundle.putParcelableArrayList(ConstantUtils.PROMOTOR_LIST,
+	// promotorList);
+	// allPromotorListFragment.setArguments(mBundle);
+	// onItemSelected(allPromotorListFragment, true);
+	// }
+	//
+	// break;
+	//
+	// case R.id.notifications:
+	// NotificationListFragment notificationListFragment = new
+	// NotificationListFragment();
+	// this.onItemSelected(notificationListFragment, true);
+	// break;
+	//
+	// default:
+	// break;
+	// }
+	// return super.onOptionsItemSelected(item);
+	// }
 
-		switch (item.getItemId()) {
-		case R.id.action_all_promotors:
-
-			if (campaignDetailsList != null && campaignDetailsList.size() > 0) {
-				AllPromotorListFragment allPromotorListFragment = new AllPromotorListFragment();
-				Bundle mBundle = new Bundle();
-				mBundle.putParcelableArrayList(ConstantUtils.PROMOTOR_LIST,
-						promotorList);
-				allPromotorListFragment.setArguments(mBundle);
-				onItemSelected(allPromotorListFragment, true);
-			}
-
-			break;
-		case android.R.id.home:
-			onBackPressed();
-			return true;
-
-		default:
-			break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	
 	public void setActionBarTitle(String title) {
 
 		mActionBar.setTitle(title);
 
 	}
-	
+
 	/**
 	 * Create a compatible helper that will manipulate the action bar if
 	 * available.
@@ -168,16 +173,15 @@ public class SupervisorMotherActivity extends ActionBarActivity implements
 		mProgressDialog.setContentView(R.layout.please_wait_dialog);
 		mProgressDialog.setCancelable(true);
 		mProgressDialog.show();
-		 mProgressDialog.setOnCancelListener(new OnCancelListener() {
-		 @Override
-		 public void onCancel(DialogInterface dialog) {
-		 mProgressDialog.cancel();
-		 onBackPressed();
-		 
-		 }
+		mProgressDialog.setOnCancelListener(new OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				mProgressDialog.cancel();
+				onBackPressed();
 
-	
-		 });
+			}
+
+		});
 
 		jsonGetCampaignDetails = JsonGetCampaignDetails.getInstance();
 		// jsonGetCampaignDetails.getCampaignDetailsFromURL(ConstantUtils.SERVER,
@@ -211,7 +215,7 @@ public class SupervisorMotherActivity extends ActionBarActivity implements
 
 			mCampaignFragment = new CampaignListFragment();
 			mCampaignFragment.setArguments(mBundle);
-		    onItemSelected(mCampaignFragment, false);
+			onItemSelected(mCampaignFragment, false);
 		}
 
 	}
@@ -223,21 +227,17 @@ public class SupervisorMotherActivity extends ActionBarActivity implements
 		android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager()
 				.beginTransaction();
 
-		if (animate)
-		{
+		if (animate) {
 			ft.setCustomAnimations(R.anim.slide_left_to_right,
 					R.anim.slide_right_to_left, R.anim.slide_out_right_to_left,
 					R.anim.slide_out_left_to_right);
 
-		    
 		}
 
 		ft.addToBackStack(null);
-	    ft.replace(mFragmentHolder, frg);
+		ft.replace(mFragmentHolder, frg);
 		ft.commitAllowingStateLoss();
 		mCurrentFragment = frg;
-		TLog.i(TAG,
-				"showFragment mCurrentFragment " + mCurrentFragment.getClass());
 
 	}
 
@@ -255,8 +255,8 @@ public class SupervisorMotherActivity extends ActionBarActivity implements
 					initData.getLocationBatteryStatus());
 			editor.putInt(ConstantUtils.LOCATION_INTERVAL,
 					initData.getLocationPeriodicInterval());
-//			editor.putInt(ConstantUtils.SYNC_INTERVAL,
-//					initData.getSyncUnsentDataInterval());
+			// editor.putInt(ConstantUtils.SYNC_INTERVAL,
+			// initData.getSyncUnsentDataInterval());
 			editor.putString(ConstantUtils.LOCATION_START_TIME,
 					initData.getLocationStartInterval());
 			editor.putString(ConstantUtils.LOCATION_END_TIME,
@@ -265,12 +265,11 @@ public class SupervisorMotherActivity extends ActionBarActivity implements
 		}
 	}
 
-
 	@Override
 	public void onBackPressed() {
 		if (mProgressDialog.isShowing()) {
 			mProgressDialog.dismiss();
-			
+
 		}
 		// super.onBackPressed();
 		int cnt = getSupportFragmentManager().getBackStackEntryCount();
@@ -283,10 +282,10 @@ public class SupervisorMotherActivity extends ActionBarActivity implements
 			if (mCurrentFragment.getClass().toString()
 					.contains("PromotorDetailsFragment")) {
 
-				if (((PromotorDetailsFragment) mCurrentFragment).onBack()) {
-				} else {
-					super.onBackPressed();
-				}
+				// if (((PromotorDetailsFragment) mCurrentFragment).onBack()) {
+				// } else {
+				super.onBackPressed();
+				// }
 			} else {
 				super.onBackPressed();
 			}
@@ -312,6 +311,7 @@ public class SupervisorMotherActivity extends ActionBarActivity implements
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		// No call for super(). Bug on API Level > 11.
+		super.onSaveInstanceState(outState);
 	}
 
 	@Override
@@ -325,7 +325,8 @@ public class SupervisorMotherActivity extends ActionBarActivity implements
 
 			for (android.support.v4.app.Fragment fragment : mList) {
 
-				// getFragmentManager().beginTransaction().remove(fragment).commit();
+				// getFragmentManager().beginTransaction().remove(fragment)
+				// .commitAllowingStateLoss();
 			}
 	}
 

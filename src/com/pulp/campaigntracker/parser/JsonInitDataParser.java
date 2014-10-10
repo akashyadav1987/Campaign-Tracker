@@ -1,21 +1,14 @@
 package com.pulp.campaigntracker.parser;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.telephony.TelephonyManager;
 
 import com.pulp.campaigntracker.beans.InitData;
 import com.pulp.campaigntracker.listeners.InitializeApp;
-import com.pulp.campaigntracker.utils.ConstantUtils;
-import com.pulp.campaigntracker.utils.TLog;
 import com.pulp.campaigntracker.utils.UtilityMethods;
 
 public class JsonInitDataParser {

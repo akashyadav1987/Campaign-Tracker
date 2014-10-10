@@ -2,12 +2,12 @@ package com.pulp.campaigntracker.listeners;
 
 
 	
-import com.pulp.campaigntracker.beans.LoginData;
-import com.pulp.campaigntracker.utils.UtilityMethods;
-
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import com.pulp.campaigntracker.beans.LoginData;
+import com.pulp.campaigntracker.utils.UtilityMethods;
 
 
 	public class PhoneCallListener extends PhoneStateListener {

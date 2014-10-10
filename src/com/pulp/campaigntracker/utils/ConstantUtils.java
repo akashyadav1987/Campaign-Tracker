@@ -8,8 +8,11 @@ public class ConstantUtils {
 	public static String STAGING_SERVER = "http://182.74.47.179/";
 
 	// URL for the api's
-	 public static String LOGIN_URL = SERVER + "LFRTrack/api/Login/";
-//	public static String LOGIN_URL = "http://www.promotadka.in/track/api/auth/login/index.php";
+	public static String LOGIN_URL = SERVER + "LFRTrack/api/Login/";
+
+	// public static String LOGIN_URL =
+	// "http://www.promotadka.in/task_manager/api1/index.php/login";
+
 	// public static String LOGIN_URL =
 	// "http://www.drikpanchang.com/dp-api/xml/panchangam-data.xml";
 	public static String SUBMIT_FORM_URL = SERVER + "LFRTrack/api/SubmitForm/";
@@ -35,7 +38,6 @@ public class ConstantUtils {
 	public static final int TAB_FRAGMENT_REQUEST = -3;
 	public static final int POP_RELAUNCH_FRAGMENT = -4;
 	public static final String STORE_DETAILS = "store_details";
-	public static final String STORE_CHECKIN = "store_checkin";
 	public static final String CAMPAIGN_DETAILS = "campaign_details";
 	public static final String CAMPAIGN_LIST = "campaign_list";
 	public static final String USER_DETAILS = "user_details";
@@ -72,7 +74,8 @@ public class ConstantUtils {
 	public static final String USER_EMAIL = "email";
 	public static final String USER_ROLE = "role";
 	public static final String USER_NUMBER = "number";
-
+	public static boolean CheckinStatus;
+	public static boolean afterCheckinButtonClicked;
 	public static boolean ReferList = false;
 
 	public static final String START_COUNT = "0";
@@ -81,6 +84,15 @@ public class ConstantUtils {
 	public static final String PROMOTER_DETAILS_CACHE = "PROMOTER_DETAILS_CACHE";
 	public static final String NOTIFICATION_CACHE = "NOTIFICATION_CACHE";
 	public static final String CHECKIN_DETAILS = "Checkin";
+	public static final String STORE_CHECKIN = "STORE_CHECKIN";
+	public static final int NOTIFI_ID = 1;
+	public static final String CAMPAIGN_NAME = "CAMPAIGN_NAME";
+	public static final String ASSIGN_CAMPAIGN_NAME = "ASSIGN_CAMPAIGN_NAME";
+	public static final String ASSIGN_STORE_NAME = "ASSIGN_STORE_NAME";
+	public static final String STORE_LIST = null;
+	public static final String ASSIGN_PREF = "ASSIGN_PREF";
+	public static final String ASSIGN_CAMAIGN_PREF = "ASSIGN_CAMAIGN_PREF";
+	public static final String ASSIGN_STORE_PREF = "ASSIGN_STORE_PREF";
 
 	public static enum LoginType {
 		promotor, supervisor

@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
 import java.nio.CharBuffer;
 import java.util.List;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -30,9 +31,11 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
-import com.pulp.campaigntracker.utils.TLog;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
+
+import com.pulp.campaigntracker.utils.TLog;
 
 
 
@@ -182,18 +185,19 @@ public class HTTPConnectionWrapper {
 		HttpResponse response = null;
 		try {
 			
-				TLog.d("HTTP", "Performing HTTP Request " + request.getRequestLine());
-				TLog.d("HTTP", "to host" + request);
+				
 				response = httpClient.execute(request);
+				String as =response.toString();
 				TLog.d("HTTP", "finished request");
 				if (response.getStatusLine().getStatusCode() != 200)
 				{
 					TLog.w("HTTP", "Request Failed: " + response.getStatusLine());
 					return null;
 				}
-				response = httpClient.execute(request);
+
 				HttpEntity entity = response.getEntity();
-				return getResponse(entity.getContent());
+				InputStream is= entity.getContent();
+				return getResponse(is);
 			}
 			catch (ClientProtocolException e)
 			{

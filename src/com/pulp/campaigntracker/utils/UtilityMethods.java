@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -59,14 +60,11 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
-
 import com.google.android.gms.maps.model.LatLng;
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.R.integer;
 import com.pulp.campaigntracker.R.string;
 import com.pulp.campaigntracker.dao.UserLoginStatusDatabase;
-import com.pulp.campaigntracker.http.PulpHTTPTask;
-import com.pulp.campaigntracker.http.PulpHttpRequest;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class UtilityMethods {
@@ -499,7 +497,7 @@ public class UtilityMethods {
 				bufferSize = Math.min(bytesAvailable, maxBufferSize);
 				buffer = new byte[bufferSize];
 
-				// read file and write it into form...
+				// read file and1 write it into form...
 				bytesRead = fileInputStream.read(buffer, 0, bufferSize);
 				TLog.v(TAG, "bytesRead" + bytesRead);
 

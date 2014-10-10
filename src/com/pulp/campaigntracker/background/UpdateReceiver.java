@@ -1,6 +1,4 @@
 package com.pulp.campaigntracker.background;
-import java.util.Date;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

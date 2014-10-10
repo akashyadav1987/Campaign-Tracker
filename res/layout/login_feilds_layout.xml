@@ -105,10 +105,11 @@
         android:layout_alignLeft="@+id/emailId"
         android:layout_alignParentRight="true"
         android:background="@drawable/tracker_theme_edit_text_holo_light"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:hint="@string/password"
         android:inputType="textPassword"
-        android:paddingLeft="10dp" >
-    </EditText>
+        android:paddingLeft="10dp" />
 
     <EditText
         android:id="@+id/emailId"
@@ -120,6 +121,8 @@
         android:layout_marginBottom="15dp"
         android:layout_toRightOf="@+id/emailIcon"
         android:background="@drawable/tracker_theme_edit_text_holo_light"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:paddingLeft="10dp" />
@@ -133,12 +136,11 @@
         android:layout_alignLeft="@+id/emailId"
         android:layout_marginBottom="15dp"
         android:background="@drawable/tracker_theme_edit_text_holo_light"
-        android:cursorVisible="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:hint="@string/phone_no"
         android:inputType="number"
-        android:paddingLeft="10dp"
-        android:textCursorDrawable="@null" >
-    </EditText>
+        android:paddingLeft="10dp" />
 
     <TextView
         android:id="@+id/emailIcon"

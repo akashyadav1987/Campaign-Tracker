@@ -1,14 +1,17 @@
 package com.pulp.campaigntracker.controllers;
 
 import java.util.List;
+
 import org.apache.http.NameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
 import com.pulp.campaigntracker.utils.TLog;
-import android.content.Context;
 
 public class JsonResponseAdapter {
 
@@ -28,6 +31,7 @@ public class JsonResponseAdapter {
 
 		try {
 			jsonString  = HTTPConnectionWrapper.GetHttpResponse(url.toLowerCase());
+//			 final String s = new String(jsonString.getBytes(), "UTF-8");
 	
 			Object jTObject = new JSONTokener(jsonString).nextValue();
 			if (jTObject instanceof JSONObject) {
@@ -42,6 +46,7 @@ public class JsonResponseAdapter {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+			Log.e("json",e.toString());
 			TLog.v(TAG, "Exception" + e.toString());
 		}
 
