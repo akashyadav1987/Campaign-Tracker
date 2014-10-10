@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -19,22 +18,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
-
+import java.util.Locale;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -45,7 +38,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -57,28 +49,26 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.media.ExifInterface;
-import android.net.ConnectivityManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
-import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
+
 
 import com.google.android.gms.maps.model.LatLng;
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.R.integer;
 import com.pulp.campaigntracker.R.string;
-import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.dao.UserLoginStatusDatabase;
-import com.pulp.campaigntracker.listeners.PromoterActivityFinish;
-import com.pulp.campaigntracker.ui.LoginActivity;
-import com.pulp.campaigntracker.ui.PromotorMotherActivity;
-import com.pulp.campaigntracker.ui.SplashScreen;
-import com.pulp.campaigntracker.ui.SupervisorMotherActivity;
+import com.pulp.campaigntracker.http.PulpHTTPTask;
+import com.pulp.campaigntracker.http.PulpHttpRequest;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class UtilityMethods {
 
 	private static final String MY_PICS_IMAGES = "MyPics/Images";
@@ -89,57 +79,35 @@ public class UtilityMethods {
 	public static final String CONTENT_TYPE_JSON = "application/json";
 	private static final String TAG_STATUS = "status";
 	public static String SECURITY_SALT = "a%pULp0StRaTeGy$!";
-	private static LoginActivity mLoginActivity;
-	private static PromotorMotherActivity mPromotorMotherActivity;
-	private static SupervisorMotherActivity mSupervisorMotherActivity;
-	private static SplashScreen mSplashScreen;
-	private static PromoterActivityFinish promoterFinishListner;
+	
 
-	public static SplashScreen getmSplashScreen() {
-		return mSplashScreen;
+//	public static SplashScreen getmSplashScreen() {
+//		return mSplashScreen;
+//	}
+//
+//	public static void setmSplashScreen(SplashScreen mSplashScreen) {
+//		UtilityMethods.mSplashScreen = mSplashScreen;
+//	}
+
+
+	/**
+	 * Restart the app and launch the required activity.
+	 * 
+	 * @param activity
+	 * @param context
+	 * @return void
+	 * @throws
+	 */
+	public static void restartapp(Context context,ActionBarActivity activity) {
+
+		// restart app
+		Intent i = context.getPackageManager()
+				.getLaunchIntentForPackage(context.getPackageName());
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		activity.startActivity(i);
 	}
 
-	public static void setmSplashScreen(SplashScreen mSplashScreen) {
-		UtilityMethods.mSplashScreen = mSplashScreen;
-	}
 
-	public static void setLoginActivity(LoginActivity loginActivity) {
-
-		mLoginActivity = loginActivity;
-
-	}
-
-	public static LoginActivity getLoginActivity() {
-
-		return mLoginActivity;
-
-	}
-
-	public static void setSupervisorMotherActivity(
-			SupervisorMotherActivity supervisorMotherActivity) {
-
-		mSupervisorMotherActivity = supervisorMotherActivity;
-
-	}
-
-	public static SupervisorMotherActivity getSupervisorMotherActivity() {
-
-		return mSupervisorMotherActivity;
-
-	}
-
-	public static void setPromotorMotherActivity(
-			PromotorMotherActivity promotorMotherActivity) {
-
-		mPromotorMotherActivity = promotorMotherActivity;
-
-	}
-
-	public static PromotorMotherActivity getPromotorMotherActivity() {
-
-		return mPromotorMotherActivity;
-
-	}
 
 	/**
 	 * Extract the JSonObject from the files in asset folder.
@@ -172,163 +140,7 @@ public class UtilityMethods {
 		return jsonObj;
 	}
 
-	/**
-	 * Takes a url as an input makes and HTTP call and returns the JSONOnject
-	 * for the same
-	 * 
-	 * @param url
-	 * @return {@link JSONObject}
-	 */
-	public static JSONObject campaignJsonResponse(String url, Context mContext) {
-		String jsonString = "";
-		JSONObject jsonObj = null;
-
-		try {
-			LoginData mLoginData = LoginData.getInstance();
-			//
-			// url +="?auth_token="+mLoginData.getAuthToken();
-			//
-			// url +="&user_id=test"+mLoginData.getId();
-
-			url = url.toLowerCase();
-
-			HttpUriRequest request = new HttpGet(url);
-			request.addHeader("Accept-Encoding", "gzip");
-//			request.setUnsuccessfulResponseHandler(new HttpBackOffUnsuccessfulResponseHandler(new ExponentialBackOff()));
-			HttpClient httpClient = new DefaultHttpClient();
-			HttpResponse response = httpClient.execute(request);
-
-			InputStream instream = response.getEntity().getContent();
-			org.apache.http.Header contentEncoding = response
-					.getFirstHeader("Content-Encoding");
-
-			if (contentEncoding != null
-					&& contentEncoding.getValue().equalsIgnoreCase("gzip")) {
-				BufferedReader rd = new BufferedReader(new InputStreamReader(
-						new GZIPInputStream(instream)));
-				jsonString = readAll(rd);
-				rd = null;
-			} else {
-				BufferedReader rd = new BufferedReader(new InputStreamReader(
-						instream));
-				jsonString = readAll(rd);
-				rd = null;
-			}
-			instream.close();
-			instream = null;
-			contentEncoding = null;
-			request = null;
-			response = null;
-			httpClient = null;
-			// } catch (Exception e) {
-			// TLog.v(TAG, e.toString());
-			// }
-			// // try parse the string to a JSON object
-			//
-			// try {
-			Object jTObject = new JSONTokener(jsonString).nextValue();
-			if (jTObject instanceof JSONObject) {
-				jsonObj = new JSONObject(jsonString);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			TLog.v(TAG, "Exception" + e.toString());
-//			promoterFinishListner.promoterFinishActivity();
-			//UtilityMethods.ShowAlertDialog(mContext);
-			
-		}
-
-		return jsonObj;
-
-	}
-
-	/**
-	 * Takes url and NameValuePair as params and return the JSONObject for the
-	 * same.
-	 * 
-	 * @param url
-	 * @param params
-	 * @return {@link JSONObject}
-	 */
-	public static JSONObject getJSONFromUrl(String url,
-			List<NameValuePair> params) {
-
-		InputStream is = null;
-		JSONObject jObj = null;
-		String json = null;
-
-		// String loginParamsString = (URLEncodedUtils.format(params, "utf-8"))
-		// .toLowerCase();
-		// url += loginParamsString;
-
-		// Making HTTP request
-
-		// defaultHttpClient
-
-		try {
-			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost(url);
-			// HttpGet httpGet = new HttpGet(url);
-			httpPost.setEntity(new UrlEncodedFormEntity(params));
-
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-			HttpEntity httpEntity = httpResponse.getEntity();
-			is = httpEntity.getContent();
-
-			// reading the json Object received in Http Response
-
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					is, "iso-8859-1"), 8);
-			StringBuilder sb = new StringBuilder();
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
-			}
-			is.close();
-			json = sb.toString();
-			jObj = new JSONObject(json);
-		} catch (Exception ex) {
-			UtilityMethods.ShowAlertDialog(getLoginActivity());
-		}
-		return jObj;
-
-	}
-
-	public static JSONObject submitForm(String url,
-			List<NameValuePair> formSubmitValues) {
-
-		InputStream is = null;
-		JSONObject jObj = null;
-		String json = null;
-
-		// Making HTTP request
-		try {
-			// defaultHttpClient
-			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpPost httpPost = new HttpPost(url);
-			httpPost.setEntity(new UrlEncodedFormEntity(formSubmitValues));
-
-			HttpResponse httpResponse = httpClient.execute(httpPost);
-			HttpEntity httpEntity = httpResponse.getEntity();
-			is = httpEntity.getContent();
-
-			// // reading the json Object received in Http Response
-			// try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					is, "iso-8859-1"), 8);
-			StringBuilder sb = new StringBuilder();
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
-			}
-			is.close();
-			json = sb.toString();
-			jObj = new JSONObject(json);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return jObj;
-	}
+	
 
 	/**
 	 * This is to read the file line by line to avoid outofmemory. And make use
@@ -394,35 +206,7 @@ public class UtilityMethods {
 		return list.size() > 0;
 	}
 
-	/**
-	 * This is to check if the internet connection is available.
-	 * 
-	 * @param context
-	 * @return {@link Boolean}
-	 */
-	public static boolean isNetworkAvailable(Context context) {
-		boolean isNetworkAvailable = false;
-		ConnectivityManager manager = (ConnectivityManager) context
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-		// For 3G check
-		boolean is3g = false;
-		if (manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE) != null)
-			is3g = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
-					.isConnectedOrConnecting();
-		// For WiFi Check
-		boolean isWifi = false;
-		if (manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI) != null)
-			isWifi = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-					.isConnectedOrConnecting();
-
-		if (is3g || isWifi) {
-			isNetworkAvailable = true;
-		}
-
-		return isNetworkAvailable;
-	}
-
+	
 	/**
 	 * 
 	 * @param mContext
@@ -480,7 +264,7 @@ public class UtilityMethods {
 	 */
 	public static File createImageFile(Context mContext) throws IOException {
 		// Create an image file name
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",Locale.getDefault())
 				.format(new Date());
 		String imageFileName = JPEG_FILE_PREFIX + timeStamp + "_";
 		File albumF = getAlbumDir(mContext);
@@ -801,7 +585,7 @@ public class UtilityMethods {
 	 * @return {@link String}
 	 */
 	public static String getCurrentTimeStampInHours() {
-		SimpleDateFormat s = new SimpleDateFormat("HHddMMyyyy");
+		SimpleDateFormat s = new SimpleDateFormat("HHddMMyyyy",Locale.getDefault());
 		String format = s.format(new Date());
 		return format;
 	}
@@ -812,7 +596,7 @@ public class UtilityMethods {
 	 * @return {@link String}
 	 */
 	public static String getCurrentTimeStampInDays() {
-		SimpleDateFormat s = new SimpleDateFormat("ddMMyyyy");
+		SimpleDateFormat s = new SimpleDateFormat("ddMMyyyy",Locale.getDefault());
 		String format = s.format(new Date());
 		return format;
 	}
@@ -1017,7 +801,7 @@ public class UtilityMethods {
 	 * @return {@link Date}
 	 */
 	public static Date getDateFromString(String dateString) {
-		SimpleDateFormat format = new SimpleDateFormat("HHddMMyyyy");
+		SimpleDateFormat format = new SimpleDateFormat("HHddMMyyyy",Locale.getDefault());
 		try {
 			Date date = format.parse(dateString);
 			System.out.println(date);
@@ -1153,49 +937,6 @@ public class UtilityMethods {
 				Context.MODE_PRIVATE);
 	}
 
-	/**
-	 * @return Application's {@code SharedPreferences}.
-	 */
-	private void setGcmPreferences(Context context, String key, String value) {
-		// This sample app persists the registration ID in shared preferences,
-		// but
-		// how you store the regID in your app is up to you.
-
-		SharedPreferences appSharedPrefs = PreferenceManager
-				.getDefaultSharedPreferences(context);
-		Editor prefsEditor = appSharedPrefs.edit();
-		prefsEditor.putString(key, value);
-		prefsEditor.commit();
-
-	}
-
-	/**
-	 * Sends the registration ID to your server over HTTP, so it can use
-	 * GCM/HTTP or CCS to send messages to your application. Not needed for this
-	 * demo since the device sends upstream messages to a server that echoes
-	 * back the message using the 'from' address in the message.
-	 * 
-	 * @throws JSONException
-	 */
-	private void sendRegistrationIdToBackend(Context context, String regId)
-			throws JSONException {
-		TLog.v(TAG, "Registeration ID = " + regId);
-
-		storeRegistrationId(context, regId);
-
-	}
-
-	private JSONObject buildRegisterationJSON(String regId)
-			throws JSONException {
-		JSONObject jCompleteObject = new JSONObject();
-		JSONObject jInnerObject = new JSONObject();
-		jInnerObject.put("name", "udit");
-		jInnerObject.put("email", "uditgupta.mail@gmail.com");
-		jInnerObject.put("gcm_token", regId);
-		return jCompleteObject.put("user", jInnerObject);
-
-	}
-
 	public static void ShowAlertDialog(Context context) {
 
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -1218,4 +959,33 @@ public class UtilityMethods {
 
 	}
 
+	public static boolean isHoneycombOrHigher()
+	{
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+	}
+
+	public static void executeAsyncTask(AsyncTask<Void, Void, Void> asyncTask)
+	{
+		if (isHoneycombOrHigher())
+		{
+			asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		}
+		else
+		{
+			asyncTask.execute();
+		}
+	}
+
+
+	public static void executePostHttp(AsyncTask<List<NameValuePair>, Void, Boolean> asyncTask, List<NameValuePair>... params)
+	{
+		if (isHoneycombOrHigher())
+		{
+			asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,params);
+		}
+		else
+		{
+			asyncTask.execute(params);
+		}
+	}
 }

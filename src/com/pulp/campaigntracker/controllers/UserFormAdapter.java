@@ -1,6 +1,5 @@
 package com.pulp.campaigntracker.controllers;
 
-import java.io.ObjectInputStream.GetField;
 import java.util.List;
 
 import android.content.Context;

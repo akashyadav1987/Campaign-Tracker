@@ -23,6 +23,8 @@ import com.pulp.campaigntracker.beans.FetchData;
 import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.beans.SinglePromotorData;
 import com.pulp.campaigntracker.beans.UserProfile;
+import com.pulp.campaigntracker.controllers.JsonResponseAdapter;
+import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
 import com.pulp.campaigntracker.listeners.CallPromoterListner;
 import com.pulp.campaigntracker.listeners.PromotorDetailsRecieved;
 import com.pulp.campaigntracker.utils.ConstantUtils;
@@ -119,41 +121,27 @@ public class JsonGetPromotorDetails implements CallPromoterListner{
 			
 			//If network is not available
 
-//			if (!(UtilityMethods.isNetworkAvailable(mContext))) {
-//			try {
-//				jPromoterObject = new JSONObject(mContext
-//							.getSharedPreferences(
-//									ConstantUtils.PROMOTER_DETAILS_CACHE, 0)
-//							.getString(ConstantUtils.CACHED_DATA, ""));
-//				buildFetchPromotorJson(jPromoterObject);
-//
-//				} catch (Exception e) {
-//					Toast.makeText(mContext, "Error", Toast.LENGTH_LONG).show();
-//				}
-//			}
-//			
-			
-			
-
+			if ((HTTPConnectionWrapper.isNetworkAvailable(mContext))) {
 			try {
-				buildFetchPromotorJson(UtilityMethods.AssetJSONFile("userList",
-						mContext));
-			
-				// jPromoterObject = UtilityMethods.campaignJsonResponse(
-				// params[0], mContext);
-				// buildFetchPromotorJson(jPromoterObject);
-				// mContext.getSharedPreferences(
-				// ConstantUtils.PROMOTER_DETAILS_CACHE, 0)
-				// .edit()
-				// .putString(ConstantUtils.CACHED_DATA,
-				// jPromoterObject.toString()).commit();
 				
+//				try
+//				{
+//					//jPromoterObject = new JSONObject(mContext.getSharedPreferences(ConstantUtils.PROMOTER_DETAILS_CACHE, 0).getString(ConstantUtils.CACHED_DATA, ""));
+//				} catch (JSONException e) {
+//					Toast.makeText(mContext, "Error", Toast.LENGTH_SHORT).show();
+//				}
 				
+				jPromoterObject =UtilityMethods.AssetJSONFile("userList",mContext);
+				buildFetchPromotorJson(jPromoterObject);
+					
 
-			} catch (IOException e) {
-				TLog.v(TAG, "Exception" + e.toString());
-				e.printStackTrace();
+				} catch (Exception e) {
+					Toast.makeText(mContext, "Error", Toast.LENGTH_SHORT).show();
+				}
 			}
+			
+	
+
 
 			return null;
 		}
@@ -208,9 +196,7 @@ public class JsonGetPromotorDetails implements CallPromoterListner{
 			if (!jPromoterObject.isNull(KEY_USER_LIST)
 					&& jPromoterObject.getJSONArray(KEY_USER_LIST) instanceof JSONArray) {
 				// Parse the User Details in a campaign
-				// if (!jPromoterObject.isNull(KEY_USER_LIST)
-				// && jPromoterObject.getJSONArray(KEY_USER_LIST) instanceof
-				// JSONArray) {
+
 				JSONArray jsonUserListArray = (JSONArray) jPromoterObject
 						.getJSONArray(KEY_USER_LIST);
 				userProfile = new ArrayList<UserProfile>();

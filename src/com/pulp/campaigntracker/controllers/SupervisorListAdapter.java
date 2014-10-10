@@ -5,7 +5,6 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -13,13 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.beans.UserProfile;
-import com.pulp.campaigntracker.controllers.PromotorListAdapter.ViewHolder;
 
 public class SupervisorListAdapter extends BaseAdapter{
 
@@ -28,7 +24,6 @@ public class SupervisorListAdapter extends BaseAdapter{
 	private List<UserProfile> mSupervisorList;
 	private LayoutInflater layoutInflater;
 	int[] placeholders = {R.drawable.place_holder_blue, R.drawable.place_holder_red,R.drawable.place_holder_orange, R.drawable.place_holder_yellow};
-	private ImageLoader imageLoader;
 	private Typeface icomoon;
 
 	public SupervisorListAdapter(Context mContext,List<UserProfile> mSupervisorList)
@@ -36,7 +31,7 @@ public class SupervisorListAdapter extends BaseAdapter{
 		this.mContext = mContext;
 		this.mSupervisorList = mSupervisorList;
 		this.layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		imageLoader = ImageLoader.getInstance();
+	
 		icomoon  = Typeface.createFromAsset(mContext.getAssets(), "icomoon.ttf");
 
 	}

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -22,22 +23,21 @@ import com.pulp.campaigntracker.utils.ConstantUtils.LoginType;
 import com.pulp.campaigntracker.utils.TypeFaceUtil;
 import com.pulp.campaigntracker.utils.TypeFaceUtil.EnumCustomTypeFace;
 
-public class ChooseUser extends FragmentActivity implements
+public class ChooseUser extends ActionBarActivity implements
 OnPageChangeListener, OnClickListener{
 
 	private static final String TAG = ChooseUser.class.getSimpleName();
-	private Button loginBuuton;
-	private int index;
 	private ViewPager roleSelector;
 	private TextView backwardIcon;
 	private TextView forwardIcon;
 	private Button loginButton;
 	private String role = LoginType.promotor.toString();
-	private Button refreshButton;
 	private ScreenPagerAdapter mPagerAdapter;
 	private TextView chooseAccount;
 	private int mCurrentPosition;
 	private int mScrollState;
+	
+	private ActionBarHelper mActionBar;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -64,7 +64,19 @@ OnPageChangeListener, OnClickListener{
 		chooseAccount = (TextView) findViewById(R.id.chooseAccount);
 		TypeFaceUtil.getInstance(getBaseContext()).setCustomTypeFaceText(EnumCustomTypeFace.TITILLIUM_DARK, chooseAccount);
 
+		
+		mActionBar = createActionBarHelper();
+		mActionBar.init();
+		mActionBar.setTitle("Campaign Tracker");
 
+	}
+	
+	/**
+	 * Create a compatible helper that will manipulate the action bar if
+	 * available.
+	 */
+	private ActionBarHelper createActionBarHelper() {
+		return new ActionBarHelper(this);
 	}
 
 	@Override

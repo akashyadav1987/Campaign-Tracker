@@ -10,13 +10,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.telephony.TelephonyManager;
+import android.widget.Toast;
+
 
 import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.beans.LoginErrorData;
+import com.pulp.campaigntracker.controllers.JsonResponseAdapter;
+import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
+import com.pulp.campaigntracker.http.PulpHTTPTask;
+import com.pulp.campaigntracker.http.PulpHttpRequest;
+import com.pulp.campaigntracker.http.PulpHttpRequest.RequestType;
 import com.pulp.campaigntracker.listeners.LoginDataRecieved;
 import com.pulp.campaigntracker.ui.LoginActivity;
 import com.pulp.campaigntracker.utils.ConstantUtils;
@@ -30,9 +39,6 @@ public class JsonLoginDataParser {
 	private LoginData mLoginData;
 	private LoginErrorData mLoginErrorData;
 
-	private String url;
-
-
 	// JSON Response node names
 	private final String KEY_LOGIN = "login";
 	private final String KEY_SUCCESS = "success";
@@ -45,10 +51,10 @@ public class JsonLoginDataParser {
 	private final String KEY_NUMBER = "number";
 	private final String KEY_AUTH_TOKEN = "auth_token";
 	private final String KEY_ROLE = "role";
+	
+	private PulpHTTPTask pulpHTTPTask;
 
-	private boolean isSucess;
-	private Context mContext;
-	// Single instance for Login
+	private boolean isSuccess;
 
 	/**
 	 * 
@@ -66,10 +72,10 @@ public class JsonLoginDataParser {
 	 * @param role
 	 *            : Login type enum for promotor/supervisor
 	 */
-	@SuppressLint("NewApi")
+
+	@SuppressWarnings("unchecked")
 	public void getLoginDataFromURL(String url, LoginDataRecieved listener,
 			String email, String password, String number, LoginType role,String gcm_Token,String device_id) {
-		this.url = url;
 		this.listener = listener;
 		GetJson getJson = new GetJson(); 
 
@@ -83,22 +89,67 @@ public class JsonLoginDataParser {
 
 		// To execute the task on multiple(pool Of threads) background threads
 		// in android 4.0
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			getJson.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+		
+//		JSONObject request = new JSONObject();
+//		PulpHttpRequest pulpHttpRequest = new PulpHttpRequest(ConstantUtils.LOGIN_URL, RequestType.LOGIN,
+//				new PulpHttpRequest.PulpHttpCallback()
+//				{
+//					public void onSuccess(JSONObject response)
+//					{
+//						
+//						
+//					}
+//
+//					public void onFailure()
+//					{
+//						
+//					
+//						
+//					}
+//				});
+//		pulpHttpRequest.setJSONData(request);
+//		pulpHTTPTask = new PulpHTTPTask(null, 0);
+//		UtilityMethods.executePostHttp(pulpHTTPTask,params);
+		
+		
+		if (UtilityMethods.isHoneycombOrHigher())
+			getJson.executeForHoneyComb(params);
 		else
 			getJson.execute(params);
 	}
 
+	
 	private class GetJson extends AsyncTask<List<NameValuePair>, Void, Void> {
 
+		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+		private void executeForHoneyComb(List<NameValuePair>...params)
+		{
+			executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+			
+		}
+		
 		@Override
 		protected Void doInBackground(List<NameValuePair>... params) {
 
-			JSONObject loginObject = UtilityMethods.getJSONFromUrl(
+			JSONObject loginObject = JsonResponseAdapter.getJSONFromUrl(
 					ConstantUtils.LOGIN_URL, params[0]);
 			
 			if(loginObject!=null)
 				buildLoginObject(loginObject);
+			else
+			{
+				/**
+				 * Network got lost
+				 * 
+				 */
+				
+				isSuccess=false; 
+				mLoginData = null;
+				mLoginErrorData = new LoginErrorData();
+				mLoginErrorData.setMessage("Please check your connection settings");
+
+				
+			}
 
 			/*
 			 * For Testing purpose replace with the above code
@@ -111,7 +162,7 @@ public class JsonLoginDataParser {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			if (isSucess)
+			if (isSuccess)
 				listener.onLoginDataRecieved(mLoginData);
 			else
 				listener.onLoginErrorDataRecieved(mLoginErrorData);
@@ -130,7 +181,7 @@ public class JsonLoginDataParser {
 				JSONObject jLoginObject = jsonObject.getJSONObject(KEY_LOGIN);
 				
 				if (jLoginObject.getInt(KEY_SUCCESS) == 1) {
-					isSucess = true;
+					isSuccess = true;
 					mLoginErrorData = null;
 					mLoginData = LoginData.getInstance();
 
@@ -160,7 +211,7 @@ public class JsonLoginDataParser {
 					}
 				} 
 				else if (!jLoginObject.isNull(KEY_ERROR)) {
-					isSucess = false;
+					isSuccess = false;
 					mLoginData = null;
 					mLoginErrorData = new LoginErrorData();
 
@@ -171,9 +222,9 @@ public class JsonLoginDataParser {
 					}
 
 				}
-			} else if (UtilityMethods
+			} else if (HTTPConnectionWrapper
 					.isNetworkAvailable((LoginActivity) listener)) {
-				isSucess = false;
+				isSuccess = false;
 				mLoginData = null;
 				mLoginErrorData = new LoginErrorData();
 				mLoginErrorData.setMessage("No Internet Connection.");

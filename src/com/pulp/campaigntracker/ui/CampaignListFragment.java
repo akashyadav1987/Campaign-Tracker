@@ -31,6 +31,8 @@ import com.pulp.campaigntracker.beans.FetchData;
 import com.pulp.campaigntracker.beans.SinglePromotorData;
 import com.pulp.campaigntracker.beans.UserProfile;
 import com.pulp.campaigntracker.controllers.CampaignListAdapter;
+import com.pulp.campaigntracker.controllers.NotificationListFragment;
+import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
 import com.pulp.campaigntracker.listeners.PromotorDetailsRecieved;
 import com.pulp.campaigntracker.parser.JsonGetPromotorDetails;
 import com.pulp.campaigntracker.utils.ConstantUtils;
@@ -47,7 +49,6 @@ public class CampaignListFragment extends android.support.v4.app.Fragment
 	CampaignListAdapter campaignListAdapter;
 	private List<CampaignDetails> campaignDetailsList;
 	ArrayList<UserProfile> promotorList = new ArrayList<UserProfile>();
-	private ProgressBar promotorListProgressBar;
 	private SinglePromotorData mSinglePromotorData;
 	private RelativeLayout errorLayout;
 	private TextView errorImage;
@@ -102,7 +103,7 @@ public class CampaignListFragment extends android.support.v4.app.Fragment
 		retryButton.setOnClickListener(this);
 		errorImage.setTypeface(iconFonts);
 
-		if (!UtilityMethods.isNetworkAvailable(mContext))
+		if (!HTTPConnectionWrapper.isNetworkAvailable(mContext))
 			errorLayout.setVisibility(View.VISIBLE);
 		else
 			errorLayout.setVisibility(View.INVISIBLE);
@@ -137,6 +138,11 @@ public class CampaignListFragment extends android.support.v4.app.Fragment
 			executeQuery();
 			break;
 
+		case R.id.notifications:
+			NotificationListFragment notificationListFragment=new NotificationListFragment();
+			((SupervisorMotherActivity) mActivity).onItemSelected(
+			notificationListFragment, true);
+			
 		default:
 			break;
 		}

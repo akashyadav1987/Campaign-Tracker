@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.http.NameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -36,8 +38,8 @@ public class JsonGetStoreDistance {
 
 		DownloadTask downloadTask = new DownloadTask();
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+		if (UtilityMethods.isHoneycombOrHigher())
+			downloadTask.executeForHoneyComb(url);
 		else
 			downloadTask.execute(url);
 
@@ -45,6 +47,14 @@ public class JsonGetStoreDistance {
 
 	private class DownloadTask extends AsyncTask<String, Void, String>{
 
+		
+		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+		private void executeForHoneyComb(String url)
+		{
+			executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+			
+		}
+		
 		// Downloading data in non-ui thread
 		@Override
 		protected String doInBackground(String... url) {

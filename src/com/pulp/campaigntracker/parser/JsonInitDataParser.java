@@ -65,12 +65,14 @@ public class JsonInitDataParser {
 
 		@Override
 		protected Void doInBackground(String... params) {
+			try {
+				// initData();
+				buildInitJson(UtilityMethods
+						.AssetJSONFile("jsonInit", mContext));
 
-			initData();
-			//buildInitJson(UtilityMethods.AssetJSONFile("jsonInit",mContext));
+			} catch (Exception e) {
 
-
-			
+			}
 
 			return null;
 		}
@@ -89,24 +91,29 @@ public class JsonInitDataParser {
 
 		try {
 
-			if (!jsonFullObject.isNull(KEY_INIT_CONFIG)  ) 
-			{
-				JSONObject jInitObject = jsonFullObject.getJSONObject(KEY_INIT_CONFIG);
-				mInitData = new InitData();
-				if(!jInitObject.isNull(KEY_BATTERY_STATUS))
-					mInitData.setLocationBatteryStatus(jInitObject.getInt(KEY_BATTERY_STATUS));
-				
-				if(!jInitObject.isNull(KEY_LOCATION_INTERVAL))
-					mInitData.setLocationPeriodicInterval(jInitObject.getInt(KEY_LOCATION_INTERVAL));
+			if (!jsonFullObject.isNull(KEY_INIT_CONFIG)) {
+				JSONObject jInitObject = jsonFullObject
+						.getJSONObject(KEY_INIT_CONFIG);
 
-				if(!jInitObject.isNull(KEY_LOCATION_TIME_START))
-					mInitData.setLocationStartInterval(jInitObject.getString(KEY_LOCATION_TIME_START));
+				if (!jInitObject.isNull(KEY_BATTERY_STATUS))
+					mInitData.setLocationBatteryStatus(jInitObject
+							.getInt(KEY_BATTERY_STATUS));
 
-				if(!jInitObject.isNull(KEY_LOCATION_TIME_END))
-					mInitData.setLocationEndInterval(jInitObject.getString(KEY_LOCATION_TIME_END));
+				if (!jInitObject.isNull(KEY_LOCATION_INTERVAL))
+					mInitData.setLocationPeriodicInterval(jInitObject
+							.getInt(KEY_LOCATION_INTERVAL));
 
-				if(!jInitObject.isNull(KEY_SYNC_INTERVAL))
-					mInitData.setSyncUnsentDataInterval(jInitObject.getInt(KEY_SYNC_INTERVAL));
+				if (!jInitObject.isNull(KEY_LOCATION_TIME_START))
+					mInitData.setLocationStartInterval(jInitObject
+							.getString(KEY_LOCATION_TIME_START));
+
+				if (!jInitObject.isNull(KEY_LOCATION_TIME_END))
+					mInitData.setLocationEndInterval(jInitObject
+							.getString(KEY_LOCATION_TIME_END));
+
+				if (!jInitObject.isNull(KEY_SYNC_INTERVAL))
+					mInitData.setSyncUnsentDataInterval(jInitObject
+							.getInt(KEY_SYNC_INTERVAL));
 
 			}
 

@@ -3,36 +3,28 @@ package com.pulp.campaigntracker.controllers;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.beans.CampaignDetails;
-import com.pulp.campaigntracker.beans.StoreDetails;
-import com.pulp.campaigntracker.utils.ConstantUtils;
 
 public class CampaignListAdapter extends BaseAdapter{
 
 
-	private Context mContext;
 	private List<CampaignDetails> mCampaignList;
 	private LayoutInflater layoutInflater;
-	private ImageLoader imageLoader;
 	public final String STORES = "Stores : ";
 	public final String PROMOTORS = "Promotors : ";
 	int[] placeholders = {R.drawable.place_holder_blue, R.drawable.place_holder_red,R.drawable.place_holder_orange, R.drawable.place_holder_yellow};
 	public CampaignListAdapter(Context mContext,List<CampaignDetails> mCampaignList)
 	{
-		this.mContext = mContext;
 		this.mCampaignList = mCampaignList;
 		this.layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		imageLoader = ImageLoader.getInstance();
+		
 
 	}
 	@Override
@@ -96,13 +88,6 @@ public class CampaignListAdapter extends BaseAdapter{
 			
 		}
 
-
-		//		else
-		//			viewHolder.campaignPromotorCount.setVisibility(View.GONE);
-
-		//		imageLoader.displayImage(
-		//				mCampaignList.get(position).getImageUrl(),
-		//				viewHolder.campaignImage, null, null);
 
 
 		return convertView;

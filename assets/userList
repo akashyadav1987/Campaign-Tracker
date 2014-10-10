@@ -14,9 +14,8 @@
                 "email": "sdbsb@sndjsn.com",
                 "address": "308 Raleigh Place, West Bengal, 4317",
                 "gender": "male",
-                "campagin":"Intel Campagin",
-                "store":"Chrome Store"
-                
+                "campagin": "Intel Campagin",
+                "store": "Chrome Store"
             },
             {
                 "id": 1,
@@ -27,8 +26,8 @@
                 "email": "sdbsb@sndjsn.com",
                 "address": "308 Raleigh Place, West Bengal, 4317",
                 "gender": "male",
-                "campagin":"Intel Campagin",
-                "store":"Chrome Store"
+                "campagin": "Intel Campagin",
+                "store": "Chrome Store"
             },
             {
                 "id": 1,
@@ -39,8 +38,8 @@
                 "email": "sdbsb@sndjsn.com",
                 "address": "308 Raleigh Place, West Bengal, 4317",
                 "gender": "male",
-                "campagin":"Intel Campagin",
-                "store":"Chrome Store"
+                "campagin": "Intel Campagin",
+                "store": "Chrome Store"
             },
             {
                 "id": 1,
@@ -51,8 +50,8 @@
                 "email": "sdbsb@sndjsn.com",
                 "address": "308 Raleigh Place, West Bengal, 4317",
                 "gender": "male",
-                "campagin":"Intel Campagin",
-                "store":"Chrome Store"
+                "campagin": "Intel Campagin",
+                "store": "Chrome Store"
             },
             {
                 "id": 2,
@@ -63,8 +62,9 @@
                 "email": "sdbsb@sndjsn.com",
                 "address": "308 Raleigh Place, West Bengal, 4317",
                 "gender": "male",
-                "campagin":"Intel Campagin",
-                "store":"Chrome Store"
+                "campagin": "Intel Campagin",
+                "store": "Chrome Store",
+                "status": "active"
             },
             {
                 "id": 1,
@@ -75,9 +75,10 @@
                 "email": "sdbsb@sndjsn.com",
                 "address": "308 Raleigh Place, West Bengal, 4317",
                 "gender": "male",
-                "campagin":"Intel Campagin",
-                "store":"Chrome Store"
-            },       
+                "campagin": "Intel Campagin",
+                "store": "Chrome Store",
+                "status": "active"
+            },
             {
                 "id": 1,
                 "name": "Mahesh",
@@ -87,8 +88,9 @@
                 "email": "sdbsb@sndjsn.com",
                 "address": "308RaleighPlace,WestBengal,4317",
                 "gender": "male",
-                "campagin":"Intel Campagin",
-                "store":"Chrome Store"
+                "campagin": "Intel Campagin",
+                "store": "Chrome Store",
+                "status": "inactive"
             },
             {
                 "id": 2,
@@ -99,8 +101,9 @@
                 "email": "sdbsb@sndjsn.com",
                 "address": "308RaleighPlace,WestBengal,4317",
                 "gender": "male",
-                "campagin":"Intel Campagin",
-                "store":"Chrome Store"
+                "campagin": "Intel Campagin",
+                "store": "Chrome Store",
+                "status": "active"
             },
             {
                 "id": 1,
@@ -111,8 +114,8 @@
                 "email": "sdbsb@sndjsn.com",
                 "address": "308RaleighPlace,WestBengal,4317",
                 "gender": "male",
-                "campagin":"Intel Campagin",
-                "store":"Chrome Store"
+                "campagin": "Intel Campagin",
+                "store": "Chrome Store"
             }
         ]
     }

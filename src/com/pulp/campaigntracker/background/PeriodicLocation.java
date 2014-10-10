@@ -68,8 +68,11 @@ public class PeriodicLocation extends IntentService implements UpdateLocation {
 	}
 	@Override
 	public void showLocation(MyLocation loc) {
-		TLog.v(TAG, "showLocation"+loc);
+	
 		if (loc != null) {
+			
+			Log.e("Service","Location    "+loc.toString());
+
 			List<NameValuePair> nameValuePair = getJSONObjectToPost(loc);
 			int response = UtilityMethods.postJsonToServer(ConstantUtils.POST_LOCATION_URL, nameValuePair);
 			if(response!=1)
@@ -99,7 +102,7 @@ public class PeriodicLocation extends IntentService implements UpdateLocation {
 		nameValuePairs.add(new BasicNameValuePair(DEVICEID,getSharedPreferences(ConstantUtils.LOGIN, 0).getString(ConstantUtils.DEVICEID, "device_id")));
 		nameValuePairs.add(new BasicNameValuePair(HASH, UtilityMethods
 				.calculateSyncHash(nameValuePairs)));
-		TLog.v(TAG, "nameValuePairs : "+nameValuePairs);
+		Log.e("Service", "nameValuePairs : "+nameValuePairs);
 		return nameValuePairs;
 	}
 

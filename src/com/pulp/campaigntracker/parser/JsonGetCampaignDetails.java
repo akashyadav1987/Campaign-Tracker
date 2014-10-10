@@ -28,6 +28,8 @@ import com.pulp.campaigntracker.beans.CampaignDetails;
 import com.pulp.campaigntracker.beans.StoreDetails;
 import com.pulp.campaigntracker.beans.UserFormDetails;
 import com.pulp.campaigntracker.beans.UserProfile;
+import com.pulp.campaigntracker.controllers.JsonResponseAdapter;
+import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
 import com.pulp.campaigntracker.listeners.PromoterActivityFinish;
 import com.pulp.campaigntracker.listeners.CampaignDetailsRecieved;
 import com.pulp.campaigntracker.ui.CampaignDetailsActivity;
@@ -126,8 +128,7 @@ public class JsonGetCampaignDetails {
 		getJson = new GetJson();
 
 		List<NameValuePair> promotorCampaginParams = new ArrayList<NameValuePair>();
-		// promotorCampaginParams.add(new BasicNameValuePair("tag",
-		// "promotor"));
+
 		promotorCampaginParams.add(new BasicNameValuePair("user_id", id));
 		promotorCampaginParams.add(new BasicNameValuePair("Auth_Token",
 				AuthToken));
@@ -165,19 +166,14 @@ public class JsonGetCampaignDetails {
 			// ConstantUtils.CACHED_TIME, ""))&&
 			// !(UtilityMethods.isNetworkAvailable(mContext)))
 
-			if (!(UtilityMethods.isNetworkAvailable(mContext))) {
+			if (!(HTTPConnectionWrapper.isNetworkAvailable(mContext))) {
 				try {
 					jCampaignObject = new JSONObject(mContext
 							.getSharedPreferences(
 									ConstantUtils.CAMPAIGN_DETAILS_CACHE, 0)
 							.getString(ConstantUtils.CACHED_DATA, ""));
 					buildCampaignJson(jCampaignObject);
-					// mContext.getSharedPreferences(
-					// ConstantUtils.CAMPAIGN_DETAILS_CACHE, 0)
-					// .edit()
-					// .putString(ConstantUtils.CACHED_TIME,
-					// UtilityMethods.getCurrentTimeStampInDays())
-					// .commit();
+			
 				} catch (Exception e) {
 					killAsyncTask();
 					UtilityMethods.ShowAlertDialog(mContext);
@@ -190,7 +186,7 @@ public class JsonGetCampaignDetails {
 			 */
 			else {
 				try {
-					jCampaignObject = UtilityMethods.campaignJsonResponse(
+					jCampaignObject = JsonResponseAdapter.campaignJsonResponse(
 							params[0], mContext);
 					buildCampaignJson(jCampaignObject);
 					mContext.getSharedPreferences(
@@ -253,8 +249,7 @@ public class JsonGetCampaignDetails {
 						i++;
 						campaingTag = "c" + i;
 					}
-					// mCampaignDetails =
-					// getCampainObject(jsonFullObject.getJSONObject(KEY_CAMPAIGN_LIST));
+					
 				}
 
 			}
