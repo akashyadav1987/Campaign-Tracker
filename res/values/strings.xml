@@ -16,7 +16,7 @@
     <string name="pulp_strategy">Pulp Strategy</string>
     <string name="lorrem_ipsum">"Sample error text"</string>
     <string name="venue_address">Venue Address</string>
- <string name="hint">Search Promoters</string>
+    <string name="hint">Search Promoters</string>
     <string-array name="roleSelector">
         <item>Promoter</item>
         <item>Superviser</item>
@@ -42,7 +42,7 @@
     <string name="call_icon">\ue604</string>
     <string name="messageIcon">\ue602</string>
     <string name="smsIcon">\ue901</string>
-     <string name="searchIcon">\ue613</string>
+    <string name="searchIcon">\ue613</string>
     <string name="report_icon">\ue609</string>
     <string name="checkinIcon">\ue606</string>
     <string name="userListIcon">\ue900</string>
@@ -55,6 +55,7 @@
     <string name="supervisor_icon">\ue60a</string>
     <string name="fill_report_icon">\ue60f</string>
     <string name="campagin_placeholder">\ue60b</string>
+    <string name="user_placeholder">\ue607</string>
     <string name="check_out_icon">\ue60e</string>
     <string name="error_icon">\ue913</string>
     <string name="route_map">Map</string>
@@ -66,8 +67,7 @@
     <string name="promoter">Promoter</string>
     <string name="supervisor">Supervisor</string>
     <string name="back">Back</string>
-    <string name="log_out">Log Out</string>
-     <string name="check_out">Check Out</string>
+    <string name="check_out">Check Out</string>
     <string name="fill_report">Fill Report</string>
     <string name="tap_to_post_an_image">Tap to post an Image</string>
     <string name="please_wait">Please Wait</string>
@@ -76,6 +76,16 @@
     <string name="spash_screen_icon">\ue611</string>
     <string name="next">Next</string>
     <string name="notification">Notification</string>
+    <string name="clear_all">Clear All</string>
     <string name="action_search">Search</string>
+    <string name="campaignDescIcon">\ue60b</string>
+    <string name="campaignDesc">Campaign</string>
+    <string name="contactIcon">\ue604</string>
+    <string name="contact">Contact</string>
+    <string name="timeLineIcon">\ue902</string>
+    <string name="timeLine">TimeLine</string>
+    <string name="right_arrow_icon">\ue614</string>
+    <string name="active">Active</string>
+    <string name="inactive">Inactive</string>
 
 </resources>

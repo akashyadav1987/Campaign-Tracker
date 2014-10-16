@@ -20,14 +20,14 @@
 			android:layout_alignTop="@+id/campaignImage"
 			android:layout_marginLeft="20dp"
 			android:layout_marginTop="10dp"
-			android:layout_toRightOf="@+id/campaignText"
+			android:layout_toRightOf="@+id/campainText"
 			android:maxLines="1"
 			android:text="TextView"
 			android:textColor="@android:color/black"
 			android:textSize="@dimen/heading_textsize" />
 
 		<TextView
-			android:id="@+id/campaignText"
+			android:id="@+id/campainText"
 			android:layout_width="70dp"
 			android:layout_height="70dp"
 			android:layout_alignParentLeft="true"

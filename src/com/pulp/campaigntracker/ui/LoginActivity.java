@@ -2,10 +2,8 @@ package com.pulp.campaigntracker.ui;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -23,16 +21,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pulp.campaigntracker.R;
-import com.pulp.campaigntracker.background.PeriodicService;
 import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.beans.LoginErrorData;
 import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
 import com.pulp.campaigntracker.listeners.LoginDataRecieved;
 import com.pulp.campaigntracker.parser.JsonLoginDataParser;
 import com.pulp.campaigntracker.utils.ConstantUtils;
-import com.pulp.campaigntracker.utils.ConstantUtils.LoginType;
-import com.pulp.campaigntracker.utils.TLog;
 import com.pulp.campaigntracker.utils.UtilityMethods;
+
 
 public class LoginActivity extends ActionBarActivity implements
 		LoginDataRecieved, OnClickListener, OnGlobalLayoutListener {
@@ -41,10 +37,9 @@ public class LoginActivity extends ActionBarActivity implements
 
 	private EditText mobileNo;
 	private EditText emailId;
-	private EditText supervisorPassword;
-
+	private EditText userPassword;
 	private Button loginButton;
-	private Button backButton;
+
 
 	private String TAG = LoginActivity.class.getSimpleName();
 	private Typeface iconFonts;
@@ -55,19 +50,18 @@ public class LoginActivity extends ActionBarActivity implements
 	private TextView errorText;
 	private String role;
 	private TextView supervisorIcon;
-	private TextView promotorIcon;
+	private TextView promoterIcon;
 
 	private TextView userLabel;
 
-	private Dialog mProgressDialog;
+	private ProgressDialog mProgressDialog;
 
 	private Button erroDialogButton;
 
 	private View activityRootView;
 
 	private View view1;
-
-	// private ViewPager roleSelector;
+	private ActionBarHelper mActionBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +72,8 @@ public class LoginActivity extends ActionBarActivity implements
 				"icomoon.ttf");
 
 		mobileNo = (EditText) findViewById(R.id.mobileNumber);
-		mobileNo.requestFocus();
 		emailId = (EditText) findViewById(R.id.emailId);
-		supervisorPassword = (EditText) findViewById(R.id.password);
+		userPassword = (EditText) findViewById(R.id.password);
 
 		activityRootView = findViewById(R.id.activityRoot);
 
@@ -99,79 +92,72 @@ public class LoginActivity extends ActionBarActivity implements
 		supervisorIcon = (TextView) findViewById(R.id.supervisorIcon);
 		supervisorIcon.setTypeface(iconFonts);
 
-		promotorIcon = (TextView) findViewById(R.id.promotorIcon);
-		promotorIcon.setTypeface(iconFonts);
+		promoterIcon = (TextView) findViewById(R.id.promotorIcon);
+		promoterIcon.setTypeface(iconFonts);
 
 		loginButton = (Button) findViewById(R.id.loginButton);
 		loginButton.setOnClickListener(this);
-		backButton = (Button) findViewById(R.id.backButton);
-		backButton.setOnClickListener(this);
 		userLabel = (TextView) findViewById(R.id.userLabel);
 
 		Intent loginIntent = getIntent();
 		role = loginIntent.getStringExtra("UserType");
-
-		if (role.equals(LoginType.promotor.toString())) {
-			supervisorIcon.setVisibility(View.GONE);
-			supervisorPassword.setVisibility(View.GONE);
-			passwordIcon.setVisibility(View.GONE);
-			userLabel.setText("Promoter");
-
-		} else if (role.equals(LoginType.supervisor.toString())) {
-			promotorIcon.setVisibility(View.GONE);
-			supervisorPassword.setVisibility(View.VISIBLE);
-			userLabel.setText("Supervisor");
-		}
+		
+		
+		promoterIcon.setVisibility(View.VISIBLE);
+		userPassword.setVisibility(View.VISIBLE);
+		userLabel.setText("User");
+		
+		
+		mActionBar = createActionBarHelper();
+		mActionBar.init();
+		mActionBar.setTitle("Field Force Automation");
 
 		LoginData.setLoginActivity(this);
 		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
 	}
 
+	private ActionBarHelper createActionBarHelper() {
+		return new ActionBarHelper(this);
+	}
+
 	public void executeQuery(String email, String password, String number,
-			LoginType promotor, String gcm_Token) {
+			String role, String gcm_Token) {
 
-		mProgressDialog = new Dialog(LoginActivity.this,
-				R.style.transparent_dialog_no_titlebar);
 
-		TLog.i(TAG, "show mProgressDialog " + mProgressDialog);
-		mProgressDialog.setContentView(R.layout.please_wait_dialog);
-		mProgressDialog.setCancelable(true);
+		mProgressDialog = ProgressDialog.show(this,
+				"Logging in ...", "Please Wait ...", true);
+		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		mProgressDialog.show();
-		mProgressDialog.setOnCancelListener(new OnCancelListener() {
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				mProgressDialog.cancel();
-			}
-		});
+		
 
 		TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		String device_id = telephonyManager.getDeviceId();
 
 		jsonLoginDataParser = new JsonLoginDataParser();
 		jsonLoginDataParser.getLoginDataFromURL(ConstantUtils.LOGIN_URL, this,
-				email, password, number, promotor, gcm_Token, device_id);
+				email, password, number, gcm_Token, device_id);
 	}
 
 	private void storeLoginInfo() {
-		UtilityMethods.setLoginPreferences(getApplicationContext(),
+		UtilityMethods.setLoginDataInPref(getApplicationContext(),
 				ConstantUtils.AUTH_TOKEN, LoginData.getInstance()
 						.getAuthToken());
 		UtilityMethods
-				.setLoginPreferences(getApplicationContext(),
+				.setLoginDataInPref(getApplicationContext(),
 						ConstantUtils.LOGIN_NAME, LoginData.getInstance()
 								.getUsername());
-		UtilityMethods.setLoginPreferences(getApplicationContext(),
+		UtilityMethods.setLoginDataInPref(getApplicationContext(),
 				ConstantUtils.LOGIN_ID, LoginData.getInstance().getId());
-		UtilityMethods.setLoginPreferences(getApplicationContext(),
+		UtilityMethods.setLoginDataInPref(getApplicationContext(),
 				ConstantUtils.USER_EMAIL, LoginData.getInstance().getEmail());
-		UtilityMethods.setLoginPreferences(getApplicationContext(),
+		UtilityMethods.setLoginDataInPref(getApplicationContext(),
 				ConstantUtils.USER_ROLE, LoginData.getInstance().getRole());
 		UtilityMethods
-				.setLoginPreferences(getApplicationContext(),
+				.setLoginDataInPref(getApplicationContext(),
 						ConstantUtils.USER_NUMBER, LoginData.getInstance()
 								.getPhoneNo());
-	}
+			}
 
 	@Override
 	public void onLoginDataRecieved(LoginData ld) {
@@ -179,24 +165,18 @@ public class LoginActivity extends ActionBarActivity implements
 
 		storeLoginInfo();
 
-		mProgressDialog.dismiss();
-		if (role.equals(LoginType.promotor.toString())) {
-			Intent intent = new Intent(LoginActivity.this,
-					PromotorMotherActivity.class);
-			// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-		} else if (role.equals(LoginType.supervisor.toString())) {
-			Intent intent = new Intent(LoginActivity.this,
-					SupervisorMotherActivity.class);
-			// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
+		if(mProgressDialog!=null && mProgressDialog.isShowing())
+		{
+			mProgressDialog.dismiss();
+			mProgressDialog=null;
 		}
-		Intent intent = new Intent(this, PeriodicService.class);
-		startService(intent);
+
+		Intent intent = new Intent(LoginActivity.this,
+				UserMotherActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+				| Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+		
 		finish();
 
 	}
@@ -247,7 +227,6 @@ public class LoginActivity extends ActionBarActivity implements
 		mProgressDialog.dismiss();
 		if (ld.getMessage() != null) {
 			if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-				// code
 				alertBuilder(ld.getMessage());
 			} else {
 				LayoutInflater inflater = getLayoutInflater();
@@ -265,7 +244,6 @@ public class LoginActivity extends ActionBarActivity implements
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-
 						alert.dismiss();
 
 					}
@@ -303,27 +281,15 @@ public class LoginActivity extends ActionBarActivity implements
 
 				String regid = UtilityMethods
 						.getRegistrationId(getApplicationContext());
-
-				// if(regid != null && !regid.isEmpty()) {
-				if (role.equals(LoginType.promotor.toString()))
-					executeQuery(emailId.getText().toString(),
-							supervisorPassword.getText().toString(), mobileNo
-									.getText().toString(), LoginType.promotor,
-							regid);
-				else if (role.equals(LoginType.supervisor.toString()))
-					executeQuery(emailId.getText().toString(),
-							supervisorPassword.getText().toString(), mobileNo
+					
+				executeQuery(emailId.getText().toString(),
+						userPassword.getText().toString(), mobileNo
 									.getText().toString(),
-							LoginType.supervisor, regid);
+							LoginData.getInstance().getRole(), regid);
 			}
 
 			break;
-
-		case R.id.backButton:
-
-			Intent refreshIntent = new Intent(LoginActivity.this,
-					ChooseUser.class);
-			startActivity(refreshIntent);
+			
 
 		default:
 			break;
@@ -337,12 +303,12 @@ public class LoginActivity extends ActionBarActivity implements
 		if (heightDiff > 120) { // if more than 100 pixels, its probably a
 								// keyboard...
 			userLabel.setVisibility(View.INVISIBLE);
-			promotorIcon.setVisibility(View.INVISIBLE);
+			promoterIcon.setVisibility(View.INVISIBLE);
 			supervisorIcon.setVisibility(View.INVISIBLE);
 			view1.setVisibility(View.INVISIBLE);
 		} else {
 			userLabel.setVisibility(View.VISIBLE);
-			promotorIcon.setVisibility(View.VISIBLE);
+			promoterIcon.setVisibility(View.VISIBLE);
 			supervisorIcon.setVisibility(View.VISIBLE);
 			view1.setVisibility(View.VISIBLE);
 		}

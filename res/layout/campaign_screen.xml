@@ -13,8 +13,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_below="@+id/campaignlisterrorLayout"
-        android:divider="@color/GreyLineColor"
-        android:dividerHeight="1dp" >
+        android:divider="@color/ListDevider"
+        android:dividerHeight="0.75dp" >
     </ListView>
 
     <include

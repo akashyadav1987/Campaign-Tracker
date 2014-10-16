@@ -1,11 +1,9 @@
 package com.pulp.campaigntracker.beans;
 
 import java.util.Date;
-import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
 
 public class UserFormDetails implements Parcelable{
 	

@@ -2,8 +2,6 @@ package com.pulp.campaigntracker.beans;
 
 import android.support.v7.app.ActionBarActivity;
 
-import com.pulp.campaigntracker.ui.PromotorMotherActivity;
-
 public class LoginData {
 //Single instance for Login
 public static LoginData instance;

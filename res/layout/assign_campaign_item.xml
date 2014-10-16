@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.pulp.campaigntracker.utils.CheckableRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="15dp" >
+
+    <com.pulp.campaigntracker.utils.InertCheckBox
+        android:id="@+id/singleitemCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:button="@drawable/single_radio_chice"
+        android:focusable="false" />
+
+    <TextView
+        android:id="@+id/assignCampaignName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/singleitemCheckBox"
+        android:textSize="@dimen/heading_textsize" />
+
+    <TextView
+        android:id="@+id/assignCampaignDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/assignCampaignName"
+        android:layout_below="@id/assignCampaignName"
+        android:layout_marginTop="4dp"
+        android:maxLength="30"
+        android:maxLines="1"
+        android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+        android:textColor="@color/GreyLineColor"
+        android:textSize="@dimen/small_text_size" />
+
+</com.pulp.campaigntracker.utils.CheckableRelativeLayout>

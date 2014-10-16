@@ -3,14 +3,10 @@ package com.pulp.campaigntracker.controllers;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
-import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +15,6 @@ import android.widget.TextView;
 
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.beans.UserNotification;
-import com.pulp.campaigntracker.utils.UtilityMethods;
 
 public class NotificationListAdapter extends BaseAdapter {
 
@@ -91,13 +86,15 @@ public class NotificationListAdapter extends BaseAdapter {
 
 			String currentDate = new SimpleDateFormat("dd/MM/yyyy",
 					Locale.getDefault()).format(calendar.getTime());
-			if (date == currentDate) {
-				viewHolder.clockTime.setText(date);
-			} else {
-				String time = new SimpleDateFormat("hh:mm a", Locale.getDefault())
-						.format(new java.util.Date(getItem(position)
-								.getNotifyTime()));
+			int compare = date.compareTo(currentDate);
+			if (compare == 0) {
+				String time = new SimpleDateFormat("hh:mm a",
+						Locale.getDefault()).format(new java.util.Date(getItem(
+						position).getNotifyTime()));
 				viewHolder.clockTime.setText(time);
+
+			} else {
+				viewHolder.clockTime.setText(date);
 			}
 
 		}

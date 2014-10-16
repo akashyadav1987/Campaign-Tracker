@@ -6,8 +6,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.nio.CharBuffer;
 import java.util.List;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -30,9 +32,12 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
-import com.pulp.campaigntracker.utils.TLog;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
+
+import com.pulp.campaigntracker.utils.ConstantUtils;
+import com.pulp.campaigntracker.utils.TLog;
 
 
 
@@ -182,18 +187,19 @@ public class HTTPConnectionWrapper {
 		HttpResponse response = null;
 		try {
 			
-				TLog.d("HTTP", "Performing HTTP Request " + request.getRequestLine());
-				TLog.d("HTTP", "to host" + request);
+				
 				response = httpClient.execute(request);
+				String as =response.toString();
 				TLog.d("HTTP", "finished request");
 				if (response.getStatusLine().getStatusCode() != 200)
 				{
 					TLog.w("HTTP", "Request Failed: " + response.getStatusLine());
 					return null;
 				}
-				response = httpClient.execute(request);
+
 				HttpEntity entity = response.getEntity();
-				return getResponse(entity.getContent());
+				InputStream is= entity.getContent();
+				return getResponse(is);
 			}
 			catch (ClientProtocolException e)
 			{
@@ -256,7 +262,7 @@ public class HTTPConnectionWrapper {
 		{
 			return mClient;
 		}
-		TLog.d("SSL", "Initialising the HTTP CLIENT");
+		TLog.d("HTTPConnectionWrapper", "Initialising the HTTP CLIENT");
 
 		HttpParams params = new BasicHttpParams();
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
@@ -264,7 +270,7 @@ public class HTTPConnectionWrapper {
 		/*
 		 * set the connection timeout to 6 seconds, and the waiting for data timeout to 30 seconds
 		 */
-		HttpConnectionParams.setConnectionTimeout(params, 6000);
+		HttpConnectionParams.setConnectionTimeout(params, 30*1000);
 		HttpConnectionParams.setSoTimeout(params, 30 * 1000);
 
 		SchemeRegistry schemeRegistry = new SchemeRegistry();
@@ -316,7 +322,7 @@ public class HTTPConnectionWrapper {
 			e2.printStackTrace();
 		}
 		
-		httpPostRequest.addHeader("Accept-Encoding", "gzip");
+		//httpPostRequest.addHeader("Accept-Encoding", "gzip");
 		
 		HttpClient httpClient = getClient();
 	    for (int attempt = 0; attempt < 3; attempt++)
@@ -332,12 +338,20 @@ public class HTTPConnectionWrapper {
 						TLog.e("HTTP", "Invalid Response",e);
 						e.printStackTrace();
 					}
-					catch (IOException e)
+					
+					catch (UnknownHostException e)
+					{
+						TLog.e("HTTP", "Server Error",e);
+						e.printStackTrace();
+					
+					}catch (IOException e)
 					{
 						TLog.e("HTTP", "Unable to perform request",e);
 						e.printStackTrace();
+						
 	
 					}
+				
 	    	}
 
 	    httpPostRequest.abort();

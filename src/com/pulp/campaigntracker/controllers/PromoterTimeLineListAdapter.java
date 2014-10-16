@@ -1,32 +1,25 @@
 package com.pulp.campaigntracker.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pulp.campaigntracker.R;
-import com.pulp.campaigntracker.beans.CampaignDetails;
-import com.pulp.campaigntracker.beans.StoreDetails;
 import com.pulp.campaigntracker.beans.UserNotification;
-import com.pulp.campaigntracker.beans.UserProfile;
 
-public class PromotorNotificationListAdapter extends BaseAdapter{
+public class PromoterTimeLineListAdapter extends BaseAdapter{
 
 
 	private Context mContext;
 	private List<UserNotification> mPromotorList;
 	private LayoutInflater layoutInflater;
 
-	public PromotorNotificationListAdapter(Context mContext,List<UserNotification> mPromotorList)
+	public PromoterTimeLineListAdapter(Context mContext,List<UserNotification> mPromotorList)
 	{
 		this.mContext = mContext;
 		this.mPromotorList = mPromotorList;

@@ -1,12 +1,13 @@
 package com.pulp.campaigntracker.receiver;
 
 
-import com.pulp.campaigntracker.listeners.PhoneCallListener;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+
+import com.pulp.campaigntracker.listeners.PhoneCallListener;
 
 public class ServiceReceiver extends BroadcastReceiver {
     TelephonyManager telephony=null;

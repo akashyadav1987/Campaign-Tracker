@@ -5,29 +5,50 @@
     android:background="@color/app_background_color" >
 
     <include
-        android:id="@+id/promotorDetails"
+        android:id="@+id/promoterDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         layout="@layout/promotor_info_header"
         android:paddingBottom="10dp" />
 
-    <ListView
-        android:id="@+id/promotorNotificationList"
+    <include
+        android:id="@+id/promoterCampaign"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/promoterDetails"
+        layout="@layout/promoter_campaign_description"
+        android:paddingBottom="10dp" />
+
+    <include
+        android:id="@+id/promoterContactLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/promoterDetails"
+        layout="@layout/promoter_contact"
+        android:paddingBottom="10dp" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/promotorDetails"
-        android:layout_marginTop="15dp"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="5dp" >
-    </ListView>
+        android:layout_below="@id/promoterDetails"
+        android:layout_marginTop="15dp" >
+
+        <ListView
+            android:id="@+id/promoterTimeLineList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10dp" >
+        </ListView>
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/userForm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/mapFrame_ref"
-        android:layout_below="@id/promotorDetails"
+        android:layout_below="@id/promoterDetails"
         android:divider="@color/app_background_color"
         android:dividerHeight="10dp"
         android:paddingTop="20dp" />

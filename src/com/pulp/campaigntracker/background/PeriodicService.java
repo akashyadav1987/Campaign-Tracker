@@ -27,7 +27,7 @@ public class PeriodicService extends Service {
 		 * Check if app is initialized
 		 */
 		SharedPreferences prefs = UtilityMethods
-				.getInitPreferences(getBaseContext());
+				.getAppPreferences(getApplicationContext());
 		TLog.d(TAG, "AlarmManager");
 
 		// if(prefs.getBoolean(ConstantUtils.INIT, false))
@@ -41,7 +41,7 @@ public class PeriodicService extends Service {
 			// if(prefs.getInt(ConstantUtils.LOCATION_INTERVAL, 1)!=1)
 			// {
 
-			long updateInterval = ConstantUtils.INTERVAL_UPDATE
+			long updateInterval = ConstantUtils.LOCATION_UPDATE_INTERVAL
 					* prefs.getInt(ConstantUtils.LOCATION_INTERVAL, 1);
 
 			Intent serviceIntent = new Intent(PeriodicService.this,

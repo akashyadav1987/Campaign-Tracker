@@ -1,3 +1,4 @@
+
 {
     "fetch": {
         "total": "400",
@@ -14,11 +15,16 @@
                 "email": "sdbsb@sndjsn.com",
                 "address": "308 Raleigh Place, West Bengal, 4317",
                 "gender": "male",
-                "campagin": "Intel Campagin",
-                "store": "Chrome Store"
+                 "status": "active",
+                "campagin": "Intel Hired Campaign 01",
+                "store": "Chrome Store",
+                "campaign_start_date":"1/9/2014",
+                "campaign_end_date":"31/9/2014",
+                "store_start_date":"1/9/2014",
+                "store_end_date":"31/9/2014"
             },
             {
-                "id": 1,
+                "id": 2,
                 "name": "Nikhil",
                 "store_id": 1,
                 "role": "promotor",
@@ -26,11 +32,16 @@
                 "email": "sdbsb@sndjsn.com",
                 "address": "308 Raleigh Place, West Bengal, 4317",
                 "gender": "male",
-                "campagin": "Intel Campagin",
-                "store": "Chrome Store"
+                 "status": "active",
+                "campagin": "Intel Hired Campaign 02",
+                "store": "Vijay Sales Store",
+                "campaign_start_date":"1/9/2014",
+                "campaign_end_date":"31/9/2014",
+                "store_start_date":"1/9/2014",
+                "store_end_date":"31/9/2014"
             },
             {
-                "id": 1,
+                "id": 3,
                 "name": "Udit",
                 "store_id": 1,
                 "role": "promotor",
@@ -38,11 +49,16 @@
                 "email": "sdbsb@sndjsn.com",
                 "address": "308 Raleigh Place, West Bengal, 4317",
                 "gender": "male",
-                "campagin": "Intel Campagin",
-                "store": "Chrome Store"
+                 "status": "inactive",
+                "campagin": "",
+                "store": "",
+                "campaign_start_date":"",
+                "campaign_end_date":"",
+                "store_start_date":"",
+                "store_end_date":""
             },
             {
-                "id": 1,
+                "id": 4,
                 "name": "Akhilesh",
                 "store_id": 1,
                 "role": "promotor",
@@ -50,11 +66,15 @@
                 "email": "sdbsb@sndjsn.com",
                 "address": "308 Raleigh Place, West Bengal, 4317",
                 "gender": "male",
-                "campagin": "Intel Campagin",
-                "store": "Chrome Store"
-            },
+                "campagin": "Intel Hired Campaign 01",
+                "store": "Nimbus Store",
+                 "status": "active",
+                "campaign_start_date":"1/9/2014",
+                "campaign_end_date":"31/9/2014",
+                "store_start_date":"1/9/2014",
+                "store_end_date":"31/9/2014"            },
             {
-                "id": 2,
+                "id": 5,
                 "name": "Ramesh",
                 "store_id": 2,
                 "role": "promotor",
@@ -62,51 +82,67 @@
                 "email": "sdbsb@sndjsn.com",
                 "address": "308 Raleigh Place, West Bengal, 4317",
                 "gender": "male",
-                "campagin": "Intel Campagin",
+                 "status": "active",
+                "campagin": "Intel Hired Campaign 01",
                 "store": "Chrome Store",
-                "status": "active"
+                "status": "active",
+                "campaign_start_date":"1/9/2014",
+                "campaign_end_date":"31/9/2014",
+                "store_start_date":"1/9/2014",
+                "store_end_date":"31/9/2014"
             },
             {
-                "id": 1,
-                "name": "Suresh",
+                "id": 6,
+                "name": "Sohan",
                 "store_id": 3,
                 "role": "promotor",
                 "contact_no": "91-981223332",
                 "email": "sdbsb@sndjsn.com",
                 "address": "308 Raleigh Place, West Bengal, 4317",
                 "gender": "male",
-                "campagin": "Intel Campagin",
-                "store": "Chrome Store",
-                "status": "active"
+                 "status": "inactive",
+             "campagin": "Intel Hired Campaign 01",
+                "store": "",
+                "campaign_start_date":"",
+                "campaign_end_date":"",
+                "store_start_date":"",
+                "store_end_date":""
             },
             {
-                "id": 1,
-                "name": "Mahesh",
+                "id": 7,
+                "name": "Mukul",
                 "store_id": 1,
                 "role": "promotor",
                 "contact_no": "91-981223332",
                 "email": "sdbsb@sndjsn.com",
                 "address": "308RaleighPlace,WestBengal,4317",
                 "gender": "male",
-                "campagin": "Intel Campagin",
+                "campagin": "Intel Hired Campaign 01",
                 "store": "Chrome Store",
-                "status": "inactive"
-            },
+                "status": "active",
+                "campaign_start_date":"1/9/2014",
+                "campaign_end_date":"31/9/2014",
+                "store_start_date":"1/9/2014",
+                "store_end_date":"31/9/2014"            },
             {
-                "id": 2,
-                "name": "Ramesh",
+                "id": 8,
+                "name": "Rohan",
                 "store_id": 2,
                 "role": "promotor",
                 "contact_no": "91-981223332",
                 "email": "sdbsb@sndjsn.com",
                 "address": "308RaleighPlace,WestBengal,4317",
                 "gender": "male",
-                "campagin": "Intel Campagin",
+                 "campagin": "Intel Hired Campaign 01",
                 "store": "Chrome Store",
-                "status": "active"
+                "status": "inactive",
+                "campaign_start_date":"",
+                "campaign_end_date":"",
+                "store_start_date":"",
+                "store_end_date":""
             },
             {
-                "id": 1,
+                "id": 9,
                 "name": "Suresh",
                 "store_id": 3,
                 "role": "promotor",
@@ -114,8 +150,13 @@
                 "email": "sdbsb@sndjsn.com",
                 "address": "308RaleighPlace,WestBengal,4317",
                 "gender": "male",
-                "campagin": "Intel Campagin",
-                "store": "Chrome Store"
+                 "status": "active",
+                "campagin": "Intel Hired Campaign 01",
+                "store": "Chrome Store",
+                "campaign_start_date":"1/9/2014",
+                "campaign_end_date":"31/9/2014",
+                "store_start_date":"1/9/2014",
+                "store_end_date":"31/9/2014"
             }
         ]
     }

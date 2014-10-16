@@ -59,26 +59,22 @@
         android:gravity="center"
         android:orientation="horizontal" >
 
-        <View
-            android:id="@+id/view2"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="0.10" />
+        
 
-        <Button
+      <!--   <Button
             android:id="@+id/backButton"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_weight="0.35"
             android:background="@drawable/white_button_selector"
             android:text="@string/back"
-            android:textColor="@drawable/button_text_selector" />
+            android:textColor="@drawable/button_text_selector" /> -->
 
         <View
             android:id="@+id/view3"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_weight="0.10" />
+            android:layout_weight="0.30" />
 
         <Button
             android:id="@+id/loginButton"
@@ -93,7 +89,7 @@
             android:id="@+id/view4"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_weight="0.10" />
+            android:layout_weight="0.30" />
     </LinearLayout>
 
     <EditText
@@ -105,10 +101,11 @@
         android:layout_alignLeft="@+id/emailId"
         android:layout_alignParentRight="true"
         android:background="@drawable/tracker_theme_edit_text_holo_light"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:hint="@string/password"
         android:inputType="textPassword"
-        android:paddingLeft="10dp" >
-    </EditText>
+        android:paddingLeft="10dp" />
 
     <EditText
         android:id="@+id/emailId"
@@ -120,6 +117,8 @@
         android:layout_marginBottom="15dp"
         android:layout_toRightOf="@+id/emailIcon"
         android:background="@drawable/tracker_theme_edit_text_holo_light"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:paddingLeft="10dp" />
@@ -133,12 +132,11 @@
         android:layout_alignLeft="@+id/emailId"
         android:layout_marginBottom="15dp"
         android:background="@drawable/tracker_theme_edit_text_holo_light"
-        android:cursorVisible="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:hint="@string/phone_no"
         android:inputType="number"
-        android:paddingLeft="10dp"
-        android:textCursorDrawable="@null" >
-    </EditText>
+        android:paddingLeft="10dp" />
 
     <TextView
         android:id="@+id/emailIcon"
