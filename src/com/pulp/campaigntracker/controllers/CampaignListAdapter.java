@@ -85,10 +85,9 @@ public class CampaignListAdapter extends BaseAdapter {
 		else
 			viewHolder.campaignStoreCount.setVisibility(View.GONE);
 
-		if (mCampaignList.get(position).getUserList() != null
-				&& getItem(position).getUserList().size() > 0)
+		if (getItem(position).getPromoterCount() != null)
 			viewHolder.campaignPromotorCount.setText(PROMOTORS
-					+ getItem(position).getUserList().size());
+					+ getItem(position).getPromoterCount()); //Ritu
 		else
 			viewHolder.campaignPromotorCount.setVisibility(View.GONE);
 

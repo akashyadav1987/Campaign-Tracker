@@ -15,7 +15,6 @@ import com.pulp.campaigntracker.utils.TLog;
 
 public class JsonResponseAdapter {
 
-
 	private static final String TAG = null;
 
 	/**
@@ -30,27 +29,48 @@ public class JsonResponseAdapter {
 		JSONObject jsonObj = null;
 
 		try {
-			jsonString  = HTTPConnectionWrapper.GetHttpResponse(url.toLowerCase());
-//			 final String s = new String(jsonString.getBytes(), "UTF-8");
-	
+			jsonString = HTTPConnectionWrapper.GetHttpResponse(url
+					.toLowerCase());
+			
+
 			Object jTObject = new JSONTokener(jsonString).nextValue();
 			if (jTObject instanceof JSONObject) {
 				jsonObj = new JSONObject(jsonString);
 			}
 
-		return jsonObj;
-		}
-		catch (JSONException e)
-		{
+			return jsonObj;
+		} catch (JSONException e) {
 			TLog.e("HTTP", "Invalid JSON Response", e);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			Log.e("json",e.toString());
+			Log.e("json", e.toString());
 			TLog.v(TAG, "Exception" + e.toString());
 		}
 
 		return jsonObj;
+	}
+
+	public static JSONObject postJSONToUrl(String url,
+			List<NameValuePair> params) {
+
+		JSONObject jObj = null;
+		String jsonString = null;
+
+		// Making HTTP post request
+
+		try {
+
+			jsonString = HTTPConnectionWrapper.postHTTPRequest(
+					url.toLowerCase(), params);
+
+			jObj = new JSONObject(jsonString);
+
+		} catch (Exception ex) {
+
+			ex.printStackTrace();
+		}
+		return jObj;
+
 	}
 
 	/**
@@ -64,19 +84,19 @@ public class JsonResponseAdapter {
 	public static JSONObject getJSONFromUrl(String url,
 			List<NameValuePair> params) {
 
-
 		JSONObject jObj = null;
 		String jsonString = null;
 
 		// Making HTTP post request
-
 		try {
+
+			jsonString = HTTPConnectionWrapper.postHTTPRequest(
+					url.toLowerCase(), params);
+
 			
-			jsonString  = HTTPConnectionWrapper.postHTTPRequest(url.toLowerCase(),params);
-	
 			jObj = new JSONObject(jsonString);
 		} catch (Exception ex) {
-			
+
 			ex.printStackTrace();
 		}
 		return jObj;
@@ -92,8 +112,8 @@ public class JsonResponseAdapter {
 		// Making HTTP post request
 		try {
 
-			
-			jsonString  = HTTPConnectionWrapper.postHTTPRequest(url.toLowerCase(),formSubmitValues);
+			jsonString = HTTPConnectionWrapper.postHTTPRequest(
+					url.toLowerCase(), formSubmitValues);
 
 			jObj = new JSONObject(jsonString);
 		} catch (Exception ex) {

@@ -25,6 +25,7 @@ import com.pulp.campaigntracker.beans.UserProfile;
 import com.pulp.campaigntracker.controllers.AssignStoreAdapter;
 import com.pulp.campaigntracker.utils.ConstantUtils;
 import com.pulp.campaigntracker.utils.TLog;
+import com.pulp.campaigntracker.utils.UtilityMethods;
 
 public class AssignStoreFragment extends android.support.v4.app.Fragment
 		implements android.widget.AdapterView.OnItemClickListener {
@@ -32,17 +33,11 @@ public class AssignStoreFragment extends android.support.v4.app.Fragment
 	private static final String TAG = AssignStoreFragment.class.getSimpleName();
 	private FragmentActivity mActivity;
 	private Context mContext;
-	private ListView storeList;
 	private String assignCampaignName;
-	private ProgressBar promotorListProgressBar;
 	private ListView assignStoreList;
 	private UserProfile userDetails;
 	String campaignDisplayName;
 	private ArrayList<CampaignDetails> campaignDetailsList;
-	// private List<StoreDetails> storeDetailsList;
-	private ArrayList<StoreDetails> storeDetailsList;
-
-	private StoreDetails mStoreDetails;
 	String storeName;
 
 	AssignStoreAdapter assignStoreAdapter;
@@ -58,7 +53,7 @@ public class AssignStoreFragment extends android.support.v4.app.Fragment
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		mActivity = getActivity();
-		mContext = getActivity().getBaseContext();
+		mContext = getActivity().getApplicationContext();
 
 	}
 
@@ -92,25 +87,20 @@ public class AssignStoreFragment extends android.support.v4.app.Fragment
 		}
 		assignStoreList = (ListView) view.findViewById(R.id.assignList);
 		assignStoreList.setOnItemClickListener(this);
-		// newStoreDetailsList.addAll(storeDetailsList);
+
 		newStoreDetailsList.addAll(mCampaignDetails.getStoreList());
-	//	newStoreDetailsList.addAll(storeDetailsList);
 		mEmptystoreDetails = new StoreDetails();
 		mEmptystoreDetails.setName("None");
 		newStoreDetailsList.add(0, mEmptystoreDetails);
-
 		assignStoreList = (ListView) view.findViewById(R.id.assignList);
 
 		if (assignStoreAdapter == null)
 			assignStoreAdapter = new AssignStoreAdapter(mContext,
 					newStoreDetailsList);
 
-		// assignStoreAdapter = new AssignStoreAdapter(mContext,
-		// storeDetailsList);
-
 		assignStoreAdapter.notifyDataSetChanged();
 		assignStoreList.setAdapter(assignStoreAdapter);
-		// storeList.setAdapter(assignStoreAdapter);
+
 	
 		return view;
 	}
@@ -132,14 +122,9 @@ public class AssignStoreFragment extends android.support.v4.app.Fragment
 			
 			
 			selectedStore=newStoreDetailsList.get(position).getName();
-			
-			
-
-			mActivity
-					.getApplicationContext()
-					.getSharedPreferences(ConstantUtils.ASSIGN_PREF, 0)
+				UtilityMethods.getAppPreferences(mContext)
 					.edit()
-					.putString(ConstantUtils.ASSIGN_STORE_PREF, selectedStore)
+					.putString(ConstantUtils.ASSIGN_STORE, selectedStore)
 					.commit();
 
 			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -166,7 +151,7 @@ public class AssignStoreFragment extends android.support.v4.app.Fragment
 									mBundle.putParcelable(ConstantUtils.USER_DETAILS, userDetails);
 									mBundle.putString(ConstantUtils.ASSIGN_CAMPAIGN_NAME,
 											assignCampaignName);
-									((SupervisorMotherActivity) mActivity)
+									((UserMotherActivity) mActivity)
 											.onItemSelected(
 													promotorDetailsFragment,
 													true);
@@ -186,7 +171,7 @@ public class AssignStoreFragment extends android.support.v4.app.Fragment
 									mBundle.putParcelable(ConstantUtils.USER_DETAILS, userDetails);
 									mBundle.putString(ConstantUtils.ASSIGN_CAMPAIGN_NAME,
 											assignCampaignName);
-									((SupervisorMotherActivity) mActivity)
+									((UserMotherActivity) mActivity)
 											.onItemSelected(
 													promotorDetailsFragment,
 													true);

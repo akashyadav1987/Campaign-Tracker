@@ -24,6 +24,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,7 +45,7 @@ import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.beans.InitData;
 import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.utils.ConstantUtils;
-import com.pulp.campaigntracker.utils.ConstantUtils.LoginType;
+
 import com.pulp.campaigntracker.utils.TLog;
 import com.pulp.campaigntracker.utils.TypeFaceUtil;
 import com.pulp.campaigntracker.utils.TypeFaceUtil.EnumCustomTypeFace;
@@ -55,7 +56,7 @@ import com.pulp.campaigntracker.utils.UtilityMethods;
  */
 public class SplashScreen extends Activity {
 
-	public static final String EXTRA_MESSAGE = "message";
+
 
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
@@ -78,9 +79,8 @@ public class SplashScreen extends Activity {
 
 	private ImageLoader imageLoader;
 	private DisplayImageOptions options;
-
 	private TextView splashIcon;
-
+    private SharedPreferences mApppref;
 	/**
 	 * Check the device to make sure it has the Google Play Services APK. If it
 	 * doesn't, display a dialog that allows users to download the APK from the
@@ -119,7 +119,8 @@ public class SplashScreen extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.splash_screen);
-
+		
+		
 		splashIcon = (TextView) findViewById(R.id.splashIcon);
 		TypeFaceUtil.getInstance(getBaseContext()).setCustomTypeFaceText(
 				EnumCustomTypeFace.ICOMOON, splashIcon);
@@ -127,6 +128,9 @@ public class SplashScreen extends Activity {
 
 		context.registerReceiver(this.mBatInfoReceiver, new IntentFilter(
 				Intent.ACTION_BATTERY_CHANGED));
+		
+		mApppref = UtilityMethods.getAppPreferences(context);
+
 
 		// Check device for Play Services APK. If check succeeds, proceed with
 		// GCM registration.
@@ -143,16 +147,16 @@ public class SplashScreen extends Activity {
 			Log.i(TAG, "No valid Google Play Services APK found.");
 		}
 
-		if (UtilityMethods.getLoginPreferences(getApplicationContext())
+		if (UtilityMethods.getAppPreferences(getApplicationContext())
 				.getString(ConstantUtils.USER_EMAIL, "").isEmpty()
-				&& UtilityMethods.getLoginPreferences(getApplicationContext())
+				&& UtilityMethods.getAppPreferences(getApplicationContext())
 						.getString(ConstantUtils.USER_NUMBER, "").isEmpty()) {
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
 
 					Intent intent = new Intent(getApplicationContext(),
-							ChooseUser.class);
+							LoginActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 					if (!isFinishing())
@@ -162,23 +166,17 @@ public class SplashScreen extends Activity {
 			}, 2000);
 		} else {
 			LoginData mLoginData = LoginData.getInstance();
-			mLoginData.setUsername(UtilityMethods.getLoginPreferences(
-					getApplicationContext()).getString(
+			mLoginData.setUsername(mApppref.getString(
 					ConstantUtils.LOGIN_NAME, ""));
-			mLoginData.setEmail(UtilityMethods.getLoginPreferences(
-					getApplicationContext()).getString(
+			mLoginData.setEmail(mApppref.getString(
 					ConstantUtils.USER_EMAIL, ""));
-			mLoginData.setPhoneNo(UtilityMethods.getLoginPreferences(
-					getApplicationContext()).getString(
+			mLoginData.setPhoneNo(mApppref.getString(
 					ConstantUtils.USER_NUMBER, ""));
-			mLoginData.setId(UtilityMethods.getLoginPreferences(
-					getApplicationContext()).getString(ConstantUtils.LOGIN_ID,
+			mLoginData.setId(mApppref.getString(ConstantUtils.LOGIN_ID,
 					""));
-			mLoginData.setAuthToken(UtilityMethods.getLoginPreferences(
-					getApplicationContext()).getString(
+			mLoginData.setAuthToken(mApppref.getString(
 					ConstantUtils.AUTH_TOKEN, ""));
-			mLoginData.setRole(UtilityMethods.getLoginPreferences(
-					getApplicationContext()).getString(ConstantUtils.USER_ROLE,
+			mLoginData.setRole(mApppref.getString(ConstantUtils.USER_ROLE,
 					""));
 
 			new Handler().postDelayed(new Runnable() {
@@ -186,16 +184,16 @@ public class SplashScreen extends Activity {
 				public void run() {
 
 					Intent intent = null;
-					if (LoginData.getInstance().getRole()
-							.equals(LoginType.promotor.toString())) {
-						intent = new Intent(getApplicationContext(),
-								PromotorMotherActivity.class);
-					} else {
+//					if (LoginData.getInstance().getRole()
+//							.equals(LoginType.promotor.toString())) {
+//						intent = new Intent(context,
+//								PromotorMotherActivity.class);
+//					} else {
 
 						intent = new Intent(getApplicationContext(),
-								SupervisorMotherActivity.class);
+								UserMotherActivity.class);
 
-					}
+//					}
 
 					if (!isFinishing()) {
 						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -221,9 +219,7 @@ public class SplashScreen extends Activity {
 				.enableLogging().build();
 		// Initialize ImageLoader with created configuration. Do it once.
 		imageLoader.init(config);
-		options = new DisplayImageOptions.Builder().cacheInMemory()
-				.cacheOnDisc().displayer(new RoundedBitmapDisplayer(20))
-				.build();
+		
 	}
 
 	

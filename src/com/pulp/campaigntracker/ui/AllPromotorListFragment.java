@@ -22,6 +22,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView.FindListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
@@ -31,14 +33,20 @@ import android.widget.Toast;
 
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.beans.CampaignDetails;
+import com.pulp.campaigntracker.beans.SinglePromotorData;
 import com.pulp.campaigntracker.beans.UserProfile;
+import com.pulp.campaigntracker.controllers.NotificationListAdapter;
 import com.pulp.campaigntracker.controllers.NotificationListFragment;
-import com.pulp.campaigntracker.controllers.PromotorListAdapter;
+import com.pulp.campaigntracker.controllers.UserListAdapter;
+import com.pulp.campaigntracker.listeners.FetchMoreListner;
+import com.pulp.campaigntracker.listeners.UserDetailsRecieved;
+import com.pulp.campaigntracker.parser.JsonGetPromotorDetails;
 import com.pulp.campaigntracker.utils.ConstantUtils;
 import com.pulp.campaigntracker.utils.TLog;
+import com.pulp.campaigntracker.utils.UtilityMethods;
 
 public class AllPromotorListFragment extends Fragment implements
-		OnItemClickListener {
+		OnItemClickListener, UserDetailsRecieved, OnScrollListener {
 
 	private static final String TAG = AllPromotorListFragment.class
 			.getSimpleName();
@@ -52,7 +60,7 @@ public class AllPromotorListFragment extends Fragment implements
 	private ArrayList<UserProfile> mActivePromotorList;
 	private ArrayList<UserProfile> mInactivePromotorList;
 
-	private PromotorListAdapter promotorListAdapter;
+	private UserListAdapter userListAdapter;
 	private ListView promotorList;
 	private EditText inputSearch;
 	private TextView searchIcon;
@@ -60,6 +68,8 @@ public class AllPromotorListFragment extends Fragment implements
 	private String campaignDisplayName;
 	private ArrayList<Parcelable> mUserForm;
 	private boolean activeorinactive = true;
+	private FetchMoreListner mCallBack;
+	private ArrayList<UserProfile> mList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -98,7 +108,7 @@ public class AllPromotorListFragment extends Fragment implements
 			mUserForm = mBundle
 					.getParcelableArrayList(ConstantUtils.USER_FORM_LIST);
 			mPromotorList = mBundle
-					.getParcelableArrayList(ConstantUtils.PROMOTOR_LIST);
+					.getParcelableArrayList(ConstantUtils.USER_LIST);
 			TLog.v(TAG, "mBundle " + mBundle);
 			setActionBarTitle();
 
@@ -119,12 +129,12 @@ public class AllPromotorListFragment extends Fragment implements
 			}
 		}
 
-		if (promotorListAdapter == null)
-			promotorListAdapter = new PromotorListAdapter(mContext,
-					mActivePromotorList);
+		if (userListAdapter == null)
+			userListAdapter = new UserListAdapter(mContext,
+					mPromotorList);
 
-		promotorListAdapter.notifyDataSetChanged();
-		promotorList.setAdapter(promotorListAdapter);
+		userListAdapter.notifyDataSetChanged();
+		promotorList.setAdapter(userListAdapter);
 		searchIcon = (TextView) view.findViewById(R.id.searchIcon);
 		searchIcon.setTypeface(icomoon);
 		inputSearch.addTextChangedListener(new TextWatcher() {
@@ -137,7 +147,7 @@ public class AllPromotorListFragment extends Fragment implements
 				String text = inputSearch.getText().toString()
 						.toLowerCase(Locale.getDefault());
 
-				promotorListAdapter.filter(text);
+				userListAdapter.filter(text);
 
 			}
 
@@ -154,7 +164,7 @@ public class AllPromotorListFragment extends Fragment implements
 
 			}
 		});
-
+		promotorList.setOnScrollListener(this);
 		return view;
 	}
 
@@ -179,18 +189,18 @@ public class AllPromotorListFragment extends Fragment implements
 		switch (item.getItemId()) {
 		case R.id.activePromoters:
 			activeorinactive = true;
-			promotorListAdapter = new PromotorListAdapter(mContext,
+			userListAdapter = new UserListAdapter(mContext,
 					mActivePromotorList);
-			promotorListAdapter.notifyDataSetChanged();
-			promotorList.setAdapter(promotorListAdapter);
+			userListAdapter.notifyDataSetChanged();
+			promotorList.setAdapter(userListAdapter);
 			break;
 
 		case R.id.inactivePromoters:
 			activeorinactive = false;
-			promotorListAdapter = new PromotorListAdapter(mContext,
+			userListAdapter = new UserListAdapter(mContext,
 					mInactivePromotorList);
-			promotorListAdapter.notifyDataSetChanged();
-			promotorList.setAdapter(promotorListAdapter);
+			userListAdapter.notifyDataSetChanged();
+			promotorList.setAdapter(userListAdapter);
 
 			break;
 		default:
@@ -231,11 +241,11 @@ public class AllPromotorListFragment extends Fragment implements
 
 				promotorDetailsFragment.setArguments(mBundle);
 
-				((SupervisorMotherActivity) mActivity).onItemSelected(
+				((UserMotherActivity) mActivity).onItemSelected(
 						promotorDetailsFragment, true);
 
 			} catch (Exception e) {
-				Toast.makeText((SupervisorMotherActivity) mActivity,
+				Toast.makeText((UserMotherActivity) mActivity,
 						"ArrayOutOfBounds", Toast.LENGTH_SHORT).show();
 			}
 			break;
@@ -246,4 +256,52 @@ public class AllPromotorListFragment extends Fragment implements
 
 	}
 
+	private void execute() {
+		JsonGetPromotorDetails jsonGetPromotorDetails = new JsonGetPromotorDetails();
+		StringBuilder url = new StringBuilder();
+		url.append(ConstantUtils.USER_DETAILS_URL);
+		// url.append(mCampaignDetails.getId());
+		jsonGetPromotorDetails.getPromotorDetailsFromURL(url.toString(), this,
+				mContext, "0", "0", mPromotorList.size(), ConstantUtils.MAX_USER_RESPONSE_COUNT);
+
+	}
+
+	@Override
+	public void onUserDetailsRecieved(SinglePromotorData mSinglePromotorData) {
+		if (mSinglePromotorData.getPersonalDetails() != null
+				&& mSinglePromotorData.getPersonalDetails().size() > 0) {
+			mList = mSinglePromotorData.getPersonalDetails();
+			// for (int i = 0; i < mList.size(); i++) {
+			// if (mList.get(i).getStatus().equals("active")) {
+			// mActivePromotorList.add(mList.get(i));
+			// } else if (mList.get(i).getStatus().equals("inactive")) {
+			// mInactivePromotorList.add(mList.get(i));
+			// }
+			// }
+
+			mPromotorList.addAll(mList);
+
+			UtilityMethods.refreshList(userListAdapter, promotorList,
+					mPromotorList, mContext);
+		}
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+		
+			int lastInScreen = firstVisibleItem + visibleItemCount;
+//		if ((lastInScreen == totalItemCount) && !(ConstantUtils.loadingMore)) {
+		if (lastInScreen == totalItemCount){
+			Toast.makeText(mContext, "Size" + mPromotorList.size(),
+					Toast.LENGTH_LONG).show();
+			execute();
+		}
+	}
 }

@@ -28,6 +28,7 @@ import com.pulp.campaigntracker.controllers.AssignCampaignAdapter;
 import com.pulp.campaigntracker.utils.ConstantUtils;
 import com.pulp.campaigntracker.utils.ObjectSerializer;
 import com.pulp.campaigntracker.utils.TLog;
+import com.pulp.campaigntracker.utils.UtilityMethods;
 
 public class AssignCampaignFragment extends android.support.v4.app.Fragment
 		implements OnItemClickListener {
@@ -39,20 +40,13 @@ public class AssignCampaignFragment extends android.support.v4.app.Fragment
 	private StoreDetails mStoreDetails;
 	private ArrayList<UserFormDetails> mUserForm;
 	private UserProfile userDetails;
-	private ListView storeList;
 	private ListView assignCampaignList;
-	private ProgressBar promotorListProgressBar;
-	private ListView assignStoreList;
-	// private List<StoreDetails> campaignDetailsList;
-	// private List<CampaignDetails> campaignDetailsList;
 	private ArrayList<CampaignDetails> campaignDetailsList;
 
-	private List<StoreDetails> storeDetailsList;
 	private CampaignDetails mEmptyCamapign = null;
 	private ArrayList<CampaignDetails> newCampaignDetailsList;
 	AssignCampaignAdapter assignCampaignAdapter;
 
-	private CampaignDetails mCampaignDetails;
 	private String campaignDisplayName;
 	private String assignStoreName;
 	private String selectedCampaign;
@@ -133,11 +127,9 @@ public class AssignCampaignFragment extends android.support.v4.app.Fragment
 
 			selectedCampaign = newCampaignDetailsList.get(position).getName();
 
-			mActivity
-					.getApplicationContext()
-					.getSharedPreferences(ConstantUtils.ASSIGN_PREF, 0)
+			UtilityMethods.getAppPreferences(mContext)
 					.edit()
-					.putString(ConstantUtils.ASSIGN_CAMAIGN_PREF, selectedCampaign)
+					.putString(ConstantUtils.ASSIGN_CAMAIGN, selectedCampaign)
 					.commit();
 
 			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -176,7 +168,7 @@ public class AssignCampaignFragment extends android.support.v4.app.Fragment
 											userDetails);
 									promotorDetailsFragment
 											.setArguments(mBundle);
-									((SupervisorMotherActivity) mActivity)
+									((UserMotherActivity) mActivity)
 											.onItemSelected(
 													promotorDetailsFragment,
 													true);
@@ -207,7 +199,7 @@ public class AssignCampaignFragment extends android.support.v4.app.Fragment
 											userDetails);
 									promotorDetailsFragment
 											.setArguments(mBundle);
-									((SupervisorMotherActivity) mActivity)
+									((UserMotherActivity) mActivity)
 											.onItemSelected(
 													promotorDetailsFragment,
 													true);

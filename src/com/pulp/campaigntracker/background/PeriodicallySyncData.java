@@ -8,6 +8,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.IBinder;
 import android.util.Base64;
@@ -39,7 +40,7 @@ public class PeriodicallySyncData extends Service{
 	private final String ID = null;
 	private final String NAME = null;
 	private final String DEVICEID = null;
-
+	SharedPreferences pref = UtilityMethods.getAppPreferences(getApplicationContext());
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub
@@ -52,7 +53,9 @@ public class PeriodicallySyncData extends Service{
 		/*
 		 * Get LocationDatabase and push all unsent data to server.
 		 */
-		AUTH_TOKEN = getSharedPreferences(ConstantUtils.LOGIN, 0).getString(ConstantUtils.AUTH_TOKEN, "");
+		
+		
+		AUTH_TOKEN = pref.getString(ConstantUtils.AUTH_TOKEN, "");
 		pushLocationUnsentData(ConstantUtils.POST_LOCATION_URL + AUTH_TOKEN);
 		/*
 		 * Get LoginDatabase and push all unsent data to server.
@@ -65,7 +68,8 @@ public class PeriodicallySyncData extends Service{
 		pushFormUnsentData(ConstantUtils.POST_FORM_DATA_URL + AUTH_TOKEN);
 
 		// Put the current time in sync preference after the sync is done.
-		getBaseContext().getSharedPreferences(ConstantUtils.SYNC_TO_SERVER, 0).edit().putLong(ConstantUtils.LAST_SYNC_TIME,System.currentTimeMillis()).commit();
+		UtilityMethods.getAppPreferences(getApplicationContext()).edit().putLong(ConstantUtils.LAST_SYNC_TIME,System.currentTimeMillis()).commit();
+
 		
 		return super.onStartCommand(intent, flags, startId);
 	}
@@ -81,8 +85,8 @@ public class PeriodicallySyncData extends Service{
 		nameValuePairs.add(new BasicNameValuePair(LATITUDE,Double.toString(loc.getLatitude())));
 		nameValuePairs.add(new BasicNameValuePair(LONGITIUE,Double.toString(loc.getLongitude())));
 		
-		nameValuePairs.add(new BasicNameValuePair(ID,getSharedPreferences(ConstantUtils.LOGIN, 0).getString(ConstantUtils.LOGIN_ID, "")));
-		nameValuePairs.add(new BasicNameValuePair(DEVICEID,getSharedPreferences(ConstantUtils.LOGIN, 0).getString(ConstantUtils.DEVICEID, "")));
+		nameValuePairs.add(new BasicNameValuePair(ID,pref.getString(ConstantUtils.LOGIN_ID, "")));
+		nameValuePairs.add(new BasicNameValuePair(DEVICEID,pref.getString(ConstantUtils.DEVICEID, "")));
 		nameValuePairs.add(new BasicNameValuePair(HASH, UtilityMethods
 				.calculateSyncHash(nameValuePairs)));
 		TLog.v(TAG, "nameValuePairs : "+nameValuePairs);
@@ -95,8 +99,8 @@ public class PeriodicallySyncData extends Service{
 		nameValuePairs.add(new BasicNameValuePair(IMAGE,Base64.encodeToString(image, 0)));
 		nameValuePairs.add(new BasicNameValuePair(LOGIN_STATUS,Integer.toString(loginStatus)));
 		
-		nameValuePairs.add(new BasicNameValuePair(ID,getSharedPreferences(ConstantUtils.LOGIN, 0).getString(ConstantUtils.LOGIN_ID, "")));
-		nameValuePairs.add(new BasicNameValuePair(DEVICEID,getSharedPreferences(ConstantUtils.LOGIN, 0).getString(ConstantUtils.DEVICEID, "")));
+		nameValuePairs.add(new BasicNameValuePair(ID,pref.getString(ConstantUtils.LOGIN_ID, "")));
+		nameValuePairs.add(new BasicNameValuePair(DEVICEID,pref.getString(ConstantUtils.DEVICEID, "")));
 		nameValuePairs.add(new BasicNameValuePair(HASH, UtilityMethods
 				.calculateSyncHash(nameValuePairs)));
 		TLog.v(TAG, "nameValuePairs : "+nameValuePairs);
@@ -110,8 +114,8 @@ public class PeriodicallySyncData extends Service{
 		nameValuePairs.add(new BasicNameValuePair(FORM_KEY,userFormDetails.getFieldName()));
 		nameValuePairs.add(new BasicNameValuePair(FORM_VALUE,userFormDetails.getFieldValue()));
 		
-		nameValuePairs.add(new BasicNameValuePair(ID,getSharedPreferences(ConstantUtils.LOGIN, 0).getString(ConstantUtils.LOGIN_ID, "")));
-		nameValuePairs.add(new BasicNameValuePair(DEVICEID,getSharedPreferences(ConstantUtils.LOGIN, 0).getString(ConstantUtils.DEVICEID, "")));
+		nameValuePairs.add(new BasicNameValuePair(ID,getSharedPreferences(ConstantUtils.CAMPAIGNTRACKER_PREF, 0).getString(ConstantUtils.LOGIN_ID, "")));
+		nameValuePairs.add(new BasicNameValuePair(DEVICEID,getSharedPreferences(ConstantUtils.CAMPAIGNTRACKER_PREF, 0).getString(ConstantUtils.DEVICEID, "")));
 		nameValuePairs.add(new BasicNameValuePair(HASH, UtilityMethods
 				.calculateSyncHash(nameValuePairs)));
 		TLog.v(TAG, "nameValuePairs : "+nameValuePairs);

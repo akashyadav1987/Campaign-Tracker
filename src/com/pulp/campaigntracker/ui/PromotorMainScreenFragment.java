@@ -72,7 +72,7 @@ import com.pulp.campaigntracker.listeners.UserLocationManager;
 import com.pulp.campaigntracker.parser.JsonGetCampaignDetails;
 import com.pulp.campaigntracker.parser.JsonGetStoreDistance;
 import com.pulp.campaigntracker.utils.ConstantUtils;
-import com.pulp.campaigntracker.utils.ConstantUtils.LoginType;
+//import com.pulp.campaigntracker.utils.ConstantUtils.LoginType;
 import com.pulp.campaigntracker.utils.TLog;
 import com.pulp.campaigntracker.utils.UtilityMethods;
 
@@ -379,7 +379,8 @@ public class PromotorMainScreenFragment extends Fragment implements
 		jsonGetCampaignDetails.getCampaignDetailsFromURL(
 				ConstantUtils.CAMPAIGN_DETAILS_URL, this, LoginData
 						.getInstance().getId(), LoginData.getInstance()
-						.getAuthToken(), LoginType.promotor, mContext);
+						.getAuthToken(),  LoginData.getInstance()
+						.getRole(), mContext);
 
 	}
 

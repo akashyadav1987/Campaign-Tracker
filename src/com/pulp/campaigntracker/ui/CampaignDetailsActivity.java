@@ -16,7 +16,7 @@ import com.pulp.campaigntracker.controllers.StoreDetailsAdapter;
 import com.pulp.campaigntracker.listeners.CampaignDetailsRecieved;
 import com.pulp.campaigntracker.parser.JsonGetCampaignDetails;
 import com.pulp.campaigntracker.utils.ConstantUtils;
-import com.pulp.campaigntracker.utils.ConstantUtils.LoginType;
+
 
 public class CampaignDetailsActivity extends Activity implements CampaignDetailsRecieved,OnClickListener{
 
@@ -55,7 +55,7 @@ public class CampaignDetailsActivity extends Activity implements CampaignDetails
 	public void executeQuery()
 	{
 		jsonGetCampaignDetails = JsonGetCampaignDetails.getInstance();
-		jsonGetCampaignDetails.getCampaignDetailsFromURL(ConstantUtils.CAMPAIGN_DETAILS_URL, this,LoginData.getInstance().getId(), LoginData.getInstance().getAuthToken(), LoginType.supervisor,getBaseContext());
+		jsonGetCampaignDetails.getCampaignDetailsFromURL(ConstantUtils.CAMPAIGN_DETAILS_URL, this,LoginData.getInstance().getId(), LoginData.getInstance().getAuthToken(), LoginData.getInstance().getRole(),getBaseContext());
 		//jsonGetCampaignDetails.getCampaignDetailsFromURL(ConstantUtils.CAMPAIGN_DETAILS_URL, this, LoginType.supervisor,getBaseContext());
 	}
 

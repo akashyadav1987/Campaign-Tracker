@@ -14,6 +14,7 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -58,12 +59,17 @@ import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.R.integer;
 import com.pulp.campaigntracker.R.string;
+import com.pulp.campaigntracker.beans.UserProfile;
+import com.pulp.campaigntracker.controllers.UserListAdapter;
 import com.pulp.campaigntracker.dao.UserLoginStatusDatabase;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -79,13 +85,7 @@ public class UtilityMethods {
 	public static String SECURITY_SALT = "a%pULp0StRaTeGy$!";
 	
 
-//	public static SplashScreen getmSplashScreen() {
-//		return mSplashScreen;
-//	}
-//
-//	public static void setmSplashScreen(SplashScreen mSplashScreen) {
-//		UtilityMethods.mSplashScreen = mSplashScreen;
-//	}
+
 
 
 	/**
@@ -810,17 +810,45 @@ public class UtilityMethods {
 
 	}
 
+//	/**
+//	 * Return the init shared preference for the app.
+//	 * 
+//	 * @param context
+//	 * @return {@link SharedPreferences}
+//	 */
+//	public static SharedPreferences getInitPreferences(Context context) {
+//		// This sample app persists the registration ID in shared preferences,
+//		// but
+//		// how you store the regID in your app is up to you.
+//		return context.getSharedPreferences(ConstantUtils.INIT,
+//				Context.MODE_PRIVATE);
+//	}
+	
 	/**
-	 * Return the init shared preference for the app.
+	 * Return the  string from shared preference for the app.
 	 * 
 	 * @param context
 	 * @return {@link SharedPreferences}
 	 */
-	public static SharedPreferences getInitPreferences(Context context) {
+	public static String getStringFromAppPreferences(Context context,String var) {
 		// This sample app persists the registration ID in shared preferences,
 		// but
 		// how you store the regID in your app is up to you.
-		return context.getSharedPreferences(ConstantUtils.INIT,
+		return context.getSharedPreferences(ConstantUtils.CAMPAIGNTRACKER_PREF,
+				Context.MODE_PRIVATE).getString(var, "");
+	}
+	
+	/**
+	 * Return the  string from shared preference for the app.
+	 * 
+	 * @param context
+	 * @return {@link SharedPreferences}
+	 */
+	public static SharedPreferences getAppPreferences(Context context) {
+		// This sample app persists the registration ID in shared preferences,
+		// but
+		// how you store the regID in your app is up to you.
+		return context.getSharedPreferences(ConstantUtils.CAMPAIGNTRACKER_PREF,
 				Context.MODE_PRIVATE);
 	}
 
@@ -843,12 +871,12 @@ public class UtilityMethods {
 	 *            registration ID
 	 */
 	public static void storeRegistrationId(Context context, String regId) {
-		final SharedPreferences prefs = getGcmPreferences(context);
+		final SharedPreferences prefs = getAppPreferences(context);
 		int appVersion = getAppVersion(context);
 		Log.i(TAG, "Saving regId on app version " + appVersion);
 		SharedPreferences.Editor editor = prefs.edit();
-		editor.putString(ConstantUtils.PROPERTY_GCM_REG_ID, regId);
-		editor.putInt(ConstantUtils.PROPERTY_APP_VERSION, appVersion);
+		editor.putString(ConstantUtils.GCM_REG_ID, regId);
+		editor.putInt(ConstantUtils.APP_VERSION, appVersion);
 		editor.commit();
 	}
 
@@ -862,9 +890,9 @@ public class UtilityMethods {
 	 *         registration ID.
 	 */
 	public static String getRegistrationId(Context context) {
-		final SharedPreferences prefs = getGcmPreferences(context);
+		final SharedPreferences prefs = getAppPreferences(context);
 		String registrationId = prefs.getString(
-				ConstantUtils.PROPERTY_GCM_REG_ID, "");
+				ConstantUtils.GCM_REG_ID, "");
 		if (registrationId != null && registrationId.equals("")) {
 			Log.i(TAG, "Registration not found.");
 			return "";
@@ -873,7 +901,7 @@ public class UtilityMethods {
 		// since the existing regID is not guaranteed to work with the new
 		// app version.
 		int registeredVersion = prefs.getInt(
-				ConstantUtils.PROPERTY_APP_VERSION, Integer.MIN_VALUE);
+				ConstantUtils.APP_VERSION, Integer.MIN_VALUE);
 		int currentVersion = getAppVersion(context);
 		if (registeredVersion != currentVersion) {
 			Log.i(TAG, "App version changed.");
@@ -896,26 +924,26 @@ public class UtilityMethods {
 		}
 	}
 
-	/**
-	 * @return Application's {@code SharedPreferences}.
-	 */
-	public static SharedPreferences getLoginPreferences(Context context) {
-		// This sample app persists the registration ID in shared preferences,
-		// but
-		// how you store the regID in your app is up to you.
-		return context.getSharedPreferences(ConstantUtils.LOGIN,
-				Context.MODE_PRIVATE);
-	}
+//	/**
+//	 * @return Application's {@code SharedPreferences}.
+//	 */
+//	public static SharedPreferences getLoginPreferences(Context context) {
+//		// This sample app persists the registration ID in shared preferences,
+//		// but
+//		// how you store the regID in your app is up to you.
+//		return context.getSharedPreferences(ConstantUtils.CAMPAIGNTRACKER_PREF,
+//				Context.MODE_PRIVATE);
+//	}
 
 	/**
 	 * @return Application's {@code SharedPreferences}.
 	 */
-	public static void setLoginPreferences(Context context, String key,
+	public static void setLoginDataInPref(Context context, String key,
 			String value) {
 		// This sample app persists the registration ID in shared preferences,
 		// but
 		// how you store the regID in your app is up to you.
-		final SharedPreferences prefs = getLoginPreferences(context);
+		final SharedPreferences prefs = getAppPreferences(context);
 
 		Log.i(TAG, "Saving login info on app version ");
 		SharedPreferences.Editor editor = prefs.edit();
@@ -924,16 +952,16 @@ public class UtilityMethods {
 
 	}
 
-	/**
-	 * @return Application's {@code SharedPreferences}.
-	 */
-	private static SharedPreferences getGcmPreferences(Context context) {
-		// This sample app persists the registration ID in shared preferences,
-		// but
-		// how you store the regID in your app is up to you.
-		return context.getSharedPreferences(ConstantUtils.GCM,
-				Context.MODE_PRIVATE);
-	}
+//	/**
+//	 * @return Application's {@code SharedPreferences}.
+//	 */
+//	private static SharedPreferences getGcmPreferences(Context context) {
+//		// This sample app persists the registration ID in shared preferences,
+//		// but
+//		// how you store the regID in your app is up to you.
+//		return context.getSharedPreferences(ConstantUtils.GCM,
+//				Context.MODE_PRIVATE);
+//	}
 
 	public static void ShowAlertDialog(Context context) {
 
@@ -985,5 +1013,16 @@ public class UtilityMethods {
 		{
 			asyncTask.execute(params);
 		}
+	}
+	
+	
+	public static void refreshList(BaseAdapter adapter,ListView listView,ArrayList<UserProfile> mList,Context context){
+		
+		adapter = new UserListAdapter(context, mList);
+		adapter.notifyDataSetChanged();
+		listView.setAdapter(adapter);
+
+		
+		
 	}
 }

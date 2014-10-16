@@ -42,6 +42,7 @@ import com.pulp.campaigntracker.controllers.UserFormAdapter;
 import com.pulp.campaigntracker.listeners.UserNotificationsRecieved;
 import com.pulp.campaigntracker.parser.JsonGetUserNotification;
 import com.pulp.campaigntracker.utils.ConstantUtils;
+import com.pulp.campaigntracker.utils.UtilityMethods;
 
 public class PromotorDetailsFragment extends Fragment implements
 		OnClickListener, UserNotificationsRecieved {
@@ -112,13 +113,14 @@ public class PromotorDetailsFragment extends Fragment implements
 	private ArrayList<UserProfile> mPromotorList;
 	private ArrayList<StoreDetails> storeDetailsList;
 	private ArrayList<UserProfile> mInactivePromotorList;
+	private boolean formButtonClicked;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		mActivity = getActivity();
-		mContext = getActivity().getBaseContext();
+		mContext = getActivity().getApplicationContext();
 
 	}
 
@@ -309,10 +311,8 @@ public class PromotorDetailsFragment extends Fragment implements
 			promotorTimeLineList.setVisibility(View.VISIBLE);
 		}
 
-		assignCampaignName = mActivity
-				.getApplicationContext()
-				.getSharedPreferences(ConstantUtils.ASSIGN_PREF, 0)
-				.getString(ConstantUtils.ASSIGN_CAMAIGN_PREF,
+		assignCampaignName = UtilityMethods.getAppPreferences(mContext)
+				.getString(ConstantUtils.ASSIGN_CAMAIGN,
 						userDetails.getCurrentCampagin());
 
 		if (assignCampaignName != null)
@@ -401,7 +401,7 @@ public class PromotorDetailsFragment extends Fragment implements
 						.show();
 			} else {
 				promoterContactLayout.setVisibility(View.INVISIBLE);
-				ConstantUtils.formButtonClicked = true;
+				formButtonClicked = true;
 				promoterCampaignDescription.setVisibility(View.INVISIBLE);
 				promotorTimeLineList.setVisibility(View.INVISIBLE);
 				userForm.setVisibility(View.VISIBLE);
@@ -468,7 +468,6 @@ public class PromotorDetailsFragment extends Fragment implements
 						campaignDetailsList);
 				mBundle.putParcelable(ConstantUtils.STORE_DETAILS,
 						mStoreDetails);
-				// mBundle.putParcelable(ConstantUtils.USER_DETAILS,);
 				mBundle.putParcelableArrayList(ConstantUtils.USER_FORM_LIST,
 						mUserForm);
 				mBundle.putParcelable(ConstantUtils.USER_DETAILS, userDetails);
@@ -480,11 +479,11 @@ public class PromotorDetailsFragment extends Fragment implements
 							assignStoreName);
 
 				assignCampaignFragment.setArguments(mBundle);
-				((SupervisorMotherActivity) mActivity).onItemSelected(
+				((UserMotherActivity) mActivity).onItemSelected(
 						assignCampaignFragment, true);
 
 			} catch (Exception e) {
-				Toast.makeText((SupervisorMotherActivity) mActivity,
+				Toast.makeText((UserMotherActivity) mActivity,
 						"ArrayOutOfBounds", Toast.LENGTH_LONG).show();
 			}
 			break;
@@ -512,7 +511,7 @@ public class PromotorDetailsFragment extends Fragment implements
 				mBundle.putString(ConstantUtils.ASSIGN_CAMPAIGN_NAME,
 						assignCampaignName);
 			assignStoreFragment.setArguments(mBundle);
-			((SupervisorMotherActivity) mActivity).onItemSelected(
+			((UserMotherActivity) mActivity).onItemSelected(
 					assignStoreFragment, true);
 
 			break;
@@ -522,13 +521,9 @@ public class PromotorDetailsFragment extends Fragment implements
 	}
 
 	public boolean onBack() {
-		if (ConstantUtils.formButtonClicked) {
-			// userForm.setVisibility(View.INVISIBLE);
-			// promotorTimeLineList.setVisibility(View.VISIBLE);
-		}
-		boolean temp = ConstantUtils.formButtonClicked;
-
-		ConstantUtils.formButtonClicked = false;
+		
+		boolean temp = formButtonClicked;
+		formButtonClicked = false;
 		return temp;
 
 	}
@@ -600,7 +595,7 @@ public class PromotorDetailsFragment extends Fragment implements
 
 		case R.id.notifications:
 			NotificationListFragment notificationListFragment = new NotificationListFragment();
-			((SupervisorMotherActivity) mActivity).onItemSelected(
+			((UserMotherActivity) mActivity).onItemSelected(
 					notificationListFragment, true);
 
 		default:

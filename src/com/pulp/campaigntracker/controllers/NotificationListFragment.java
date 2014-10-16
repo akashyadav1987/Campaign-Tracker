@@ -11,6 +11,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,9 +28,10 @@ import android.widget.Toast;
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.beans.UserNotification;
 import com.pulp.campaigntracker.ui.AllPromotorListFragment;
-import com.pulp.campaigntracker.ui.SupervisorMotherActivity;
+import com.pulp.campaigntracker.ui.UserMotherActivity;
 import com.pulp.campaigntracker.utils.ConstantUtils;
 import com.pulp.campaigntracker.utils.ObjectSerializer;
+import com.pulp.campaigntracker.utils.UtilityMethods;
 
 public class NotificationListFragment extends Fragment {
 
@@ -43,13 +45,16 @@ public class NotificationListFragment extends Fragment {
 	private ListView notificationList;
 	private View emptyText;
 	public static GcmReceiver gcmReceiver;
+	
+	private SharedPreferences mAppPref; 
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		mActivity = getActivity();
-		mContext = getActivity().getBaseContext();
+		mContext = getActivity().getApplicationContext();
+		mAppPref = UtilityMethods.getAppPreferences(mContext);
 
 	}
 
@@ -76,10 +81,7 @@ public class NotificationListFragment extends Fragment {
 		try {
 
 			mNotificationList = (ArrayList<UserNotification>) ObjectSerializer
-					.deserialize(mActivity
-							.getApplicationContext()
-							.getSharedPreferences(
-									ConstantUtils.NOTIFICATION_CACHE, 0)
+					.deserialize(mAppPref
 							.getString(ConstantUtils.NOTIFICATION, ""));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -123,8 +125,7 @@ public class NotificationListFragment extends Fragment {
 				mNotificationList.clear();
 				notificationListAdapter.notifyDataSetChanged();
 				try {
-					mContext.getSharedPreferences(
-							ConstantUtils.NOTIFICATION_CACHE, 0)
+						mAppPref
 							.edit()
 							.putString(
 									ConstantUtils.NOTIFICATION,
@@ -143,7 +144,7 @@ public class NotificationListFragment extends Fragment {
 			break;
 		case R.id.notifications:
 			NotificationListFragment notificationListFragment = new NotificationListFragment();
-			((SupervisorMotherActivity) mActivity).onItemSelected(
+			((UserMotherActivity) mActivity).onItemSelected(
 					notificationListFragment, true);
 		default:
 			break;
@@ -171,10 +172,7 @@ public class NotificationListFragment extends Fragment {
 			try {
 
 				mNotificationList = (ArrayList<UserNotification>) ObjectSerializer
-						.deserialize(mActivity
-								.getApplicationContext()
-								.getSharedPreferences(
-										ConstantUtils.NOTIFICATION_CACHE, 0)
+						.deserialize(mAppPref
 								.getString(ConstantUtils.NOTIFICATION, ""));
 			} catch (Exception e) {
 				e.printStackTrace();

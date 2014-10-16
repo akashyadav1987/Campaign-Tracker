@@ -230,14 +230,14 @@ public class PromotorMotherActivity extends ActionBarActivity implements
 	public void onInitDataRecieved(InitData initData) {
 		if (initData != null) {
 			SharedPreferences prefs = UtilityMethods
-					.getInitPreferences(getBaseContext());
+					.getAppPreferences(getApplicationContext());
 			SharedPreferences.Editor editor = prefs.edit();
 			editor.putInt(ConstantUtils.BATTERY_STATUS,
 					initData.getLocationBatteryStatus());
 			editor.putInt(ConstantUtils.LOCATION_INTERVAL,
 					initData.getLocationPeriodicInterval());
-//			editor.putInt(ConstantUtils.SYNC_INTERVAL,
-//					initData.getSyncUnsentDataInterval());
+			editor.putInt(ConstantUtils.SYNC_INTERVAL_TIME,
+					initData.getSyncUnsentDataInterval());
 			editor.putString(ConstantUtils.LOCATION_START_TIME,
 					initData.getLocationStartInterval());
 			editor.putString(ConstantUtils.LOCATION_END_TIME,

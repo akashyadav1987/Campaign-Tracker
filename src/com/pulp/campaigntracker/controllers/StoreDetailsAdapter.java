@@ -86,15 +86,16 @@ public class StoreDetailsAdapter extends BaseAdapter {
 		if (mStoreList.get(position).getName() != null)
 
 			viewHolder.storeName.setText(getItem(position).getName());
-		if(viewHolder.storeName.length()>15){
-			String smallString = getItem(position).getName().substring(0, Math.min(viewHolder.storeName.length(), 12));
-			smallString = smallString.concat("...");
-			viewHolder.storeName.setText(smallString);
-		}
 		
-		
-		else
-			viewHolder.storeName.setVisibility(View.GONE);
+//		if(viewHolder.storeName.length()>15){
+//			String smallString = getItem(position).getName().substring(0, Math.min(viewHolder.storeName.length(), 12));
+//			smallString = smallString.concat("...");
+//			viewHolder.storeName.setText(smallString);
+//		} //Ritu
+//		
+//		
+//		else
+//			viewHolder.storeName.setVisibility(View.GONE);
 
 		if (mStoreList.get(position).getState() != null)
 			viewHolder.storeState.setText(getItem(position).getState());

@@ -28,7 +28,7 @@ public class UpdateReceiver extends BroadcastReceiver {
 			/*
 			 * Check if app is initialized
 			 */
-			SharedPreferences prefs = UtilityMethods.getInitPreferences(context);
+			SharedPreferences prefs = UtilityMethods.getAppPreferences(context);
 			
 			if(prefs.getBoolean(ConstantUtils.INIT, false))
 			{
@@ -48,16 +48,16 @@ public class UpdateReceiver extends BroadcastReceiver {
 					 */
 					Intent syncIntent = new Intent(context,PeriodicallySyncData.class);
 
-					if(context.getSharedPreferences(ConstantUtils.SYNC_TO_SERVER, 0).getLong(ConstantUtils.LAST_SYNC_TIME, 0) == 0)
+					if(UtilityMethods.getAppPreferences(context).getLong(ConstantUtils.LAST_SYNC_TIME, 0) == 0)
 					{
 						TLog.v(TAG, "First time");
 
-						context.getSharedPreferences(ConstantUtils.SYNC_TO_SERVER, 0).edit().putLong(ConstantUtils.LAST_SYNC_TIME, System.currentTimeMillis()).commit();
+						UtilityMethods.getAppPreferences(context).edit().putLong(ConstantUtils.LAST_SYNC_TIME, System.currentTimeMillis()).commit();
 						context.startService(syncIntent);
 					}
 					else
 					{
-						long lastSyncTime = context.getSharedPreferences(ConstantUtils.SYNC_TO_SERVER, 0).getLong(ConstantUtils.LAST_SYNC_TIME, 0);
+						long lastSyncTime = UtilityMethods.getAppPreferences(context).getLong(ConstantUtils.LAST_SYNC_TIME, 0);
 						long diff = System.currentTimeMillis() - lastSyncTime;
 						TLog.v(TAG, "diff : "+diff);
 

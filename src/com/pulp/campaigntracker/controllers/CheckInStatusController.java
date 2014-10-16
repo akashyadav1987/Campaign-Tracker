@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.pulp.campaigntracker.utils.ConstantUtils;
+import com.pulp.campaigntracker.utils.UtilityMethods;
 
 
 
@@ -20,8 +21,8 @@ public class CheckInStatusController {
 	{
 		
 		
-		preferences = mContext.getSharedPreferences(ConstantUtils.CHECKIN_DETAILS,
-				Context.MODE_PRIVATE);
+		preferences = UtilityMethods.getAppPreferences(mContext);
+				
 
 	}
 	
@@ -62,7 +63,7 @@ public class CheckInStatusController {
 		
 		
 		preferences.edit()
-		.putBoolean(ConstantUtils.STATUS, status)
+		.putBoolean(ConstantUtils.CHECKIN_STATUS, status)
 		.commit();
 	}
 
@@ -74,7 +75,7 @@ public class CheckInStatusController {
 	{
 		
 		
-		return preferences.getBoolean(ConstantUtils.STATUS, false);
+		return preferences.getBoolean(ConstantUtils.CHECKIN_STATUS, false);
 		
 	}
 

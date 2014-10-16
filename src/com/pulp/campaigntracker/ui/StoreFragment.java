@@ -1,11 +1,15 @@
 package com.pulp.campaigntracker.ui;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -28,6 +32,7 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -57,6 +62,7 @@ import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.background.PeriodicLocation;
 import com.pulp.campaigntracker.background.PeriodicService;
 import com.pulp.campaigntracker.beans.CampaignDetails;
+import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.beans.ResponseData;
 import com.pulp.campaigntracker.beans.SinglePromotorData;
 import com.pulp.campaigntracker.beans.StoreDetails;
@@ -64,15 +70,17 @@ import com.pulp.campaigntracker.beans.UserFormDetails;
 import com.pulp.campaigntracker.beans.UserProfile;
 import com.pulp.campaigntracker.controllers.CheckInStatusController;
 import com.pulp.campaigntracker.controllers.NotificationListFragment;
-import com.pulp.campaigntracker.controllers.PromotorListAdapter;
+import com.pulp.campaigntracker.controllers.UserListAdapter;
 import com.pulp.campaigntracker.controllers.UserFormAdapter;
+
 import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
 import com.pulp.campaigntracker.listeners.GetStoreDistanceRecieved;
 import com.pulp.campaigntracker.listeners.MyLocation;
-import com.pulp.campaigntracker.listeners.PromotorDetailsRecieved;
+import com.pulp.campaigntracker.listeners.UserDetailsRecieved;
 import com.pulp.campaigntracker.listeners.ResponseRecieved;
 import com.pulp.campaigntracker.listeners.UpdateLocation;
 import com.pulp.campaigntracker.listeners.UserLocationManager;
+import com.pulp.campaigntracker.parser.JsonCheckinDataParser;
 import com.pulp.campaigntracker.parser.JsonGetPromotorDetails;
 import com.pulp.campaigntracker.parser.JsonGetStoreDistance;
 import com.pulp.campaigntracker.utils.ConstantUtils;
@@ -80,7 +88,7 @@ import com.pulp.campaigntracker.utils.TLog;
 import com.pulp.campaigntracker.utils.UtilityMethods;
 
 public class StoreFragment extends Fragment implements OnClickListener,
-		OnItemClickListener, PromotorDetailsRecieved, UpdateLocation,
+		OnItemClickListener, UserDetailsRecieved, UpdateLocation,
 		GetStoreDistanceRecieved, ResponseRecieved {
 
 	private static final String TAG = StoreFragment.class.getSimpleName();
@@ -94,7 +102,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 	private ListView promotorList;
 	private StoreDetails mStoreDetails;
 	private ArrayList<UserProfile> mPromotorList;
-	private PromotorListAdapter promotorListAdapter;
+	private UserListAdapter userListAdapter;
 	private FrameLayout mapFrame;
 	private RelativeLayout checkInLayout;
 	private TextView userIcon;
@@ -137,6 +145,9 @@ public class StoreFragment extends Fragment implements OnClickListener,
 	private TextView postAnImage;
 	private ArrayList<CampaignDetails> campaignDetailsList;
 	private ArrayList<StoreDetails> storeDetailsList;
+	private byte[] imageInByte = null;
+	private String encodedImage;
+	private CampaignDetails mCampaignDetails;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -168,12 +179,13 @@ public class StoreFragment extends Fragment implements OnClickListener,
 			storeDetailsList = mBundle
 					.getParcelableArrayList(ConstantUtils.STORE_LIST);
 			mStoreDetails = mBundle.getParcelable(ConstantUtils.STORE_DETAILS);
-			// mPromotorList = mBundle
-			// .getParcelableArrayList(ConstantUtils.PROMOTOR_LIST);
 			mUserForm = mBundle
 					.getParcelableArrayList(ConstantUtils.USER_FORM_LIST);
 			campaignDetailsList = mBundle
 					.getParcelableArrayList(ConstantUtils.CAMPAIGN_LIST);
+
+			mCampaignDetails = mBundle
+					.getParcelable(ConstantUtils.CAMPAIGN_DETAILS);
 			setActionBarTitle();
 
 			TLog.v(TAG, "mBundle " + mBundle);
@@ -633,11 +645,11 @@ public class StoreFragment extends Fragment implements OnClickListener,
 						campaignDisplayName);
 
 				promotorDetailsFragment.setArguments(mBundle);
-				((SupervisorMotherActivity) mActivity).onItemSelected(
+				((UserMotherActivity) mActivity).onItemSelected(
 						promotorDetailsFragment, true);
 
 			} catch (Exception e) {
-				Toast.makeText((SupervisorMotherActivity) mActivity,
+				Toast.makeText((UserMotherActivity) mActivity,
 						"ArrayOutOfBounds", Toast.LENGTH_LONG).show();
 			}
 			break;
@@ -735,11 +747,37 @@ public class StoreFragment extends Fragment implements OnClickListener,
 						mContext.stopService(serviceI);
 					}
 
-					myImage.setImageBitmap(myBitmap);
 					myImage.setVisibility(View.VISIBLE);
 					postAnImage.setVisibility(View.INVISIBLE);
 					checkInLayout.setVisibility(View.VISIBLE);
 					promotorList.setVisibility(View.INVISIBLE);
+
+					myImage.setImageBitmap(myBitmap);
+					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+					myBitmap.compress(Bitmap.CompressFormat.JPEG, 100,
+							byteArrayOutputStream);
+
+					imageInByte = byteArrayOutputStream.toByteArray();
+					encodedImage = Base64.encodeToString(imageInByte,
+							Base64.DEFAULT);
+					Calendar calendar = Calendar.getInstance();
+					String currentDate = new SimpleDateFormat("yyyy-MM-dd ",
+							Locale.getDefault()).format(calendar.getTime());
+
+					String currentTime = new SimpleDateFormat("hh:mm:ss",
+							Locale.getDefault()).format(calendar.getTime());
+
+					String timeofcheckin = currentDate + currentTime;
+					String auth_token = LoginData.getInstance().getAuthToken();
+					String role = LoginData.getInstance().getRole();
+
+					String id = LoginData.getInstance().getId();
+
+					JsonCheckinDataParser jsonCheckinDataParser = new JsonCheckinDataParser();
+					jsonCheckinDataParser.postCheckinDataToURL(mContext,
+							auth_token, role, encodedImage,
+							ConstantUtils.CHECK_IN_URL, id, timeofcheckin,
+							mCampaignDetails.getId(), mStoreDetails.getId());
 
 				}
 			} catch (Exception e) {
@@ -798,8 +836,8 @@ public class StoreFragment extends Fragment implements OnClickListener,
 		url.append(ConstantUtils.USER_DETAILS_URL);
 		url.append(mStoreDetails.getId());
 		jsonGetPromotorDetails.getPromotorDetailsFromURL(url.toString(), this,
-				mContext, "", mStoreDetails.getId(), ConstantUtils.START_COUNT,
-				ConstantUtils.NUMBER);
+				mContext, "", mStoreDetails.getId(), 0,
+				ConstantUtils.MAX_USER_RESPONSE_COUNT);
 	}
 
 	@Override
@@ -890,17 +928,17 @@ public class StoreFragment extends Fragment implements OnClickListener,
 	}
 
 	@Override
-	public void onPromotorDetailsRecieved(SinglePromotorData mSinglePromotorData) {
+	public void onUserDetailsRecieved(SinglePromotorData mSinglePromotorData) {
 		if (mSinglePromotorData != null
 				&& mSinglePromotorData.getPersonalDetails().size() > 0) {
 			promotorListProgressBar.setVisibility(View.GONE);
 			promotorList.setVisibility(View.VISIBLE);
 			mPromotorList = mSinglePromotorData.getPersonalDetails();
-			if (promotorListAdapter == null)
-				promotorListAdapter = new PromotorListAdapter(mContext,
+			if (userListAdapter == null)
+				userListAdapter = new UserListAdapter(mContext,
 						mSinglePromotorData.getPersonalDetails());
-			promotorListAdapter.notifyDataSetChanged();
-			promotorList.setAdapter(promotorListAdapter);
+			userListAdapter.notifyDataSetChanged();
+			promotorList.setAdapter(userListAdapter);
 		}
 
 	}
@@ -940,7 +978,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 
 		case R.id.notifications:
 			NotificationListFragment notificationListFragment = new NotificationListFragment();
-			((SupervisorMotherActivity) mActivity).onItemSelected(
+			((UserMotherActivity) mActivity).onItemSelected(
 					notificationListFragment, true);
 
 		default:

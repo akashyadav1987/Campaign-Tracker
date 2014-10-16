@@ -60,6 +60,20 @@
             android:text="promotorName"
             android:textColor="@android:color/black"
             android:textSize="@dimen/heading_textsize" />
+        
+        <TextView   
+            android:id="@+id/role"
+            android:layout_width="wrap_content"
+            android:layout_height="20dip"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@android:color/black"
+            android:text="type"
+            android:layout_below="@+id/promotorName"
+            android:layout_toRightOf="@+id/promotorNameIcon"
+            android:textSize="@dimen/ex_normal_text_size"
+            />
 
         <TextView
             android:id="@+id/promotorCheckinTime"

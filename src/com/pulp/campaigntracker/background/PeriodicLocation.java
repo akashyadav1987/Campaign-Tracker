@@ -8,6 +8,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.util.Log;
 
@@ -77,6 +78,8 @@ public class PeriodicLocation extends IntentService implements UpdateLocation {
 
 	public List<NameValuePair> getJSONObjectToPost(MyLocation loc)
 	{
+		SharedPreferences pref = UtilityMethods.getAppPreferences(getApplicationContext());
+		
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		nameValuePairs.add(new BasicNameValuePair(TIME,loc.getTimeStamp()));
 		nameValuePairs.add(new BasicNameValuePair(ADMIN,loc.getAdmin()));
@@ -85,9 +88,9 @@ public class PeriodicLocation extends IntentService implements UpdateLocation {
 		nameValuePairs.add(new BasicNameValuePair(LOCALITY,loc.getLocality()));
 		nameValuePairs.add(new BasicNameValuePair(LATITUDE,Double.toString(loc.getLatitude())));
 		nameValuePairs.add(new BasicNameValuePair(LONGITIUE,Double.toString(loc.getLongitude())));
-		nameValuePairs.add(new BasicNameValuePair(ID,getSharedPreferences(ConstantUtils.LOGIN, 0).getString(ConstantUtils.LOGIN_ID, "login_id")));
-		nameValuePairs.add(new BasicNameValuePair(NAME,getSharedPreferences(ConstantUtils.LOGIN, 0).getString(ConstantUtils.LOGIN_NAME, "login_name")));
-		nameValuePairs.add(new BasicNameValuePair(DEVICEID,getSharedPreferences(ConstantUtils.LOGIN, 0).getString(ConstantUtils.DEVICEID, "device_id")));
+		nameValuePairs.add(new BasicNameValuePair(ID,pref.getString(ConstantUtils.LOGIN_ID, "login_id")));
+		nameValuePairs.add(new BasicNameValuePair(NAME,pref.getString(ConstantUtils.LOGIN_NAME, "login_name")));
+		nameValuePairs.add(new BasicNameValuePair(DEVICEID,pref.getString(ConstantUtils.DEVICEID, "device_id")));
 		nameValuePairs.add(new BasicNameValuePair(HASH, UtilityMethods
 				.calculateSyncHash(nameValuePairs)));
 		Log.e("Service", "nameValuePairs : "+nameValuePairs);

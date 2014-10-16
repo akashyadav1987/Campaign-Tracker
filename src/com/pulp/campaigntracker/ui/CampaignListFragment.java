@@ -33,13 +33,14 @@ import com.pulp.campaigntracker.beans.UserProfile;
 import com.pulp.campaigntracker.controllers.CampaignListAdapter;
 import com.pulp.campaigntracker.controllers.NotificationListFragment;
 import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
-import com.pulp.campaigntracker.listeners.PromotorDetailsRecieved;
+import com.pulp.campaigntracker.listeners.FetchMoreListner;
+import com.pulp.campaigntracker.listeners.UserDetailsRecieved;
 import com.pulp.campaigntracker.parser.JsonGetPromotorDetails;
 import com.pulp.campaigntracker.utils.ConstantUtils;
 
 public class CampaignListFragment extends android.support.v4.app.Fragment
 		implements android.widget.AdapterView.OnItemClickListener,
-		PromotorDetailsRecieved, OnClickListener {
+		UserDetailsRecieved, OnClickListener {
 
 	private Activity mActivity;
 	private Context mContext;
@@ -54,6 +55,7 @@ public class CampaignListFragment extends android.support.v4.app.Fragment
 	private View view;
 	private Typeface iconFonts;
 	private CampaignDetails mCampaignDetails;
+	private int newStart;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -124,7 +126,7 @@ public class CampaignListFragment extends android.support.v4.app.Fragment
 			mBundle.putParcelableArrayList(ConstantUtils.CAMPAIGN_LIST,
 					campaignDetailsList);
 			sf.setArguments(mBundle);
-			((SupervisorMotherActivity) mActivity).onItemSelected(sf, true);
+			((UserMotherActivity) mActivity).onItemSelected(sf, true);
 
 			break;
 
@@ -133,46 +135,37 @@ public class CampaignListFragment extends android.support.v4.app.Fragment
 		}
 	}
 
-	public void executeQuery() {
+	public void executeQuery(int start) {
 		// promotorListProgressBar.setVisibility(View.VISIBLE);
 
 		JsonGetPromotorDetails jsonGetPromotorDetails = new JsonGetPromotorDetails();
 		StringBuilder url = new StringBuilder();
 		url.append(ConstantUtils.USER_DETAILS_URL);
-		// url.append(mCampaignDetails.getId());
 		jsonGetPromotorDetails.getPromotorDetailsFromURL(url.toString(), this,
-				mContext, "", "", ConstantUtils.START_COUNT,
-				ConstantUtils.NUMBER);
+				mContext, "0", "0", start,
+				ConstantUtils.MAX_USER_RESPONSE_COUNT);
 
 	}
 
 	@Override
-	public void onPromotorDetailsRecieved(SinglePromotorData mSinglePromotorData) {
+	public void onUserDetailsRecieved(SinglePromotorData mSinglePromotorData) {
 		this.mSinglePromotorData = mSinglePromotorData;
 
 		ArrayList<UserFormDetails> userFormList = new ArrayList<UserFormDetails>();
 		if (mSinglePromotorData.getPersonalDetails() != null
 				&& mSinglePromotorData.getPersonalDetails().size() > 0) {
-			// promotorListProgressBar.setVisibility(View.GONE);
-			// manageFetchUsers(mSinglePromotorData.getPersonalDetails());
-//
-//			for (int i = 0; i < mCampaignDetails.getUserFormDetailsList()
-//					.size(); i++) {
-//				userFormList.add(mCampaignDetails.getUserFormDetailsList().get(
-//						i));
-//			}
+
 
 			AllPromotorListFragment allPromotorListFragment = new AllPromotorListFragment();
 			Bundle mBundle = new Bundle();
-			mBundle.putParcelableArrayList(ConstantUtils.PROMOTOR_LIST,
+			mBundle.putParcelableArrayList(ConstantUtils.USER_LIST,
 					mSinglePromotorData.getPersonalDetails());
 			mBundle.putParcelableArrayList(ConstantUtils.CAMPAIGN_LIST,
 					campaignDetailsList);
-//			mBundle.putParcelableArrayList(ConstantUtils.USER_FORM_LIST,
-//					userFormList);
+
 			allPromotorListFragment.setArguments(mBundle);
-			ConstantUtils.ReferList = true;
-			((SupervisorMotherActivity) mActivity).onItemSelected(
+
+			((UserMotherActivity) mActivity).onItemSelected(
 					allPromotorListFragment, true);
 
 		}
@@ -181,7 +174,7 @@ public class CampaignListFragment extends android.support.v4.app.Fragment
 	private void manageFetchUsers(ArrayList<UserProfile> personalDetails) {
 		FetchData fetchData = new FetchData();
 		AllPromoterData allPromoterData = new AllPromoterData();
-		if (fetchData.getLast_count() == Integer.valueOf(ConstantUtils.NUMBER)) {
+		if (fetchData.getLast_count() == Integer.valueOf(ConstantUtils.MAX_USER_RESPONSE_COUNT)) {
 			allPromoterData.setCurrentSet(mSinglePromotorData
 					.getPersonalDetails());
 		}
@@ -208,7 +201,7 @@ public class CampaignListFragment extends android.support.v4.app.Fragment
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.retryButton:
-			executeQuery();
+			executeQuery(0);//ConstantUtils.START_COUNT);
 			// view.requestLayout();
 			break;
 
@@ -233,12 +226,13 @@ public class CampaignListFragment extends android.support.v4.app.Fragment
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_all_promotors:
-			executeQuery();
+			executeQuery(0);//ConstantUtils.START_COUNT);
+
 			break;
 
 		case R.id.notifications:
 			NotificationListFragment notificationListFragment = new NotificationListFragment();
-			((SupervisorMotherActivity) mActivity).onItemSelected(
+			((UserMotherActivity) mActivity).onItemSelected(
 					notificationListFragment, true);
 
 		default:
@@ -247,4 +241,5 @@ public class CampaignListFragment extends android.support.v4.app.Fragment
 		return super.onOptionsItemSelected(item);
 	}
 
+	
 }
