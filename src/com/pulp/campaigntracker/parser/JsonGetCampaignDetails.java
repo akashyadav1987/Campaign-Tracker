@@ -3,9 +3,6 @@ package com.pulp.campaigntracker.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,18 +17,15 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Base64;
-import android.widget.Toast;
+
 
 import com.pulp.campaigntracker.beans.CampaignDetails;
 import com.pulp.campaigntracker.beans.StoreDetails;
 import com.pulp.campaigntracker.beans.UserFormDetails;
-import com.pulp.campaigntracker.beans.UserProfile;
 import com.pulp.campaigntracker.controllers.JsonResponseAdapter;
 import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
 import com.pulp.campaigntracker.listeners.CampaignDetailsRecieved;
-import com.pulp.campaigntracker.listeners.PromoterActivityFinish;
-import com.pulp.campaigntracker.ui.CampaignDetailsActivity;
-import com.pulp.campaigntracker.ui.UserMotherActivity;
+
 import com.pulp.campaigntracker.utils.ConstantUtils;
 
 import com.pulp.campaigntracker.utils.TLog;
@@ -42,33 +36,19 @@ public class JsonGetCampaignDetails {
 
 	private final String TAG = JsonGetCampaignDetails.class.getSimpleName();
 	private CampaignDetailsRecieved listener;
-	private PromoterActivityFinish promoterFinishListner;
-
-	private String url;
-
 	// JSON Response node names
 	private final String KEY_ID = "id";
-	private final String KEY_CODE = "code";
-	private final String KEY_IS_ACTIVE = "isActive";
-	private final String KEY_COMPANY = "compDesc"; //Ritu
+	private final String KEY_COMPANY = "compDesc"; 
 	private final String KEY_PHONE = "phone";
 	private final String KEY_NAME = "name";
 	private final String KEY_ADDRESS = "address";
-	private final String KEY_REGISTERED = "registered";
 	private final String KEY_CAMPAIGN_LIST = "campaign_list";
 	private final String KEY_CAMPAIGN_DETAILS = "campaign_details";
 	private final String KEY_STORE_LIST = "store_list";
-	private final String KEY_USER_LIST = "user_list";
-	private final String KEY_IMMEDIATE_MANAGER_DETAILS = "immediate_manager_details";
 	private final String KEY_CITY = "city";
 	private final String KEY_STATE = "state";
 	private final String KEY_REGION = "region";
 	private final String KEY_AGENT = "agent";
-	private final String KEY_CAEGORY = "category";
-	private final String KEY_STORE_ID = "store_id";
-	private final String KEY_ROLE = "role";
-	private final String KEY_CONTACT_NO = "contact_no";
-	private final String KEY_GENDER = "gender";
 	private ArrayList<CampaignDetails> mCampaignDetailsList;
 	private final String KEY_PINCODE = "pincode";
 	private final String KEY_LATITUDE = "lattitude";
@@ -78,18 +58,9 @@ public class JsonGetCampaignDetails {
 	private final String KEY_FIELD_TYPE = "field_type";
 	private final String KEY_FIELD_LENGTH = "field_length";
 	private final String KEY_IMAGE = "store_image";
-	private final String KEY_PROMOTER_COUNT = "promoter_count";
-
-	private CampaignDetails mCampaignDetails;
-
 	private String KEY_CATEGORY = "category";
-	private String KEY_EMAIL = "email";
-	private boolean isList;
-
 	private Context mContext;
 	GetJson getJson;
-	private UserMotherActivity mSupervisorMotherActivity = null;
-
 	// Single instance for Login
 	public static JsonGetCampaignDetails instance;
 
@@ -106,14 +77,7 @@ public class JsonGetCampaignDetails {
 		if (getJson != null) {
 
 			mCampaignDetailsList = null;
-			mCampaignDetails = null;
-
-//			if (role == LoginType.promotor)
-//				listener.onCampaignDetailsRecieved(mCampaignDetails);
-//			else
-//
-//			if (role == LoginType.supervisor)
-				listener.onCampaignDetailsRecieved(mCampaignDetailsList);
+			listener.onCampaignDetailsRecieved(mCampaignDetailsList);
 
 			getJson.cancel(true);
 		}
@@ -133,7 +97,6 @@ public class JsonGetCampaignDetails {
 	public void getCampaignDetailsFromURL(String url,
 			CampaignDetailsRecieved listener, String id, String AuthToken,
 			String role, Context mContext) {
-		this.url = url;
 		this.listener = listener;
 		this.mContext = mContext;
 		getJson = new GetJson();
@@ -174,7 +137,7 @@ public class JsonGetCampaignDetails {
 
 				} catch (Exception e) {
 					killAsyncTask();
-					// UtilityMethods.ShowAlertDialog(mContext);
+					
 
 				}
 			}
@@ -187,14 +150,15 @@ public class JsonGetCampaignDetails {
 					jCampaignObject = JsonResponseAdapter.campaignJsonResponse(
 							params[0], mContext);
 					buildCampaignJson(jCampaignObject);
-					if (jCampaignObject == null) {
-						Toast.makeText(mContext, "Connection Timed Out",
-								Toast.LENGTH_LONG).show();
+					//buildCampaignJson(UtilityMethods.AssetJSONFile("jsonSupervisor",mContext));
+					
+					if (jCampaignObject == null) {				
 						jCampaignObject = new JSONObject(
 										pref
 										.getString(ConstantUtils.CACHED_DATA,
 												""));
 						buildCampaignJson(jCampaignObject);
+						
 					} else {
 								pref
 								.edit()
@@ -202,7 +166,7 @@ public class JsonGetCampaignDetails {
 										jCampaignObject.toString()).commit();
 					}
 				} catch (Exception e) {
-					// UtilityMethods.ShowAlertDialog(mContext);
+					
 					killAsyncTask();
 				}
 			}
@@ -237,13 +201,11 @@ public class JsonGetCampaignDetails {
 		try {
 
 				if (!jsonFullObject.isNull(KEY_CAMPAIGN_LIST)){
-					
 
 					JSONArray jsonArray = jsonFullObject
 							.getJSONArray(KEY_CAMPAIGN_LIST);
-					mCampaignDetails = null;
+					
 					mCampaignDetailsList = new ArrayList<CampaignDetails>();
-					isList = true;
 					for (int i = 0; i < jsonArray.length(); i++) {
 						
 						JSONObject jsonObject = jsonArray
@@ -359,78 +321,7 @@ public class JsonGetCampaignDetails {
 			mCampaignDetails.setStoreList(mStoreList);
 		}
 
-		// // Parse the User Details in a campaign //Ritu
-		// if (!jsonObject.isNull(KEY_USER_LIST)
-		// && jsonObject.getJSONArray(KEY_USER_LIST) instanceof JSONArray) {
-		// JSONArray jsonUserListArray = (JSONArray) jsonObject
-		// .getJSONArray(KEY_USER_LIST);
-		// List<UserProfile> mUserList = new ArrayList<UserProfile>();
-		// for (int i = 0; i < jsonUserListArray.length(); i++) {
-		// JSONObject jUserObject = jsonUserListArray.getJSONObject(i);
-		// UserProfile userDetails = new UserProfile();
-		//
-		// if (!jUserObject.isNull(KEY_ID))
-		// userDetails.setUid(jUserObject.getString(KEY_ID));
-		//
-		// if (!jUserObject.isNull(KEY_NAME))
-		// userDetails.setName(jUserObject.getString(KEY_NAME));
-		//
-		// if (!jUserObject.isNull(KEY_CONTACT_NO))
-		// userDetails.setContactNumber(jUserObject
-		// .getString(KEY_CONTACT_NO));
-		//
-		// if (!jUserObject.isNull(KEY_ADDRESS))
-		// userDetails.setAddress(jUserObject.getString(KEY_ADDRESS));
-		//
-		// if (!jUserObject.isNull(KEY_EMAIL))
-		// userDetails.setEmail(jUserObject.getString(KEY_EMAIL));
-		//
-		// if (!jUserObject.isNull(KEY_GENDER))
-		// userDetails.setGender(jUserObject.getString(KEY_GENDER));
-		//
-		// if (!jUserObject.isNull(KEY_STORE_ID))
-		// userDetails.setStoreId(jUserObject.getString(KEY_STORE_ID));
-		//
-		// if (!jUserObject.isNull(KEY_ROLE))
-		// userDetails.setRole(jUserObject.getString(KEY_ROLE));
-		//
-		// // if(!jUserObject.isNull(KEY_STORE_ID))
-		// // userDetails.setAddress(jUserObject.getString(KEY_STORE_ID));
-		// mUserList.add(userDetails);
-		// }
-		// mCampaignDetails.setUserList(mUserList);
-		// }
-		// if (!jsonObject.isNull(KEY_IMMEDIATE_MANAGER_DETAILS)
-		// && jsonObject.getJSONObject(KEY_IMMEDIATE_MANAGER_DETAILS) instanceof
-		// JSONObject) {
-		// JSONObject jUserObject = jsonObject
-		// .getJSONObject(KEY_IMMEDIATE_MANAGER_DETAILS);
-		// UserProfile userDetails = new UserProfile();
-		//
-		// if (!jUserObject.isNull(KEY_ID))
-		// userDetails.setUid(jUserObject.getString(KEY_ID));
-		//
-		// if (!jUserObject.isNull(KEY_NAME))
-		// userDetails.setName(jUserObject.getString(KEY_NAME));
-		//
-		// if (!jUserObject.isNull(KEY_CONTACT_NO))
-		// userDetails.setContactNumber(jUserObject
-		// .getString(KEY_CONTACT_NO));
-		//
-		// if (!jUserObject.isNull(KEY_ADDRESS))
-		// userDetails.setAddress(jUserObject.getString(KEY_ADDRESS));
-		//
-		// if (!jUserObject.isNull(KEY_EMAIL))
-		// userDetails.setEmail(jUserObject.getString(KEY_EMAIL));
-		//
-		// if (!jUserObject.isNull(KEY_GENDER))
-		// userDetails.setGender(jUserObject.getString(KEY_GENDER));
-		//
-		// if (!jUserObject.isNull(KEY_ROLE))
-		// userDetails.setRole(jUserObject.getString(KEY_ROLE));
-		//
-		// mCampaignDetails.setImmediateManager(userDetails);
-		// }
+		
 		if (!jsonObject.isNull(KEY_FORM_LIST)
 				&& jsonObject.getJSONArray(KEY_FORM_LIST) instanceof JSONArray) {
 			JSONArray jMessageList = jsonObject.getJSONArray(KEY_FORM_LIST);
@@ -480,11 +371,6 @@ public class JsonGetCampaignDetails {
 
 	}
 
-	public void getCampaignDetailsFromURL(String cAMPAIGN_DETAILS_URL,
-			CampaignDetailsActivity campaignDetailsActivity, String id,
-			String authToken, String role2, Context baseContext) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 }

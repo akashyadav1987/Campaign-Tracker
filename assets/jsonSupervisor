@@ -3,30 +3,34 @@
         {
             "count": "1",
             "data": {
-                "campaign_details": {
-                    "id": "1",
-                    "name": "campaign1",
-                    "startDate": "2014-10-01 00:00:00",
-                    "endDate": "2014-10-29 00:00:00",
-                    "isActive": "1",
-                    "compDesc": "google"
-                }
+                "campaign_details": [
+                    {
+                        "id": "1",
+                        "name": "campaign1",
+                        "startDate": "2014-10-01 00:00:00",
+                        "endDate": "2014-10-29 00:00:00",
+                        "isActive": "1",
+                        "compDesc": "google"
+                    }
+                ]
             },
             "store_list": {
                 "count": "1",
                 "data": [
                     {
-                        "id": "3",
-                        "name": "croma2",
+                        "id": "2",
+                        "name": "croma",
                         "city": "delhi",
                         "state": "delhi",
                         "region": "north",
                         "country": "india",
                         "category": "A",
                         "storeAddress": "store1",
-                        "email": "hmant@pulpstrategy.com",
-                        "mobile": "767676777",
-                        "phone": "767676777"
+                        "email": "r@p.com",
+                        "mobile": "111",
+                        "phone": "767676777",
+                        "latitude":"22.7",
+                        "longitude":"22.7",
                     }
                 ]
             },
@@ -34,19 +38,19 @@
                 "count": "1",
                 "data": [
                     {
-                        "userId": "13",
-                        "campaign_id": "2",
-                        "store_id": "3",
-                        "name": "Jessmin Jessmin",
-                        "phone": "7676767777",
-                        "mobile": "767677777",
-                        "email": "hemnt@pulpstrategy.com",
-                        "address1": "user1",
+                        "userId": "3",
+                        "campaign_id": "1",
+                        "store_id": "2",
+                        "name": "Ritu Kapoor",
+                        "phone": "767676777",
+                        "mobile": "111",
+                        "email": "r@p.com",
+                        "address1": "store1",
                         "gender": "female",
-                        "role": "admin",
+                        "role": "promoter",
                         "level": "1",
-                        "startDate": "2014-10-16 11:05:33",
-                        "endDate": "2014-10-23 11:05:36"
+                        "startDate": "2014-10-01 00:00:00",
+                        "endDate": "2014-10-29 00:00:00"
                     }
                 ]
             },

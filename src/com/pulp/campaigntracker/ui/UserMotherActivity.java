@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Dialog;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -283,12 +284,14 @@ public class UserMotherActivity extends ActionBarActivity implements
 //		List<android.support.v4.app.Fragment> mList = this
 //				.getSupportFragmentManager().getFragments();
 //		if (mList != null)
+//		{
 //
 //			for (android.support.v4.app.Fragment fragment : mList) {
 //
-//				// getFragmentManager().beginTransaction().remove(fragment)
-//				// .commitAllowingStateLoss();
+////				 getFragmentManager().beginTransaction().remove(fragment)
+////				 .commitAllowingStateLoss();
 //			}
+//		}
 //	}
-
 }
+
