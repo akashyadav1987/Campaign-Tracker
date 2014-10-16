@@ -1,48 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:background="@color/app_background_color"
-	android:paddingBottom="10dp" >
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/app_background_color"
+    android:paddingBottom="10dp" >
 
-	<TextView
-		android:id="@+id/formFieldLabel"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentLeft="true"
-		android:layout_alignParentTop="true"
-		android:paddingLeft="20dp"
-		android:paddingRight="20dp"
-		android:text="Foot Fall"
-		android:textColor="@android:color/black"
-		android:textSize="@dimen/heading_textsize" />
+    <TextView
+        android:id="@+id/formFieldLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="Foot Fall"
+        android:textSize="@dimen/heading_textsize" />
 
-	<EditText
-		android:id="@+id/formFeildValue"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignParentLeft="true"
-		android:layout_below="@+id/formFieldLabel"
-		android:layout_marginLeft="20dp"
-		android:layout_marginRight="20dp"
-		android:background="@drawable/user_form_editbox_background"
-		android:gravity="left|center"
-		android:hint="50"
-		android:inputType="number"
-		android:paddingLeft="10dp"
-		android:paddingRight="20dp"
-		android:paddingTop="15dp"
-		android:textSize="@dimen/heading_textsize" />
+    <EditText
+        android:id="@+id/formFeildValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/formFieldLabel"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/user_form_editbox_background"
+        android:gravity="left|center"
+        android:hint="Enter FootFall"
+        android:inputType="number"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="20dp"
+        android:paddingTop="5dp"
+        android:textSize="@dimen/normal_text_size" />
 
-	<DatePicker
-		android:id="@+id/datePicker1"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/formFieldLabel"
-		android:layout_marginLeft="20dp"
-		android:layout_marginRight="20dp"
-		android:background="@drawable/user_form_editbox_background"
-		android:calendarViewShown="false"
-		android:visibility="gone" />
+    <DatePicker
+        android:id="@+id/datePicker1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/formFieldLabel"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/user_form_editbox_background"
+        android:calendarViewShown="false"
+        android:visibility="gone" />
 
 </RelativeLayout>

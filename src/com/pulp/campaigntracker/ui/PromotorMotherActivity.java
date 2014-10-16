@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.ViewConfiguration;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.beans.InitData;
 import com.pulp.campaigntracker.beans.LoginData;
+import com.pulp.campaigntracker.controllers.NotificationListFragment;
 import com.pulp.campaigntracker.listeners.FragmentListener;
 import com.pulp.campaigntracker.listeners.InitializeApp;
 import com.pulp.campaigntracker.parser.JsonInitDataParser;
@@ -195,6 +197,21 @@ public class PromotorMotherActivity extends ActionBarActivity implements
 		return super.onCreateOptionsMenu(menu);
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+		
+		case R.id.notifications:
+			NotificationListFragment notificationListFragment = new NotificationListFragment();
+			this.onItemSelected(notificationListFragment, true);
+			break;
+	
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
 
 	/**
@@ -213,14 +230,14 @@ public class PromotorMotherActivity extends ActionBarActivity implements
 	public void onInitDataRecieved(InitData initData) {
 		if (initData != null) {
 			SharedPreferences prefs = UtilityMethods
-					.getInitPreferences(getBaseContext());
+					.getAppPreferences(getApplicationContext());
 			SharedPreferences.Editor editor = prefs.edit();
 			editor.putInt(ConstantUtils.BATTERY_STATUS,
 					initData.getLocationBatteryStatus());
 			editor.putInt(ConstantUtils.LOCATION_INTERVAL,
 					initData.getLocationPeriodicInterval());
-//			editor.putInt(ConstantUtils.SYNC_INTERVAL,
-//					initData.getSyncUnsentDataInterval());
+			editor.putInt(ConstantUtils.SYNC_INTERVAL_TIME,
+					initData.getSyncUnsentDataInterval());
 			editor.putString(ConstantUtils.LOCATION_START_TIME,
 					initData.getLocationStartInterval());
 			editor.putString(ConstantUtils.LOCATION_END_TIME,

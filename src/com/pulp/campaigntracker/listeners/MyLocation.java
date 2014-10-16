@@ -12,6 +12,25 @@ public class MyLocation {
 	String admin;
 	String region;
 	String timeStamp;
+	String cid;
+	String lac;
+	
+	
+	public String getCellId() {
+		return cid;
+	}
+	public void setCellId(String cid) {
+		this.cid = cid;
+	}
+	
+
+	public String getLacId() {
+		return lac;
+	}
+	public void setLacId(String lac) {
+		this.lac = lac;
+	}
+	
 	public String getLocality() {
 		return locality;
 	}

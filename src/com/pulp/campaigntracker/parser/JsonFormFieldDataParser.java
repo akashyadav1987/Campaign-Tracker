@@ -14,9 +14,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 
 import com.pulp.campaigntracker.beans.UserFormDetails;
-import com.pulp.campaigntracker.beans.UserNotification;
 import com.pulp.campaigntracker.listeners.UserFormFieldRecieved;
-import com.pulp.campaigntracker.listeners.UserNotificationsRecieved;
 import com.pulp.campaigntracker.utils.TLog;
 import com.pulp.campaigntracker.utils.UtilityMethods;
 

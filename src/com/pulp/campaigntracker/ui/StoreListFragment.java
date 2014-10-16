@@ -1,7 +1,6 @@
 package com.pulp.campaigntracker.ui;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -10,7 +9,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,29 +24,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pulp.campaigntracker.R;
-import com.pulp.campaigntracker.beans.AllPromoterData;
 import com.pulp.campaigntracker.beans.CampaignDetails;
-import com.pulp.campaigntracker.beans.FetchData;
 import com.pulp.campaigntracker.beans.SinglePromotorData;
 import com.pulp.campaigntracker.beans.StoreDetails;
 import com.pulp.campaigntracker.beans.UserFormDetails;
 import com.pulp.campaigntracker.beans.UserProfile;
-import com.pulp.campaigntracker.controllers.CampaignListAdapter;
-import com.pulp.campaigntracker.controllers.PromotorListAdapter;
+import com.pulp.campaigntracker.controllers.NotificationListFragment;
 import com.pulp.campaigntracker.controllers.StoreDetailsAdapter;
 import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
-import com.pulp.campaigntracker.listeners.CampaignDetailsRecieved;
-import com.pulp.campaigntracker.listeners.PromotorDetailsRecieved;
-import com.pulp.campaigntracker.parser.JsonGetCampaignDetails;
+import com.pulp.campaigntracker.listeners.UserDetailsRecieved;
 import com.pulp.campaigntracker.parser.JsonGetPromotorDetails;
 import com.pulp.campaigntracker.utils.ConstantUtils;
-import com.pulp.campaigntracker.utils.UtilityMethods;
-import com.pulp.campaigntracker.utils.ConstantUtils.LoginType;
-import com.pulp.campaigntracker.utils.TLog;
 
 public class StoreListFragment extends android.support.v4.app.Fragment
 		implements android.widget.AdapterView.OnItemClickListener,
-		PromotorDetailsRecieved, OnClickListener {
+		UserDetailsRecieved, OnClickListener {
 
 	private static final String TAG = StoreListFragment.class.getSimpleName();
 	private Activity mActivity;
@@ -65,6 +55,9 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 	private Button retryButton;
 	private Typeface iconFonts;
 	private View view;
+	private ArrayList<CampaignDetails> campaignDetailsList;
+	private ArrayList<StoreDetails> storeDetailsList;
+	private SinglePromotorData mSinglePromotorData;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -92,7 +85,8 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 			Bundle mBundle = getArguments();
 			mCampaignDetails = mBundle
 					.getParcelable(ConstantUtils.CAMPAIGN_DETAILS);
-
+			campaignDetailsList = mBundle
+					.getParcelableArrayList(ConstantUtils.CAMPAIGN_LIST);
 			setActionBarTitle();
 
 		}
@@ -134,13 +128,13 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 
 			// Get Store Specific Form And Promoter List and put in Bundle
 
-			for (int i = 0; i < mCampaignDetails.getUserList().size(); i++) {
-				if (mCampaignDetails.getUserList().get(i).getStoreId() != null
-						&& mCampaignDetails.getUserList().get(i).getStoreId()
-								.equals(storeId)) {
-					promotorList.add(mCampaignDetails.getUserList().get(i));
-				}
-			}
+			// for (int i = 0; i < mCampaignDetails.getUserList().size(); i++) {
+			// if (mCampaignDetails.getUserList().get(i).getStoreId() != null
+			// && mCampaignDetails.getUserList().get(i).getStoreId()
+			// .equals(storeId)) {
+			// promotorList.add(mCampaignDetails.getUserList().get(i));
+			// }
+			// }
 
 			for (int i = 0; i < mCampaignDetails.getUserFormDetailsList()
 					.size(); i++) {
@@ -150,13 +144,16 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 
 			mBundle.putParcelable(ConstantUtils.STORE_DETAILS, mCampaignDetails
 					.getStoreList().get(arg2));
-			mBundle.putParcelableArrayList(ConstantUtils.PROMOTOR_LIST,
-					promotorList);
+			// mBundle.putParcelableArrayList(ConstantUtils.PROMOTOR_LIST,
+			// promotorList);
 			mBundle.putParcelableArrayList(ConstantUtils.USER_FORM_LIST,
 					userFormList);
-
+			mBundle.putParcelable(ConstantUtils.CAMPAIGN_DETAILS,
+					mCampaignDetails);
+			mBundle.putParcelableArrayList(ConstantUtils.CAMPAIGN_LIST,
+					campaignDetailsList);
 			sf.setArguments(mBundle);
-			((SupervisorMotherActivity) mActivity).onItemSelected(sf, true);
+			((UserMotherActivity) mActivity).onItemSelected(sf, true);
 
 			break;
 
@@ -165,50 +162,44 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 		}
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-
-		switch (item.getItemId()) {
-		case R.id.action_all_promotors:
-			executeQuery();
-			break;
-
-		default:
-			break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	public void executeQuery() {
-		promotorListProgressBar.setVisibility(View.VISIBLE);
+	public void executeQuery(int start) {
+		// promotorListProgressBar.setVisibility(View.VISIBLE);
 
 		JsonGetPromotorDetails jsonGetPromotorDetails = new JsonGetPromotorDetails();
 		StringBuilder url = new StringBuilder();
 		url.append(ConstantUtils.USER_DETAILS_URL);
 		url.append(mCampaignDetails.getId());
 		jsonGetPromotorDetails.getPromotorDetailsFromURL(url.toString(), this,
-				mContext, mCampaignDetails.getId(), "",
-				ConstantUtils.START_COUNT, ConstantUtils.NUMBER);
+				mContext, mCampaignDetails.getId(), "0", start,
+				ConstantUtils.MAX_USER_RESPONSE_COUNT);
 
 	}
 
 	@Override
-	public void onPromotorDetailsRecieved(SinglePromotorData mSinglePromotorData) {
+	public void onUserDetailsRecieved(SinglePromotorData mSinglePromotorData) {
+		this.mSinglePromotorData = mSinglePromotorData;
+
+		// ArrayList<UserFormDetails> userFormList = new
+		// ArrayList<UserFormDetails>();
+		
+		if(mSinglePromotorData!=null){
 		if (mSinglePromotorData.getPersonalDetails() != null
 				&& mSinglePromotorData.getPersonalDetails().size() > 0) {
-			promotorListProgressBar.setVisibility(View.GONE);
+			// promotorListProgressBar.setVisibility(View.GONE);
 			// manageFetchUsers(mSinglePromotorData.getPersonalDetails());
-
 			AllPromotorListFragment allPromotorListFragment = new AllPromotorListFragment();
 			Bundle mBundle = new Bundle();
-			mBundle.putParcelableArrayList(ConstantUtils.PROMOTOR_LIST,
+			mBundle.putParcelableArrayList(ConstantUtils.USER_LIST,
 					mSinglePromotorData.getPersonalDetails());
+			mBundle.putParcelableArrayList(ConstantUtils.CAMPAIGN_LIST,
+					campaignDetailsList);
+			// mBundle.putParcelableArrayList(ConstantUtils.USER_FORM_LIST,
+			// userFormList);
 			allPromotorListFragment.setArguments(mBundle);
-			ConstantUtils.ReferList = false;
-
-			((SupervisorMotherActivity) mActivity).onItemSelected(
+			//ConstantUtils.ReferList = false;
+			((UserMotherActivity) mActivity).onItemSelected(
 					allPromotorListFragment, true);
-
+		}
 		}
 	}
 
@@ -231,13 +222,42 @@ public class StoreListFragment extends android.support.v4.app.Fragment
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.retryButton:
-			executeQuery();
-		//	view.requestLayout();
+			executeQuery(0);//ConstantUtils.START_COUNT);
+			// view.requestLayout();
 			break;
+
+		}
+	}
+
+	@Override
+	public void onDestroyView() {
+		// TODO Auto-generated method stub
+		super.onDestroyView();
+	}
+
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+		case R.id.action_all_promotors:
+			executeQuery(0);//ConstantUtils.START_COUNT);
+			break;
+
+		case R.id.notifications:
+			NotificationListFragment notificationListFragment = new NotificationListFragment();
+			((UserMotherActivity) mActivity).onItemSelected(
+					notificationListFragment, true);
 
 		default:
 			break;
 		}
-
+		return super.onOptionsItemSelected(item);
 	}
+
 }

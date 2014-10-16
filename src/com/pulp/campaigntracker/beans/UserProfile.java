@@ -17,6 +17,57 @@ public class UserProfile implements Parcelable {
 	private String storeId;
 	private String campaginId;
 	private String CurrentCampagin;
+	private String CurrentStore;
+	private String status;
+
+	public String getCampaign_start_date() {
+		return campaign_start_date;
+	}
+
+	public void setCampaign_start_date(String campaign_start_date) {
+		this.campaign_start_date = campaign_start_date;
+	}
+
+	public String getStore_start_date() {
+		return store_start_date;
+	}
+
+	public void setStore_start_date(String store_start_date) {
+		this.store_start_date = store_start_date;
+	}
+
+	public String getStore_end_date() {
+		return store_end_date;
+	}
+
+	public void setStore_end_date(String store_end_date) {
+		this.store_end_date = store_end_date;
+	}
+
+	public String getCampaign_end_date() {
+		return campaign_end_date;
+	}
+
+	public void setCampaign_end_date(String campaign_end_date) {
+		this.campaign_end_date = campaign_end_date;
+	}
+
+	private String campaign_start_date;
+	private String store_start_date;
+	private String store_end_date;
+	private String campaign_end_date;
+	int total;
+	int start_count;
+	int last_count;
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public String getCurrentCampagin() {
 		return CurrentCampagin;
 	}
@@ -32,9 +83,6 @@ public class UserProfile implements Parcelable {
 	public void setCurrentStore(String currentStore) {
 		CurrentStore = currentStore;
 	}
-
-	private String CurrentStore;
-	int total;
 
 	public int getTotal() {
 		return total;
@@ -60,11 +108,6 @@ public class UserProfile implements Parcelable {
 		this.last_count = last_count;
 	}
 
-	int start_count;
-	int last_count;
-	
-	
-	
 	public String getCampaginId() {
 		return campaginId;
 	}
@@ -171,6 +214,14 @@ public class UserProfile implements Parcelable {
 		dest.writeString(gender);
 		dest.writeString(address);
 		dest.writeString(role);
+		dest.writeString(CurrentCampagin);
+		dest.writeString(CurrentStore);
+		dest.writeString(status);
+
+		dest.writeString(campaign_start_date);
+		dest.writeString(store_start_date);
+		dest.writeString(store_end_date);
+		dest.writeString(campaign_end_date);
 
 	}
 
@@ -189,7 +240,14 @@ public class UserProfile implements Parcelable {
 		gender = in.readString();
 		address = in.readString();
 		role = in.readString();
+		CurrentCampagin = in.readString();
+		CurrentStore = in.readString();
+		status = in.readString();
 
+		campaign_start_date = in.readString();
+		store_start_date = in.readString();
+		store_end_date = in.readString();
+		campaign_end_date = in.readString();
 	}
 
 	public static final Parcelable.Creator<UserProfile> CREATOR = new Creator<UserProfile>() {
@@ -206,5 +264,6 @@ public class UserProfile implements Parcelable {
 			return new UserProfile(source);
 		}
 	};
+
 
 }

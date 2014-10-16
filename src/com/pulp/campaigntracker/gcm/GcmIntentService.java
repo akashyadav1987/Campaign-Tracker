@@ -20,17 +20,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,11 +41,12 @@ import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.background.PeriodicService;
 import com.pulp.campaigntracker.beans.GCM;
 import com.pulp.campaigntracker.beans.UserNotification;
+import com.pulp.campaigntracker.controllers.NotificationListFragment;
 import com.pulp.campaigntracker.ui.PromotorMotherActivity;
 import com.pulp.campaigntracker.ui.SplashScreen;
-import com.pulp.campaigntracker.ui.SupervisorMotherActivity;
+import com.pulp.campaigntracker.ui.UserMotherActivity;
 import com.pulp.campaigntracker.utils.ConstantUtils;
-import com.pulp.campaigntracker.utils.ConstantUtils.LoginType;
+
 import com.pulp.campaigntracker.utils.ObjectSerializer;
 import com.pulp.campaigntracker.utils.TLog;
 import com.pulp.campaigntracker.utils.UtilityMethods;
@@ -67,16 +67,22 @@ public class GcmIntentService extends IntentService {
 	private NotificationManager mNotificationManager;
 	NotificationCompat.Builder builder;
 	private UserNotification notification;
-	private int num;
+	private int mNotificationCount;
 	ArrayList<UserNotification> notifyList;
+	public static final String TAG = "GCM Auth";
+	private static final String TYPE = "type";
+	SharedPreferences mAppPref;
+
 
 	public GcmIntentService() {
 		super("GcmIntentService");
+		
+		mAppPref=UtilityMethods.getAppPreferences(getApplicationContext());
+
 
 	}
 
-	public static final String TAG = "GCM Auth";
-	private static final String TYPE = "type";
+
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
@@ -87,7 +93,8 @@ public class GcmIntentService extends IntentService {
 		String messageType = gcm.getMessageType(intent);
 
 		TLog.v(TAG, "extras : " + extras.toString());
-
+		
+	
 		if (!extras.isEmpty()) { // has effect of unparcelling Bundle
 			/*
 			 * Filter messages based on message type. Since it is likely that
@@ -108,11 +115,9 @@ public class GcmIntentService extends IntentService {
 					.equals(messageType)) {
 				// This loop represents the service doing some work.
 
-				if (!UtilityMethods
-						.getLoginPreferences(getApplicationContext())
+				if (!mAppPref
 						.getString(ConstantUtils.USER_EMAIL, "").isEmpty()
-						&& !UtilityMethods
-								.getLoginPreferences(getApplicationContext())
+						&& !mAppPref
 								.getString(ConstantUtils.LOGIN_ID, "")
 								.isEmpty()) {
 
@@ -161,7 +166,11 @@ public class GcmIntentService extends IntentService {
 	@SuppressWarnings("unchecked")
 	private void sendNotification(GCM msg) {
 
+		
 		if (msg != null) {
+			
+			int index=1;
+			
 			mNotificationManager = (NotificationManager) this
 					.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -172,30 +181,25 @@ public class GcmIntentService extends IntentService {
 			Uri uri = RingtoneManager
 					.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-			num = getApplicationContext().getSharedPreferences("NOTIFI_NUMBER",
-					0).getInt("Notif_Number_Constant", 0);
-			int x = num + 1;
+			mNotificationCount = mAppPref
+					.getInt("Notif_Number_Constant", 0);
+			
+			
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-					this).setSmallIcon(R.drawable.notification_app_icon)
-					.setContentTitle(msg.getTitle()).setStyle(bigText)
+					this).setSmallIcon(R.drawable.notification_app_icon).setContentTitle(msg.getTitle()).setStyle(bigText)
 					.setContentText(msg.getMessage()).setSound(uri)
-					.setNumber(x);
-			getApplicationContext().getSharedPreferences("NOTIFI_NUMBER", 0)
-					.edit().putInt("Notif_Number_Constant", x).commit();
-			// Save Notification To Preferences
+					.setNumber(mNotificationCount + 1);
+			
+			mAppPref.edit().putInt("Notif_Number_Constant", (mNotificationCount + 1)).commit();
 
 			try {
 				if ((ArrayList<UserNotification>) ObjectSerializer
-						.deserialize(getApplicationContext()
-								.getSharedPreferences(
-										ConstantUtils.NOTIFICATION_CACHE, 0)
+						.deserialize(mAppPref
 								.getString(ConstantUtils.NOTIFICATION, "")) == null) {
 					notifyList = new ArrayList<UserNotification>();
 				} else {
 					notifyList = (ArrayList<UserNotification>) ObjectSerializer
-							.deserialize(getApplicationContext()
-									.getSharedPreferences(
-											ConstantUtils.NOTIFICATION_CACHE, 0)
+							.deserialize(mAppPref
 									.getString(ConstantUtils.NOTIFICATION, ""));
 				}
 			} catch (IOException e1) {
@@ -204,19 +208,18 @@ public class GcmIntentService extends IntentService {
 			}
 
 			notification = new UserNotification();
-			Calendar calendar = Calendar.getInstance();
 			notification.setTitle(msg.getTitle());
 			notification.setMessage(msg.getMessage());
-			notification.setNotifyTime(mBuilder.getNotification().when);
+			notification.setNotifyTime(System.currentTimeMillis());
 			notifyList.add(notification);
+
 			try {
-				getApplicationContext()
-						.getSharedPreferences(ConstantUtils.NOTIFICATION_CACHE,
-								0)
+				mAppPref
 						.edit()
 						.putString(ConstantUtils.NOTIFICATION,
 								ObjectSerializer.serialize(notifyList))
 						.commit();
+
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -224,46 +227,35 @@ public class GcmIntentService extends IntentService {
 
 			Intent newIntent = null;
 
-		
-			ConstantUtils.SYNC_INTERVAL = 5 * 1000;
+			ConstantUtils.SYNC_INTERVAL = 30 * 60 * 1000;
 
-			if (UtilityMethods.getLoginPreferences(getApplicationContext())
-					.getString(ConstantUtils.USER_ROLE, "")
-					.equals(LoginType.supervisor)) {
-				newIntent = new Intent(getBaseContext(),
-						SupervisorMotherActivity.class);
-				Intent i = new Intent(this, PeriodicService.class);
-				getApplicationContext()
-						.getSharedPreferences("NOTIFI_NUMBER", 0).edit()
-						.putInt("Notif_Number_Constant", 0).commit();
-				this.startService(i);
-			} else if (UtilityMethods
-					.getLoginPreferences(getApplicationContext())
-					.getString(ConstantUtils.USER_ROLE, "")
-					.equals(LoginType.promotor)) {
-				newIntent = new Intent(getBaseContext(),
-						PromotorMotherActivity.class);
-				Intent i = new Intent(this, PeriodicService.class);
-				getApplicationContext()
-						.getSharedPreferences("NOTIFI_NUMBER", 0).edit()
-						.putInt("Notif_Number_Constant", 0).commit();
-				this.startService(i);
-			} else {
+//			if (mAppPref.getString(ConstantUtils.USER_ROLE, "")
+//					.equals(LoginData.)) {
+//				newIntent = new Intent(getBaseContext(),
+//						UserMotherActivity.class);
+//				Intent i = new Intent(this, PeriodicService.class);
+//				this.startService(i);
+
+			
+
+//			} else {
 				newIntent = new Intent(getBaseContext(), SplashScreen.class);
 				Intent i = new Intent(this, PeriodicService.class);
-				getApplicationContext()
-						.getSharedPreferences("NOTIFI_NUMBER", 0).edit()
-						.putInt("Notif_Number_Constant", 0).commit();
 				this.startService(i);
-			}
+
+//			}
+
 			PendingIntent contentIntent = PendingIntent.getActivity(
 					GcmIntentService.this, 0, newIntent, 0);
-
 			mBuilder.setAutoCancel(true);
 			mBuilder.setContentIntent(contentIntent);
-			mNotificationManager.notify(1, mBuilder.build());
 			
-			// nManager.notify((int)System.currentTimeMillis(),ncomp.build());
+			mNotificationManager.notify(index,
+					mBuilder.build());
+			Intent intent = new Intent();
+			intent.setAction("googleCloudMessage");
+			sendBroadcast(intent);
+			
 		}
 	}
 }

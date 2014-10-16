@@ -1,25 +1,24 @@
 package com.pulp.campaigntracker.ui;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
-import android.R.menu;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -33,6 +32,7 @@ import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,44 +51,44 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.android.gms.internal.da;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.background.PeriodicLocation;
 import com.pulp.campaigntracker.background.PeriodicService;
+import com.pulp.campaigntracker.beans.CampaignDetails;
+import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.beans.ResponseData;
 import com.pulp.campaigntracker.beans.SinglePromotorData;
 import com.pulp.campaigntracker.beans.StoreDetails;
 import com.pulp.campaigntracker.beans.UserFormDetails;
 import com.pulp.campaigntracker.beans.UserProfile;
 import com.pulp.campaigntracker.controllers.CheckInStatusController;
-import com.pulp.campaigntracker.controllers.PromotorListAdapter;
+import com.pulp.campaigntracker.controllers.NotificationListFragment;
+import com.pulp.campaigntracker.controllers.UserListAdapter;
 import com.pulp.campaigntracker.controllers.UserFormAdapter;
+
 import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
 import com.pulp.campaigntracker.listeners.GetStoreDistanceRecieved;
 import com.pulp.campaigntracker.listeners.MyLocation;
-import com.pulp.campaigntracker.listeners.PromotorDetailsRecieved;
+import com.pulp.campaigntracker.listeners.UserDetailsRecieved;
 import com.pulp.campaigntracker.listeners.ResponseRecieved;
 import com.pulp.campaigntracker.listeners.UpdateLocation;
 import com.pulp.campaigntracker.listeners.UserLocationManager;
+import com.pulp.campaigntracker.parser.JsonCheckinDataParser;
 import com.pulp.campaigntracker.parser.JsonGetPromotorDetails;
 import com.pulp.campaigntracker.parser.JsonGetStoreDistance;
-import com.pulp.campaigntracker.parser.JsonGetUserNotification;
-import com.pulp.campaigntracker.parser.JsonSubmitSucessParser;
 import com.pulp.campaigntracker.utils.ConstantUtils;
 import com.pulp.campaigntracker.utils.TLog;
 import com.pulp.campaigntracker.utils.UtilityMethods;
 
 public class StoreFragment extends Fragment implements OnClickListener,
-		OnItemClickListener, PromotorDetailsRecieved, UpdateLocation,
+		OnItemClickListener, UserDetailsRecieved, UpdateLocation,
 		GetStoreDistanceRecieved, ResponseRecieved {
 
 	private static final String TAG = StoreFragment.class.getSimpleName();
@@ -102,7 +102,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 	private ListView promotorList;
 	private StoreDetails mStoreDetails;
 	private ArrayList<UserProfile> mPromotorList;
-	private PromotorListAdapter promotorListAdapter;
+	private UserListAdapter userListAdapter;
 	private FrameLayout mapFrame;
 	private RelativeLayout checkInLayout;
 	private TextView userIcon;
@@ -114,7 +114,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 	private TextView uploadFormIcon;
 	private TextView uploadForm;
 	private Button submitButton;
-	private RelativeLayout promoterCheckInFrame; 
+	private RelativeLayout promoterCheckInFrame;
 	private TextView tvDistanceDuration;
 	private TextView fillReportIcon;
 	private Typeface iconFonts;
@@ -123,7 +123,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 	private TextView CheckInIcon;
 	private TextView RouteMapIcon;
 	SharedPreferences preferences;
-	//private boolean status;
+	// private boolean status;
 	private String uploadFormSavedFilePath;
 	File uploadFormSavedFile = null;
 	private LatLng storeLatLng;
@@ -139,9 +139,15 @@ public class StoreFragment extends Fragment implements OnClickListener,
 	private RelativeLayout errorLayout;
 	private TextView errorImage;
 	private Button retryButton;
-	
+
 	private CheckInStatusController mCheckInStatus;
+	private String campaignDisplayName;
 	private TextView postAnImage;
+	private ArrayList<CampaignDetails> campaignDetailsList;
+	private ArrayList<StoreDetails> storeDetailsList;
+	private byte[] imageInByte = null;
+	private String encodedImage;
+	private CampaignDetails mCampaignDetails;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -162,18 +168,24 @@ public class StoreFragment extends Fragment implements OnClickListener,
 		view = inflater.inflate(R.layout.store_info_screen, container, false);
 		preferences = mContext.getSharedPreferences("PrefString",
 				Context.MODE_PRIVATE);
-		
+
 		mCheckInStatus = new CheckInStatusController(mContext);
-		
+
 		if (getArguments() != null)
 
 		{
 			Bundle mBundle = getArguments();
+
+			storeDetailsList = mBundle
+					.getParcelableArrayList(ConstantUtils.STORE_LIST);
 			mStoreDetails = mBundle.getParcelable(ConstantUtils.STORE_DETAILS);
-			// mPromotorList = mBundle
-			// .getParcelableArrayList(ConstantUtils.PROMOTOR_LIST);
 			mUserForm = mBundle
 					.getParcelableArrayList(ConstantUtils.USER_FORM_LIST);
+			campaignDetailsList = mBundle
+					.getParcelableArrayList(ConstantUtils.CAMPAIGN_LIST);
+
+			mCampaignDetails = mBundle
+					.getParcelable(ConstantUtils.CAMPAIGN_DETAILS);
 			setActionBarTitle();
 
 			TLog.v(TAG, "mBundle " + mBundle);
@@ -201,7 +213,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 		tvDistanceDuration = (TextView) view
 				.findViewById(R.id.tvDistanceDuration);
 
-		postAnImage =(TextView) checkInLayout.findViewById(R.id.postImageText);
+		postAnImage = (TextView) checkInLayout.findViewById(R.id.postImageText);
 		storeDetails = (RelativeLayout) view.findViewById(R.id.storeDetails);
 		storeName = (TextView) view.findViewById(R.id.storeName);
 		addLine1 = (TextView) view.findViewById(R.id.addLine1);
@@ -276,29 +288,26 @@ public class StoreFragment extends Fragment implements OnClickListener,
 		}
 		userForm.setAdapter(userFormListAdapter);
 
-		
-		userListIcon.setTextColor(mContext.getResources().getColor(
-				R.color.red));
+		userListIcon
+				.setTextColor(mContext.getResources().getColor(R.color.red));
 
 		if (mCheckInStatus.getCheckInStatusForStore(mStoreDetails.getId())) {
-			
+
 			checkInText.setText(getString(R.string.check_out));
 			CheckInIcon.setText(getString(R.string.check_out_icon));
 			fillReportIcon.setTextColor(mContext.getResources().getColor(
 					R.color.lightest_orange));
 			CheckInIcon.setTextColor(mContext.getResources().getColor(
 					R.color.lightest_orange));
-		
-		} 
-		else
-		{
+
+		} else {
 			checkInText.setText(getString(R.string.check_in));
 			CheckInIcon.setText(getString(R.string.checkinIcon));
 			fillReportIcon.setTextColor(mContext.getResources().getColor(
 					R.color.GreyLineColor));
 			CheckInIcon.setTextColor(mContext.getResources().getColor(
 					R.color.lightest_orange));
-			
+
 		}
 
 		errorLayout = (RelativeLayout) view.findViewById(R.id.storeErrorLayout);
@@ -307,21 +316,26 @@ public class StoreFragment extends Fragment implements OnClickListener,
 		retryButton.setOnClickListener(this);
 		errorImage.setTypeface(iconFonts);
 
+		myImage.setVisibility(View.INVISIBLE);
+
 		if (!HTTPConnectionWrapper.isNetworkAvailable(mContext))
 			errorLayout.setVisibility(View.VISIBLE);
 		else
 			errorLayout.setVisibility(View.INVISIBLE);
-		
-		map.setOnMapClickListener(new OnMapClickListener() {
+		try {
+			map.setOnMapClickListener(new OnMapClickListener() {
 
-			@Override
-			public void onMapClick(LatLng point) {
-			errorLayout.setVisibility(View.GONE);
-			storeDetails.setVisibility(View.GONE);
-			mapFrame.setVisibility(View.VISIBLE);
-			}
+				@Override
+				public void onMapClick(LatLng point) {
+					errorLayout.setVisibility(View.GONE);
+					storeDetails.setVisibility(View.GONE);
+					mapFrame.setVisibility(View.VISIBLE);
+				}
 			});
-
+		} catch (Exception e) {
+			Toast.makeText(mContext, "Google play Services Not Availble",
+					Toast.LENGTH_LONG).show();
+		}
 		return view;
 	}
 
@@ -342,7 +356,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 			checkInLayout.setVisibility(View.VISIBLE);
 			mapFrame.setVisibility(View.INVISIBLE);
 			userForm.setVisibility(View.INVISIBLE);
-			
+
 			/**
 			 * Change color of tabs
 			 */
@@ -351,21 +365,29 @@ public class StoreFragment extends Fragment implements OnClickListener,
 			userListIcon.setTextColor(mContext.getResources().getColor(
 					R.color.lightest_orange));
 
-			RouteMapIcon.setTextColor(mContext.getResources().getColor(R.color.lightest_orange));
-			
+			RouteMapIcon.setTextColor(mContext.getResources().getColor(
+					R.color.lightest_orange));
 
-			if(mCheckInStatus.getCheckInStatus()){
+			if (mCheckInStatus.getCheckInStatusForStore(mStoreDetails.getId())) {
 				myImage.setVisibility(View.INVISIBLE);
 				postAnImage.setVisibility(View.VISIBLE);
-			}
-			else
-			{
-				if(!myImage.isShown())
+			} else {
+				if (!myImage.isShown())
 					postAnImage.setVisibility(View.VISIBLE);
 				else
 					postAnImage.setVisibility(View.INVISIBLE);
 			}
-			
+
+			if (mCheckInStatus.getCheckInStatusForStore(mStoreDetails.getId())) {
+
+				fillReportIcon.setTextColor(mContext.getResources().getColor(
+						R.color.lightest_orange));
+
+			} else {
+				fillReportIcon.setTextColor(mContext.getResources().getColor(
+						R.color.GreyLineColor));
+
+			}
 			break;
 
 		case R.id.userListIcon:
@@ -373,7 +395,8 @@ public class StoreFragment extends Fragment implements OnClickListener,
 			checkInLayout.setVisibility(View.INVISIBLE);
 			mapFrame.setVisibility(View.INVISIBLE);
 			userForm.setVisibility(View.INVISIBLE);
-			
+			myImage.setVisibility(View.INVISIBLE);
+
 			/**
 			 * Change color of tabs
 			 */
@@ -382,8 +405,18 @@ public class StoreFragment extends Fragment implements OnClickListener,
 			userListIcon.setTextColor(mContext.getResources().getColor(
 					R.color.red));
 
-			RouteMapIcon.setTextColor(mContext.getResources().getColor(R.color.lightest_orange));
-			
+			RouteMapIcon.setTextColor(mContext.getResources().getColor(
+					R.color.lightest_orange));
+			if (mCheckInStatus.getCheckInStatusForStore(mStoreDetails.getId())) {
+
+				fillReportIcon.setTextColor(mContext.getResources().getColor(
+						R.color.lightest_orange));
+
+			} else {
+				fillReportIcon.setTextColor(mContext.getResources().getColor(
+						R.color.GreyLineColor));
+
+			}
 			break;
 
 		case R.id.storeRouteMapIcon:
@@ -392,8 +425,9 @@ public class StoreFragment extends Fragment implements OnClickListener,
 			checkInLayout.setVisibility(View.INVISIBLE);
 			mapFrame.setVisibility(View.VISIBLE);
 			userForm.setVisibility(View.INVISIBLE);
+			myImage.setVisibility(View.INVISIBLE);
 			showOnMap();
-			
+
 			/**
 			 * Change color of tabs
 			 */
@@ -402,7 +436,18 @@ public class StoreFragment extends Fragment implements OnClickListener,
 			userListIcon.setTextColor(mContext.getResources().getColor(
 					R.color.lightest_orange));
 
-			RouteMapIcon.setTextColor(mContext.getResources().getColor(R.color.red));
+			RouteMapIcon.setTextColor(mContext.getResources().getColor(
+					R.color.red));
+			if (mCheckInStatus.getCheckInStatusForStore(mStoreDetails.getId())) {
+
+				fillReportIcon.setTextColor(mContext.getResources().getColor(
+						R.color.lightest_orange));
+
+			} else {
+				fillReportIcon.setTextColor(mContext.getResources().getColor(
+						R.color.GreyLineColor));
+
+			}
 			break;
 		case R.id.compaginLogo:
 
@@ -416,20 +461,15 @@ public class StoreFragment extends Fragment implements OnClickListener,
 					MediaStore.ACTION_IMAGE_CAPTURE);
 
 			File f = null;
-			TLog.v(TAG, "takePictureIntent : ");
 
 			try {
-				TLog.v(TAG, "UtilityMethods : ");
 
 				f = UtilityMethods.setUpPhotoFile(mContext);
-				TLog.v(TAG, "mCurrentPhotoPath : ");
 
 				mCurrentPhotoPath = f.getAbsolutePath();
-				TLog.v(TAG, "putExtra : " + mCurrentPhotoPath);
 
 				takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
 						Uri.fromFile(f));
-				TLog.v(TAG, "putExtra : ");
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -442,31 +482,30 @@ public class StoreFragment extends Fragment implements OnClickListener,
 			break;
 
 		case R.id.fillReportIcon:
+			myImage.setVisibility(View.INVISIBLE);
+			if (!mCheckInStatus.getCheckInStatusForStore(mStoreDetails.getId())) {
 
-		
+				Toast.makeText(mContext, "You should Checkin First",
+						Toast.LENGTH_LONG).show();
+			} else {
+				checkInLayout.setVisibility(View.INVISIBLE);
+				mapFrame.setVisibility(View.INVISIBLE);
+				promotorList.setVisibility(View.INVISIBLE);
+				userForm.setVisibility(View.VISIBLE);
 
-				if (!mCheckInStatus.getCheckInStatusForStore(mStoreDetails.getId())) {
-					
-					Toast.makeText(mContext, "You should Checkin First",
-							Toast.LENGTH_LONG).show();
-				} else {
-					checkInLayout.setVisibility(View.INVISIBLE);
-					mapFrame.setVisibility(View.INVISIBLE);
-					promotorList.setVisibility(View.INVISIBLE);
-					userForm.setVisibility(View.VISIBLE);
-					
-					/**
-					 * Change color of tabs
-					 */
-					CheckInIcon.setTextColor(mContext.getResources().getColor(
-							R.color.lightest_orange));
-					userListIcon.setTextColor(mContext.getResources().getColor(
-							R.color.lightest_orange));
-					fillReportIcon.setTextColor(mContext.getResources().getColor(
-							R.color.red));	
-					RouteMapIcon.setTextColor(mContext.getResources().getColor(R.color.lightest_orange));
-				
-				}
+				/**
+				 * Change color of tabs
+				 */
+				CheckInIcon.setTextColor(mContext.getResources().getColor(
+						R.color.lightest_orange));
+				userListIcon.setTextColor(mContext.getResources().getColor(
+						R.color.lightest_orange));
+				fillReportIcon.setTextColor(mContext.getResources().getColor(
+						R.color.red));
+				RouteMapIcon.setTextColor(mContext.getResources().getColor(
+						R.color.lightest_orange));
+
+			}
 			break;
 
 		case R.id.uploadFormIcon:
@@ -596,12 +635,21 @@ public class StoreFragment extends Fragment implements OnClickListener,
 						mPromotorList.get(position));
 				mBundle.putParcelableArrayList(ConstantUtils.USER_FORM_LIST,
 						mUserForm);
+				mBundle.putParcelableArrayList(ConstantUtils.CAMPAIGN_LIST,
+						campaignDetailsList);
+				mBundle.putParcelableArrayList(ConstantUtils.STORE_LIST,
+						storeDetailsList);
+				campaignDisplayName = mPromotorList.get(position)
+						.getCurrentCampagin();
+				mBundle.putString(ConstantUtils.CAMPAIGN_NAME,
+						campaignDisplayName);
+
 				promotorDetailsFragment.setArguments(mBundle);
-				((SupervisorMotherActivity) mActivity).onItemSelected(
+				((UserMotherActivity) mActivity).onItemSelected(
 						promotorDetailsFragment, true);
 
 			} catch (Exception e) {
-				Toast.makeText((SupervisorMotherActivity) mActivity,
+				Toast.makeText((UserMotherActivity) mActivity,
 						"ArrayOutOfBounds", Toast.LENGTH_LONG).show();
 			}
 			break;
@@ -617,11 +665,17 @@ public class StoreFragment extends Fragment implements OnClickListener,
 		super.onDestroyView();
 		SupportMapFragment f = (SupportMapFragment) getActivity()
 				.getSupportFragmentManager().findFragmentById(R.id.map);
-		if (f != null)
-			getFragmentManager().beginTransaction().remove(f).commit();
+
+		try {
+			if (f != null)
+				getFragmentManager().beginTransaction().remove(f)
+						.commitAllowingStateLoss();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		}
+
 	}
 
-	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -640,64 +694,90 @@ public class StoreFragment extends Fragment implements OnClickListener,
 					Bitmap myBitmap = BitmapFactory.decodeFile(imgFile
 							.getAbsolutePath());
 
+					if (!mCheckInStatus.getCheckInStatusForStore(mStoreDetails
+							.getId())) {
 
-					if(!mCheckInStatus.updateCheckInStatusForStore(mStoreDetails.getId(),true))
-					{
-						Toast.makeText(mContext, "Please check out from other store", Toast.LENGTH_SHORT).show();
-						
-						return;
-						
-					}
-					
-				
-					if (!mCheckInStatus.getCheckInStatusForStore(mStoreDetails.getId())) {
-						
-						
-						
+						if (!mCheckInStatus.updateCheckInStatusForStore(
+								mStoreDetails.getId(), true)) {
+							Toast.makeText(mContext,
+									"Please check out from other store",
+									Toast.LENGTH_SHORT).show();
+
+							return;
+
+						}
+
 						checkInText.setText(getString(R.string.check_out));
-						fillReportIcon.setTextColor(mContext.getResources().getColor(
-								R.color.lightest_orange));
-						
+						fillReportIcon.setTextColor(mContext.getResources()
+								.getColor(R.color.lightest_orange));
+
 						CheckInIcon.setText(getString(R.string.check_out_icon));
-						CheckInIcon.setTextColor(mContext.getResources().getColor(
-								R.color.red));
-						
-						
-						ConstantUtils.SYNC_INTERVAL = 20 * 1000 * 60;
+						CheckInIcon.setTextColor(mContext.getResources()
+								.getColor(R.color.red));
+
+						ConstantUtils.SYNC_INTERVAL = 60 * 60 * 1000;
 						Intent i = new Intent(mContext, PeriodicService.class);
 						mContext.startService(i);
 
-						
-						
-					} 
-					else
-					{
-							checkInText.setText(getString(R.string.check_in));
-							fillReportIcon.setTextColor(mContext.getResources().getColor(
-									R.color.GreyLineColor));
-							
-							CheckInIcon.setText(getString(R.string.checkinIcon));
-							CheckInIcon.setTextColor(mContext.getResources().getColor(
-									R.color.red));
-							
-							mCheckInStatus.updateCheckInStatusForStore(mStoreDetails.getId(),false);
-							userForm.setVisibility(View.INVISIBLE);
-							promotorList.setVisibility(View.VISIBLE);
-							
-							Intent intent = new Intent(mContext, PeriodicLocation.class);
-							PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getApplicationContext(), 0,
-								      intent, PendingIntent.FLAG_UPDATE_CURRENT);
-							AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-							alarmManager.cancel(pendingIntent);
-							Intent serviceI=new Intent(mContext,PeriodicService.class);
-							mContext.stopService(serviceI);
+					} else {
+						checkInText.setText(getString(R.string.check_in));
+						fillReportIcon.setTextColor(mContext.getResources()
+								.getColor(R.color.GreyLineColor));
+						CheckInIcon.setText(getString(R.string.checkinIcon));
+						CheckInIcon.setTextColor(mContext.getResources()
+								.getColor(R.color.red));
+
+						// mCheckInStatus.updateCheckInStatusForStore(mStoreDetails.getId(),false);
+						mCheckInStatus.clearCheckInStatusForStore(mStoreDetails
+								.getId());
+						userForm.setVisibility(View.INVISIBLE);
+						promotorList.setVisibility(View.VISIBLE);
+
+						Intent intent = new Intent(mContext,
+								PeriodicLocation.class);
+						PendingIntent pendingIntent = PendingIntent
+								.getBroadcast(getActivity()
+										.getApplicationContext(), 0, intent,
+										PendingIntent.FLAG_UPDATE_CURRENT);
+						AlarmManager alarmManager = (AlarmManager) getActivity()
+								.getSystemService(Context.ALARM_SERVICE);
+						alarmManager.cancel(pendingIntent);
+						Intent serviceI = new Intent(mContext,
+								PeriodicService.class);
+						mContext.stopService(serviceI);
 					}
-	
-					myImage.setImageBitmap(myBitmap);
-				
+
+					myImage.setVisibility(View.VISIBLE);
 					postAnImage.setVisibility(View.INVISIBLE);
 					checkInLayout.setVisibility(View.VISIBLE);
+					promotorList.setVisibility(View.INVISIBLE);
 
+					myImage.setImageBitmap(myBitmap);
+					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+					myBitmap.compress(Bitmap.CompressFormat.JPEG, 100,
+							byteArrayOutputStream);
+
+					imageInByte = byteArrayOutputStream.toByteArray();
+					encodedImage = Base64.encodeToString(imageInByte,
+							Base64.DEFAULT);
+					Calendar calendar = Calendar.getInstance();
+					String currentDate = new SimpleDateFormat("yyyy-MM-dd ",
+							Locale.getDefault()).format(calendar.getTime());
+
+					String currentTime = new SimpleDateFormat("hh:mm:ss",
+							Locale.getDefault()).format(calendar.getTime());
+
+					String timeofcheckin = currentDate + currentTime;
+					String auth_token = LoginData.getInstance().getAuthToken();
+					String role = LoginData.getInstance().getRole();
+
+					String id = LoginData.getInstance().getId();
+
+					JsonCheckinDataParser jsonCheckinDataParser = new JsonCheckinDataParser();
+					jsonCheckinDataParser.postCheckinDataToURL(mContext,
+							auth_token, role, encodedImage,
+							ConstantUtils.CHECK_IN_URL, id, timeofcheckin,
+							mCampaignDetails.getId(), mStoreDetails.getId());
 
 				}
 			} catch (Exception e) {
@@ -719,7 +799,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 			if (isCamera) {
 				Uri.fromFile(uploadFormSavedFile);
 			} else {
-			//	data == null ? null : data.getData();
+				// data == null ? null : data.getData();
 			}
 
 			try {
@@ -732,7 +812,6 @@ public class StoreFragment extends Fragment implements OnClickListener,
 					Bitmap myBitmap = BitmapFactory.decodeFile(imgFile
 							.getAbsolutePath());
 
-					
 					// Drawable d = new BitmapDrawable(getResources(),
 					// myBitmap);
 					myImage.setImageBitmap(myBitmap);
@@ -757,8 +836,8 @@ public class StoreFragment extends Fragment implements OnClickListener,
 		url.append(ConstantUtils.USER_DETAILS_URL);
 		url.append(mStoreDetails.getId());
 		jsonGetPromotorDetails.getPromotorDetailsFromURL(url.toString(), this,
-				mContext, "", mStoreDetails.getId(), ConstantUtils.START_COUNT,
-				ConstantUtils.NUMBER);
+				mContext, "", mStoreDetails.getId(), 0,
+				ConstantUtils.MAX_USER_RESPONSE_COUNT);
 	}
 
 	@Override
@@ -782,8 +861,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 				String url = UtilityMethods.getDirectionsUrl(currentLatLng,
 						storeLatLng);
 
-				new JsonGetStoreDistance(
-						url, this, mContext);
+				new JsonGetStoreDistance(url, this, mContext);
 			}
 
 		}
@@ -850,23 +928,63 @@ public class StoreFragment extends Fragment implements OnClickListener,
 	}
 
 	@Override
-	public void onPromotorDetailsRecieved(SinglePromotorData mSinglePromotorData) {
-		if (mSinglePromotorData!= null
+	public void onUserDetailsRecieved(SinglePromotorData mSinglePromotorData) {
+		if (mSinglePromotorData != null
 				&& mSinglePromotorData.getPersonalDetails().size() > 0) {
 			promotorListProgressBar.setVisibility(View.GONE);
 			promotorList.setVisibility(View.VISIBLE);
 			mPromotorList = mSinglePromotorData.getPersonalDetails();
-			if (promotorListAdapter == null)
-				promotorListAdapter = new PromotorListAdapter(mContext,
+			if (userListAdapter == null)
+				userListAdapter = new UserListAdapter(mContext,
 						mSinglePromotorData.getPersonalDetails());
-			promotorListAdapter.notifyDataSetChanged();
-			promotorList.setAdapter(promotorListAdapter);
+			userListAdapter.notifyDataSetChanged();
+			promotorList.setAdapter(userListAdapter);
 		}
 
 	}
 
 	@Override
 	public void responseRecieved(ResponseData mResponseData) {
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+
+		try {
+			Field childFragmentManager = Fragment.class
+					.getDeclaredField("mChildFragmentManager");
+			childFragmentManager.setAccessible(true);
+			childFragmentManager.set(this, null);
+
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.promoter_action_bar, menu);
+
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+
+		case R.id.notifications:
+			NotificationListFragment notificationListFragment = new NotificationListFragment();
+			((UserMotherActivity) mActivity).onItemSelected(
+					notificationListFragment, true);
+
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 }

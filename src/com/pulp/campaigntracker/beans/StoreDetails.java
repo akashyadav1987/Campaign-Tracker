@@ -1,7 +1,5 @@
 package com.pulp.campaigntracker.beans;
 
-import java.util.List;
-
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;

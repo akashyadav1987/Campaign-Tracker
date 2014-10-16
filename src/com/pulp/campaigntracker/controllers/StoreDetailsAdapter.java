@@ -14,31 +14,30 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.beans.StoreDetails;
-import com.pulp.campaigntracker.listeners.UserLocationManager;
 
 public class StoreDetailsAdapter extends BaseAdapter {
 
 	private Context mContext;
 	private List<StoreDetails> mStoreList;
 	private LayoutInflater layoutInflater;
-
+	private ImageLoader imageLoader;
 	private Typeface icomoon;
 	private double storeLan;
 	private double storeLat;
 	private String storeNameString;
+	int[] placeholders = { R.drawable.place_holder_blue,
+			R.drawable.place_holder_red, R.drawable.place_holder_orange,
+			R.drawable.place_holder_yellow };
 
 	public StoreDetailsAdapter(Context mContext, List<StoreDetails> mStoreList) {
 		this.mContext = mContext;
 		this.mStoreList = mStoreList;
 		this.layoutInflater = (LayoutInflater) mContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	
+		imageLoader = ImageLoader.getInstance();
 		icomoon = Typeface.createFromAsset(mContext.getAssets(), "icomoon.ttf");
 
 	}
@@ -77,15 +76,26 @@ public class StoreDetailsAdapter extends BaseAdapter {
 					.findViewById(R.id.storeRegion);
 			viewHolder.textbelowImage = (TextView) convertView
 					.findViewById(R.id.forwardIcon);
+			viewHolder.storeText = (TextView) convertView
+					.findViewById(R.id.storeText);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 
 		if (mStoreList.get(position).getName() != null)
+
 			viewHolder.storeName.setText(getItem(position).getName());
-		else
-			viewHolder.storeName.setVisibility(View.GONE);
+		
+//		if(viewHolder.storeName.length()>15){
+//			String smallString = getItem(position).getName().substring(0, Math.min(viewHolder.storeName.length(), 12));
+//			smallString = smallString.concat("...");
+//			viewHolder.storeName.setText(smallString);
+//		} //Ritu
+//		
+//		
+//		else
+//			viewHolder.storeName.setVisibility(View.GONE);
 
 		if (mStoreList.get(position).getState() != null)
 			viewHolder.storeState.setText(getItem(position).getState());
@@ -96,6 +106,7 @@ public class StoreDetailsAdapter extends BaseAdapter {
 			viewHolder.storeRegion.setText(getItem(position).getRegion());
 		else
 			viewHolder.storeRegion.setVisibility(View.GONE);
+
 		storeLat = mStoreList.get(position).getLatitude();
 		storeLan = mStoreList.get(position).getLongitude();
 		storeNameString = mStoreList.get(position).getName();
@@ -126,6 +137,14 @@ public class StoreDetailsAdapter extends BaseAdapter {
 							Toast.LENGTH_LONG).show();
 			}
 		});
+		if (mStoreList.get(position).getName() != null
+				&& mStoreList.get(position).getName().length() > 0) {
+			viewHolder.storeText.setText(getItem(position).getName()
+					.substring(0, 1).toUpperCase());
+			viewHolder.storeText
+					.setBackgroundResource(placeholders[(position % 4)]);
+
+		}
 
 		return convertView;
 	}
@@ -141,6 +160,7 @@ public class StoreDetailsAdapter extends BaseAdapter {
 		private TextView storeState;
 		private TextView storeMapImage;
 		private TextView storeRegion;
+		private TextView storeText;
 		private TextView textbelowImage;
 
 	}

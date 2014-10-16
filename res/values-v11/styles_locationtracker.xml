@@ -20,17 +20,54 @@
 
 <resources>
 
-	<style name="Theme.Locationtracker" parent="@style/Theme.AppCompat.Light">
+    
+      <style name="PopupMenu.Locationtracker" parent="@style/Widget.AppCompat.Light.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_locationtracker</item>
+    </style>
 
-	
+    <style name="DropDownListView.Locationtracker" parent="@style/Widget.AppCompat.Light.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_locationtracker</item>
+    </style>
+
+    <style name="ActionBarTabStyle.Locationtracker" parent="@style/Widget.AppCompat.Light.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_ab_locationtracker</item>
+    </style>
+    
+	<style name="Theme.Locationtracker" parent="@style/Theme.AppCompat.Light">
+		<item name="android:actionBarItemBackground">@drawable/selectable_background_locationtracker</item>
+		<item name="android:popupMenuStyle">@style/PopupMenu.Locationtracker</item>
+		<item name="android:dropDownListViewStyle">@style/DropDownListView.Locationtracker</item>
+		<item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Locationtracker</item>
+		
 		<item name="android:actionBarStyle">@style/ActionBar.Solid.Locationtracker</item>
 		<item name="android:actionModeBackground">@drawable/cab_background_top_locationtracker</item>
-	
+		<item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_locationtracker</item>
+		<item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Locationtracker</item>
 	</style>
 
+	  <style name="ActionButton.CloseMode.Locationtracker" parent="@style/Widget.AppCompat.Light.ActionButton.CloseMode">
+        <item name="android:background">@drawable/btn_cab_done_locationtracker</item>
+    </style>
+
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Theme.Locationtracker.Widget" parent="@style/Theme.AppCompat">
+        <item name="android:popupMenuStyle">@style/PopupMenu.Locationtracker</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Locationtracker</item>
+    </style>
+
+    
+    
+    <!-- action bar title text -->
+    <style name="TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    
 	<style name="ActionBar.Solid.Locationtracker" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
 		<item name="android:background">@drawable/ab_solid_locationtracker</item>
-
+		<item name="android:backgroundStacked">@drawable/ab_stacked_solid_locationtracker</item>
+		<item name="android:backgroundSplit">@drawable/ab_bottom_solid_locationtracker</item>
+	
 		<item name="android:titleTextStyle">@style/myActionBar.titleTextStyle</item>
 	</style>
 
@@ -40,13 +77,9 @@
 
 	<style name="ActionBar.Transparent.Locationtracker" parent="@style/Widget.AppCompat.Light.ActionBar">
 		<item name="android:background">@drawable/ab_transparent_locationtracker</item>
-	
+
 	</style>
 
-	<!-- this style is only referenced in a Light.DarkActionBar based theme -->
-	<style name="Theme.Locationtracker.Widget" parent="@style/Theme.AppCompat">
-		<item name="android:popupMenuStyle">@style/PopupMenu.Locationtracker</item>
-		<item name="android:dropDownListViewStyle">@style/DropDownListView.Locationtracker</item>
-	</style>
+
 
 </resources>

@@ -26,7 +26,8 @@
         android:layout_marginLeft="15dp"
         android:layout_toRightOf="@id/compaginLogo"
         android:text="@string/venue_address"
-        android:textSize="@dimen/heading_textsize" />
+        android:textSize="@dimen/normal_text_size"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/storeName"

@@ -64,7 +64,7 @@ public class PromotorListFragment extends android.support.v4.app.Fragment implem
 			Bundle mBundle  = new Bundle();
 			mBundle.putParcelable(ConstantUtils.STORE_DETAILS, mCampaignDetails.getStoreList().get(arg2));
 			sf.setArguments(mBundle);
-			((SupervisorMotherActivity)mActivity).onItemSelected(sf, true);
+			((UserMotherActivity)mActivity).onItemSelected(sf, true);
 
 
 			break;

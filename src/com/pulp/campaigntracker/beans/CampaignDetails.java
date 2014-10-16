@@ -3,8 +3,6 @@ package com.pulp.campaigntracker.beans;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.pulp.campaigntracker.dao.UserLoginStatusDatabase;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -20,6 +18,16 @@ public class CampaignDetails implements Parcelable {
 	private String contactNumber;
 	private String registered;
 	private String imageUrl;
+	private String promoterCount;
+
+	public String getPromoterCount() {
+		return promoterCount;
+	}
+
+	public void setPromoterCount(String promoterCount) {
+		this.promoterCount = promoterCount;
+	}
+
 	private List<StoreDetails> storeList;
 	private UserProfile immediateManager;
 	private String campaignDisplayName;
@@ -164,7 +172,7 @@ public class CampaignDetails implements Parcelable {
 		contactNumber = in.readString();
 		registered = in.readString();
 		imageUrl = in.readString();
-
+		promoterCount = in.readString();
 		userFormDetailsList = new ArrayList<UserFormDetails>();
 		in.readList(userFormDetailsList, UserFormDetails.class.getClassLoader());
 
@@ -189,6 +197,7 @@ public class CampaignDetails implements Parcelable {
 		dest.writeString(alias_name);
 		dest.writeString(address);
 		dest.writeString(company);
+		dest.writeString(promoterCount);
 		dest.writeString(contactNumber);
 		dest.writeString(registered);
 		dest.writeString(imageUrl);

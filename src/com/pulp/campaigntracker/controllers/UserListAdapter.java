@@ -10,27 +10,25 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.Telephony;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.beans.UserProfile;
+import com.pulp.campaigntracker.controllers.UserFormAdapter.ViewHolder;
 import com.pulp.campaigntracker.utils.ConstantUtils;
 
-public class PromotorListAdapter extends BaseAdapter {
+public class UserListAdapter extends BaseAdapter {
 
 	private Context mContext;
-	private List<UserProfile> mPromotorList;
-	List<UserProfile> nPromotorList;
+	private List<UserProfile> mUserList;
+	List<UserProfile> mAllUserList;
 	private LayoutInflater layoutInflater;
 	ViewHolder viewHolder = null;
 
@@ -38,32 +36,35 @@ public class PromotorListAdapter extends BaseAdapter {
 			R.drawable.place_holder_red, R.drawable.place_holder_orange,
 			R.drawable.place_holder_yellow };
 
-	private ImageLoader imageLoader;
+
 	private Typeface icomoon;
 
-	// private PromoterFilter mPromoterFilter;
 
-	public PromotorListAdapter(Context mContext,
-			ArrayList<UserProfile> mPromotorList) {
+
+	public UserListAdapter(Context mContext,
+			ArrayList<UserProfile> mUserList) {
 		this.mContext = mContext;
-		this.mPromotorList = mPromotorList;
+		this.mUserList = mUserList;
 		this.layoutInflater = (LayoutInflater) mContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		imageLoader = ImageLoader.getInstance();
+
 		icomoon = Typeface.createFromAsset(mContext.getAssets(), "icomoon.ttf");
-		this.nPromotorList = new ArrayList<UserProfile>();
-		nPromotorList.addAll(mPromotorList);
+		this.mAllUserList = new ArrayList<UserProfile>();
+		mAllUserList.addAll(mUserList);
 
 	}
+	
+	
+
 
 	@Override
 	public int getCount() {
-		return mPromotorList.size();
+		return mUserList.size();
 	}
 
 	@Override
 	public UserProfile getItem(int position) {
-		return mPromotorList.get(position);
+		return mUserList.get(position);
 	}
 
 	@Override
@@ -76,82 +77,82 @@ public class PromotorListAdapter extends BaseAdapter {
 	public void filter(String charText) {
 		charText = charText.toLowerCase(Locale.getDefault());
 
-		mPromotorList.clear();
+		mUserList.clear();
 		if (charText.length() == 0) {
-			mPromotorList.addAll(nPromotorList);
+			mUserList.addAll(mAllUserList);
 		} else {
-			for (UserProfile p : nPromotorList) {
+			for (UserProfile p : mAllUserList) {
 				if (p.getName().toLowerCase()
 						.contains(charText.toString().toLowerCase()))
-					mPromotorList.add(p);
+					mUserList.add(p);
 			}
 		}
 
 		notifyDataSetChanged();
 	}
 
-	// @Override
-	// public Filter getFilter() {
-	// if (mPromoterFilter == null)
-	// mPromoterFilter = new PromoterFilter();
-	//
-	// return mPromoterFilter;
-	// }
+
+	/**
+	 * 
+	 * 
+	 * 
+	 */
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup arg2) {
 
-		if (convertView == null) {
-			viewHolder = new ViewHolder();
-			convertView = layoutInflater.inflate(R.layout.promotor_list_item,
-					null);
-			viewHolder.promotorName = (TextView) convertView
-					.findViewById(R.id.promotorName);
-			viewHolder.promotorNameIcon = (TextView) convertView
-					.findViewById(R.id.promotorNameIcon);
-			viewHolder.phoneIcon = (TextView) convertView
-					.findViewById(R.id.phoneIcon);
-			viewHolder.emailIcon = (TextView) convertView
-					.findViewById(R.id.emailIcon);
-			viewHolder.campaignImage = (ImageView) convertView
-					.findViewById(R.id.campaignImage);
-			viewHolder.promotorLocationOrTime = (TextView) convertView
-					.findViewById(R.id.promotorCheckinTime);
-			viewHolder.status = (View) convertView.findViewById(R.id.status);
 
-			convertView.setTag(viewHolder);
-		} else {
-			viewHolder = (ViewHolder) convertView.getTag();
-		}
 
-		if (mPromotorList.get(position).getName() != null)
-			viewHolder.promotorName.setText(getItem(position).getName());
+		convertView = layoutInflater.inflate(R.layout.promotor_list_item, null);
+		viewHolder = new ViewHolder();
 
-		if (mPromotorList.get(position).getName() != null)
-			viewHolder.promotorNameIcon.setText(getItem(position).getName()
+
+		viewHolder.userName = (TextView) convertView
+				.findViewById(R.id.promotorName);
+		viewHolder.type =(TextView) convertView.findViewById(R.id.role);
+		viewHolder.userNameIcon = (TextView) convertView
+				.findViewById(R.id.promotorNameIcon);
+		viewHolder.phoneIcon = (TextView) convertView
+				.findViewById(R.id.phoneIcon);
+		viewHolder.emailIcon = (TextView) convertView
+				.findViewById(R.id.emailIcon);
+		viewHolder.campaignImage = (ImageView) convertView
+				.findViewById(R.id.campaignImage);
+		viewHolder.userLocationOrTime = (TextView) convertView
+				.findViewById(R.id.promotorCheckinTime);
+		viewHolder.status = (View) convertView.findViewById(R.id.status);
+
+		convertView.setTag(viewHolder);
+	
+
+		if (mUserList.get(position).getName() != null)
+			viewHolder.userName.setText(getItem(position).getName());
+
+		if (mUserList.get(position).getName() != null)
+			viewHolder.userNameIcon.setText(getItem(position).getName()
 					.substring(0, 1).toUpperCase());
-		viewHolder.promotorNameIcon
+		viewHolder.userNameIcon
 				.setBackgroundResource(placeholders[(position % 4)]);
-		if (ConstantUtils.ReferList) {
-			viewHolder.promotorLocationOrTime.setText(getItem(position)
-					.getCurrentCampagin());
-		} else {
-			viewHolder.promotorLocationOrTime.setText(getItem(position)
-					.getCurrentStore());
+		if(getItem(position).getRole()==null){
+			getItem(position).setRole("");
 		}
-
+		
+		viewHolder.type.setText("Role: "+getItem(position).getRole());
 		viewHolder.emailIcon.setTypeface(icomoon);
 		viewHolder.phoneIcon.setTypeface(icomoon);
 
-		if (position % 2 == 0)
+		if (getItem(position).getStatus().equalsIgnoreCase("active")) {
 
-			// if (android.os.Build.VERSION.SDK_INT >=
-			// android.os.Build.VERSION_CODES.JELLY_BEAN){
 			setStatusBackground(R.drawable.circle_active);
+
+			viewHolder.userLocationOrTime.setText(getItem(position)
+						.getCurrentCampagin());
+
+		}
 
 		else
 			setStatusBackground(R.drawable.circle_inactive);
-	
+
 		viewHolder.phoneIcon.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -197,12 +198,13 @@ public class PromotorListAdapter extends BaseAdapter {
 	 * 
 	 */
 	public class ViewHolder {
-		private TextView promotorName;
-		private TextView promotorNameIcon;
+		private TextView userName;
+		private TextView userNameIcon;
 		private TextView phoneIcon;
 		private TextView emailIcon;
 		private ImageView campaignImage;
-		private TextView promotorLocationOrTime;
+		private TextView userLocationOrTime;
+		private TextView type;
 		private View status;
 
 	}

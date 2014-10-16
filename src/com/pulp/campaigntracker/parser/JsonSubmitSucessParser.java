@@ -6,16 +6,14 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.json.JSONObject;
 
-import com.pulp.campaigntracker.beans.ResponseData;
-import com.pulp.campaigntracker.listeners.ResponseRecieved;
-import com.pulp.campaigntracker.utils.ConstantUtils;
-import com.pulp.campaigntracker.utils.UtilityMethods;
-
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
+
+import com.pulp.campaigntracker.beans.ResponseData;
+import com.pulp.campaigntracker.listeners.ResponseRecieved;
+import com.pulp.campaigntracker.utils.UtilityMethods;
 
 public class JsonSubmitSucessParser {
 
