@@ -28,6 +28,7 @@ import com.pulp.campaigntracker.listeners.CampaignDetailsRecieved;
 
 import com.pulp.campaigntracker.utils.ConstantUtils;
 
+import com.pulp.campaigntracker.utils.ParserKeysConstants;
 import com.pulp.campaigntracker.utils.TLog;
 import com.pulp.campaigntracker.utils.UtilityMethods;
 
@@ -36,29 +37,8 @@ public class JsonGetCampaignDetails {
 
 	private final String TAG = JsonGetCampaignDetails.class.getSimpleName();
 	private CampaignDetailsRecieved listener;
-	// JSON Response node names
-	private final String KEY_ID = "id";
-	private final String KEY_COMPANY = "compDesc"; 
-	private final String KEY_PHONE = "phone";
-	private final String KEY_NAME = "name";
-	private final String KEY_ADDRESS = "address";
-	private final String KEY_CAMPAIGN_LIST = "campaign_list";
-	private final String KEY_CAMPAIGN_DETAILS = "campaign_details";
-	private final String KEY_STORE_LIST = "store_list";
-	private final String KEY_CITY = "city";
-	private final String KEY_STATE = "state";
-	private final String KEY_REGION = "region";
-	private final String KEY_AGENT = "agent";
 	private ArrayList<CampaignDetails> mCampaignDetailsList;
-	private final String KEY_PINCODE = "pincode";
-	private final String KEY_LATITUDE = "lattitude";
-	private final String KEY_LONGITUDE = "longitude";
-	private final String KEY_FORM_LIST = "form_list";
-	private final String KEY_FIELD_NAME = "field_name";
-	private final String KEY_FIELD_TYPE = "field_type";
-	private final String KEY_FIELD_LENGTH = "field_length";
-	private final String KEY_IMAGE = "store_image";
-	private String KEY_CATEGORY = "category";
+	
 	private Context mContext;
 	GetJson getJson;
 	// Single instance for Login
@@ -200,10 +180,10 @@ public class JsonGetCampaignDetails {
 
 		try {
 
-				if (!jsonFullObject.isNull(KEY_CAMPAIGN_LIST)){
+				if (!jsonFullObject.isNull(ParserKeysConstants.KEY_CAMPAIGN_LIST)){
 
 					JSONArray jsonArray = jsonFullObject
-							.getJSONArray(KEY_CAMPAIGN_LIST);
+							.getJSONArray(ParserKeysConstants.KEY_CAMPAIGN_LIST);
 					
 					mCampaignDetailsList = new ArrayList<CampaignDetails>();
 					for (int i = 0; i < jsonArray.length(); i++) {
@@ -236,79 +216,79 @@ public class JsonGetCampaignDetails {
 		CampaignDetails mCampaignDetails = new CampaignDetails();
 
 		// Parse the campaign details Object
-		if (!jsonObject.isNull(KEY_CAMPAIGN_DETAILS)
-				&& jsonObject.getJSONObject(KEY_CAMPAIGN_DETAILS) instanceof JSONObject) {
+		if (!jsonObject.isNull(ParserKeysConstants.KEY_CAMPAIGN_DETAILS)
+				&& jsonObject.getJSONObject(ParserKeysConstants.KEY_CAMPAIGN_DETAILS) instanceof JSONObject) {
 			JSONObject jsonCampaignObject = (JSONObject) jsonObject
-					.getJSONObject(KEY_CAMPAIGN_DETAILS);
+					.getJSONObject(ParserKeysConstants.KEY_CAMPAIGN_DETAILS);
 
-			if (!jsonCampaignObject.isNull(KEY_ID))
-				mCampaignDetails.setId(jsonCampaignObject.getString(KEY_ID));
+			if (!jsonCampaignObject.isNull(ParserKeysConstants.KEY_ID))
+				mCampaignDetails.setId(jsonCampaignObject.getString(ParserKeysConstants.KEY_ID));
 
 
-			if (!jsonCampaignObject.isNull(KEY_NAME))
+			if (!jsonCampaignObject.isNull(ParserKeysConstants.KEY_NAME))
 				mCampaignDetails
-						.setName(jsonCampaignObject.getString(KEY_NAME));
+						.setName(jsonCampaignObject.getString(ParserKeysConstants.KEY_NAME));
 
-			if (!jsonCampaignObject.isNull(KEY_COMPANY))
+			if (!jsonCampaignObject.isNull(ParserKeysConstants.KEY_COMPANY))
 				mCampaignDetails.setCompany(jsonCampaignObject
-						.getString(KEY_COMPANY));
+						.getString(ParserKeysConstants.KEY_COMPANY));
 
 		}
 
 
 
 		// Parse the list of stores
-		if (!jsonObject.isNull(KEY_STORE_LIST)
-				&& jsonObject.getJSONArray(KEY_STORE_LIST) instanceof JSONArray) {
+		if (!jsonObject.isNull(ParserKeysConstants.KEY_STORE_LIST)
+				&& jsonObject.getJSONArray(ParserKeysConstants.KEY_STORE_LIST) instanceof JSONArray) {
 			JSONArray jsonStoreListArray = (JSONArray) jsonObject
-					.getJSONArray(KEY_STORE_LIST);
+					.getJSONArray(ParserKeysConstants.KEY_STORE_LIST);
 			List<StoreDetails> mStoreList = new ArrayList<StoreDetails>();
 			for (int i = 0; i < jsonStoreListArray.length(); i++) {
 				JSONObject jStoreObject = jsonStoreListArray.getJSONObject(i);
 				StoreDetails storeDetails = new StoreDetails();
 				
-				if (!jStoreObject.isNull(KEY_NAME))
-					storeDetails.setName(jStoreObject.getString(KEY_NAME));
+				if (!jStoreObject.isNull(ParserKeysConstants.KEY_NAME))
+					storeDetails.setName(jStoreObject.getString(ParserKeysConstants.KEY_NAME));
 
-				if (!jStoreObject.isNull(KEY_PHONE))
+				if (!jStoreObject.isNull(ParserKeysConstants.KEY_PHONE))
 					storeDetails
-							.setContactNo(jStoreObject.getString(KEY_PHONE));
+							.setContactNo(jStoreObject.getString(ParserKeysConstants.KEY_PHONE));
 
-				if (!jStoreObject.isNull(KEY_ADDRESS))
+				if (!jStoreObject.isNull(ParserKeysConstants.KEY_ADDRESS))
 					storeDetails
-							.setAddress(jStoreObject.getString(KEY_ADDRESS));
+							.setAddress(jStoreObject.getString(ParserKeysConstants.KEY_ADDRESS));
 
-				if (!jStoreObject.isNull(KEY_REGION))
-					storeDetails.setRegion(jStoreObject.getString(KEY_REGION));
+				if (!jStoreObject.isNull(ParserKeysConstants.KEY_REGION))
+					storeDetails.setRegion(jStoreObject.getString(ParserKeysConstants.KEY_REGION));
 
-				if (!jStoreObject.isNull(KEY_CATEGORY))
+				if (!jStoreObject.isNull(ParserKeysConstants.KEY_CATEGORY))
 					storeDetails.setStoreCategory(jStoreObject
-							.getString(KEY_CATEGORY));
+							.getString(ParserKeysConstants.KEY_CATEGORY));
 
-				if (!jStoreObject.isNull(KEY_CITY))
-					storeDetails.setCity(jStoreObject.getString(KEY_CITY));
+				if (!jStoreObject.isNull(ParserKeysConstants.KEY_CITY))
+					storeDetails.setCity(jStoreObject.getString(ParserKeysConstants.KEY_CITY));
 
-				if (!jStoreObject.isNull(KEY_STATE))
-					storeDetails.setState(jStoreObject.getString(KEY_STATE));
+				if (!jStoreObject.isNull(ParserKeysConstants.KEY_STATE))
+					storeDetails.setState(jStoreObject.getString(ParserKeysConstants.KEY_STATE));
 
-				if (!jStoreObject.isNull(KEY_AGENT))
-					storeDetails.setAgent(jStoreObject.getInt(KEY_AGENT));
+				if (!jStoreObject.isNull(ParserKeysConstants.KEY_AGENT))
+					storeDetails.setAgent(jStoreObject.getInt(ParserKeysConstants.KEY_AGENT));
 
-				if (!jStoreObject.isNull(KEY_PINCODE))
+				if (!jStoreObject.isNull(ParserKeysConstants.KEY_PINCODE))
 					storeDetails
-							.setPincode(jStoreObject.getString(KEY_PINCODE));
+							.setPincode(jStoreObject.getString(ParserKeysConstants.KEY_PINCODE));
 
-				if (!jStoreObject.isNull(KEY_LATITUDE))
+				if (!jStoreObject.isNull(ParserKeysConstants.KEY_LATITUDE))
 					storeDetails.setLatitude(jStoreObject
-							.getDouble(KEY_LATITUDE));
+							.getDouble(ParserKeysConstants.KEY_LATITUDE));
 
-				if (!jStoreObject.isNull(KEY_LONGITUDE))
+				if (!jStoreObject.isNull(ParserKeysConstants.KEY_LONGITUDE))
 					storeDetails.setLongitude(jStoreObject
-							.getDouble(KEY_LONGITUDE));
+							.getDouble(ParserKeysConstants.KEY_LONGITUDE));
 
-				if (!jStoreObject.isNull(KEY_IMAGE)) {
+				if (!jStoreObject.isNull(ParserKeysConstants.KEY_IMAGE)) {
 
-					String encodedImage = jStoreObject.getString(KEY_IMAGE);
+					String encodedImage = jStoreObject.getString(ParserKeysConstants.KEY_IMAGE);
 					byte[] decodedString = Base64.decode(encodedImage,
 							Base64.DEFAULT);
 					Bitmap decodedByte = BitmapFactory.decodeByteArray(
@@ -322,26 +302,26 @@ public class JsonGetCampaignDetails {
 		}
 
 		
-		if (!jsonObject.isNull(KEY_FORM_LIST)
-				&& jsonObject.getJSONArray(KEY_FORM_LIST) instanceof JSONArray) {
-			JSONArray jMessageList = jsonObject.getJSONArray(KEY_FORM_LIST);
+		if (!jsonObject.isNull(ParserKeysConstants.KEY_FORM_LIST)
+				&& jsonObject.getJSONArray(ParserKeysConstants.KEY_FORM_LIST) instanceof JSONArray) {
+			JSONArray jMessageList = jsonObject.getJSONArray(ParserKeysConstants.KEY_FORM_LIST);
 			TLog.v(TAG, "KEY_FORM_LIST" + jMessageList);
 			List<UserFormDetails> userFormDetailsList = new ArrayList<UserFormDetails>();
 			for (int i = 0; i < jMessageList.length(); i++) {
 				JSONObject jMessage = jMessageList.getJSONObject(i);
 				UserFormDetails userFormDetails = new UserFormDetails();
 
-				if (!jMessage.isNull(KEY_FIELD_NAME))
+				if (!jMessage.isNull(ParserKeysConstants.KEY_FIELD_NAME))
 					userFormDetails.setFieldName(jMessage
-							.getString(KEY_FIELD_NAME));
+							.getString(ParserKeysConstants.KEY_FIELD_NAME));
 
-				if (!jMessage.isNull(KEY_FIELD_TYPE))
+				if (!jMessage.isNull(ParserKeysConstants.KEY_FIELD_TYPE))
 					userFormDetails.setFieldType(jMessage
-							.getString(KEY_FIELD_TYPE));
+							.getString(ParserKeysConstants.KEY_FIELD_TYPE));
 
-				if (!jMessage.isNull(KEY_FIELD_LENGTH))
+				if (!jMessage.isNull(ParserKeysConstants.KEY_FIELD_LENGTH))
 					userFormDetails.setFieldLength(jMessage
-							.getString(KEY_FIELD_LENGTH));
+							.getString(ParserKeysConstants.KEY_FIELD_LENGTH));
 
 				userFormDetailsList.add(userFormDetails);
 

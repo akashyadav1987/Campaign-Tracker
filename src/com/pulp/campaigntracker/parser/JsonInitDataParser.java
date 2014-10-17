@@ -9,6 +9,7 @@ import android.os.Build;
 
 import com.pulp.campaigntracker.beans.InitData;
 import com.pulp.campaigntracker.listeners.InitializeApp;
+import com.pulp.campaigntracker.utils.ParserKeysConstants;
 import com.pulp.campaigntracker.utils.UtilityMethods;
 
 public class JsonInitDataParser {
@@ -19,13 +20,6 @@ public class JsonInitDataParser {
 
 	private String url;
 
-	// JSON Response node names
-	private final String KEY_LOCATION_TIME_START = "location_time_start";
-	private final String KEY_LOCATION_TIME_END = "location_time_end";
-	private final String KEY_LOCATION_INTERVAL = "location_interval";
-	private final String KEY_BATTERY_STATUS = "battery_status";
-	private final String KEY_INIT_CONFIG = "init_config";
-	private final String KEY_SYNC_INTERVAL = "sync_interval";
 
 
 
@@ -84,29 +78,29 @@ public class JsonInitDataParser {
 
 		try {
 
-			if (!jsonFullObject.isNull(KEY_INIT_CONFIG)) {
+			if (!jsonFullObject.isNull(ParserKeysConstants.KEY_INIT_CONFIG)) {
 				JSONObject jInitObject = jsonFullObject
-						.getJSONObject(KEY_INIT_CONFIG);
+						.getJSONObject(ParserKeysConstants.KEY_INIT_CONFIG);
 
-				if (!jInitObject.isNull(KEY_BATTERY_STATUS))
+				if (!jInitObject.isNull(ParserKeysConstants.KEY_BATTERY_STATUS))
 					mInitData.setLocationBatteryStatus(jInitObject
-							.getInt(KEY_BATTERY_STATUS));
+							.getInt(ParserKeysConstants.KEY_BATTERY_STATUS));
 
-				if (!jInitObject.isNull(KEY_LOCATION_INTERVAL))
+				if (!jInitObject.isNull(ParserKeysConstants.KEY_LOCATION_INTERVAL))
 					mInitData.setLocationPeriodicInterval(jInitObject
-							.getInt(KEY_LOCATION_INTERVAL));
+							.getInt(ParserKeysConstants.KEY_LOCATION_INTERVAL));
 
-				if (!jInitObject.isNull(KEY_LOCATION_TIME_START))
+				if (!jInitObject.isNull(ParserKeysConstants.KEY_LOCATION_TIME_START))
 					mInitData.setLocationStartInterval(jInitObject
-							.getString(KEY_LOCATION_TIME_START));
+							.getString(ParserKeysConstants.KEY_LOCATION_TIME_START));
 
-				if (!jInitObject.isNull(KEY_LOCATION_TIME_END))
+				if (!jInitObject.isNull(ParserKeysConstants.KEY_LOCATION_TIME_END))
 					mInitData.setLocationEndInterval(jInitObject
-							.getString(KEY_LOCATION_TIME_END));
+							.getString(ParserKeysConstants.KEY_LOCATION_TIME_END));
 
-				if (!jInitObject.isNull(KEY_SYNC_INTERVAL))
+				if (!jInitObject.isNull(ParserKeysConstants.KEY_SYNC_INTERVAL))
 					mInitData.setSyncUnsentDataInterval(jInitObject
-							.getInt(KEY_SYNC_INTERVAL));
+							.getInt(ParserKeysConstants.KEY_SYNC_INTERVAL));
 
 			}
 

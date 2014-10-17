@@ -24,6 +24,7 @@ import com.pulp.campaigntracker.controllers.JsonResponseAdapter;
 import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
 import com.pulp.campaigntracker.listeners.UserDetailsRecieved;
 import com.pulp.campaigntracker.utils.ConstantUtils;
+import com.pulp.campaigntracker.utils.ParserKeysConstants;
 import com.pulp.campaigntracker.utils.UtilityMethods;
 
 public class JsonGetPromotorDetails {
@@ -32,25 +33,7 @@ public class JsonGetPromotorDetails {
 	private UserDetailsRecieved listener;
 	private String url;
 
-	// JSON Response node names
-	private final String KEY_ID = "id";
-	private final String KEY_NAME = "name";
-	private final String KEY_ADDRESS = "address";
-	private final String KEY_USER_LIST = "user_list";
-	private final String KEY_STORE_ID = "store_id";
-	private final String KEY_ROLE = "role";
-	private final String KEY_CONTACT_NO = "contact_no";
-	private final String KEY_GENDER = "gender";
-	private final String KEY_CAMPAGIN = "campagin";
-	private final String KEY_STORE = "store";
-	private String KEY_EMAIL = "email";
-
-	private String KEY_STATUS = "status";
-	private String KEY_CAMPAIGN_START_DATE = "campaign_start_date";
-	private String KEY_CAMPAIGN_END_DATE = "campaign_end_date";
-	private String KEY_STORE_START_DATE = "store_start_date";
-	private String KEY_STORE_END_DATE = "store_end_date";
-
+	
 	private Context mContext;
 	private ArrayList<UserProfile> userProfile;
 	SinglePromotorData mSinglePromotorData;
@@ -165,67 +148,67 @@ public class JsonGetPromotorDetails {
 		// if (!jPromoterObject.isNull(KEY_START_COUNT))
 		// mSinglePromotorData.setStart_count(jPromoterObject
 		// .getInt(KEY_TOTAL));
-		if (!jsonObject.isNull(KEY_USER_LIST)
-				&& jsonObject.getJSONArray(KEY_USER_LIST) instanceof JSONArray) {
+		if (!jsonObject.isNull(ParserKeysConstants.KEY_USER_LIST)
+				&& jsonObject.getJSONArray(ParserKeysConstants.KEY_USER_LIST) instanceof JSONArray) {
 			// Parse the User Details in a campaign
 
 			JSONArray jsonUserListArray = (JSONArray) jsonObject
-					.getJSONArray(KEY_USER_LIST);
+					.getJSONArray(ParserKeysConstants.KEY_USER_LIST);
 			userProfile = new ArrayList<UserProfile>();
 			for (int i = 0; i < jsonUserListArray.length(); i++) {
 				JSONObject jUserObject = jsonUserListArray.getJSONObject(i);
 				UserProfile userDetails = new UserProfile();
 
-				if (!jUserObject.isNull(KEY_ID))
-					userDetails.setUid(jUserObject.getString(KEY_ID));
+				if (!jUserObject.isNull(ParserKeysConstants.KEY_ID))
+					userDetails.setUid(jUserObject.getString(ParserKeysConstants.KEY_ID));
 
-				if (!jUserObject.isNull(KEY_NAME))
-					userDetails.setName(jUserObject.getString(KEY_NAME));
+				if (!jUserObject.isNull(ParserKeysConstants.KEY_NAME))
+					userDetails.setName(jUserObject.getString(ParserKeysConstants.KEY_NAME));
 
-				if (!jUserObject.isNull(KEY_CONTACT_NO))
+				if (!jUserObject.isNull(ParserKeysConstants.KEY_CONTACT_NO))
 					userDetails.setContactNumber(jUserObject
-							.getString(KEY_CONTACT_NO));
+							.getString(ParserKeysConstants.KEY_CONTACT_NO));
 
-				if (!jUserObject.isNull(KEY_ADDRESS))
-					userDetails.setAddress(jUserObject.getString(KEY_ADDRESS));
+				if (!jUserObject.isNull(ParserKeysConstants.KEY_ADDRESS))
+					userDetails.setAddress(jUserObject.getString(ParserKeysConstants.KEY_ADDRESS));
 
-				if (!jUserObject.isNull(KEY_EMAIL))
-					userDetails.setEmail(jUserObject.getString(KEY_EMAIL));
+				if (!jUserObject.isNull(ParserKeysConstants.KEY_EMAIL))
+					userDetails.setEmail(jUserObject.getString(ParserKeysConstants.KEY_EMAIL));
 
-				if (!jUserObject.isNull(KEY_GENDER))
-					userDetails.setGender(jUserObject.getString(KEY_GENDER));
+				if (!jUserObject.isNull(ParserKeysConstants.KEY_GENDER))
+					userDetails.setGender(jUserObject.getString(ParserKeysConstants.KEY_GENDER));
 
-				if (!jUserObject.isNull(KEY_STORE_ID))
-					userDetails.setStoreId(jUserObject.getString(KEY_STORE_ID));
+				if (!jUserObject.isNull(ParserKeysConstants.KEY_STORE_ID))
+					userDetails.setStoreId(jUserObject.getString(ParserKeysConstants.KEY_STORE_ID));
 
-				if (!jUserObject.isNull(KEY_CAMPAGIN))
+				if (!jUserObject.isNull(ParserKeysConstants.KEY_CAMPAGIN))
 					userDetails.setCurrentCampagin(jUserObject
-							.getString(KEY_CAMPAGIN));
+							.getString(ParserKeysConstants.KEY_CAMPAGIN));
 
-				if (!jUserObject.isNull(KEY_STORE))
+				if (!jUserObject.isNull(ParserKeysConstants.KEY_STORE))
 					userDetails.setCurrentStore(jUserObject
-							.getString(KEY_STORE));
+							.getString(ParserKeysConstants.KEY_STORE));
 
-				if (!jUserObject.isNull(KEY_ROLE))
-					userDetails.setRole(jUserObject.getString(KEY_ROLE));
+				if (!jUserObject.isNull(ParserKeysConstants.KEY_ROLE))
+					userDetails.setRole(jUserObject.getString(ParserKeysConstants.KEY_ROLE));
 
-				if (!jUserObject.isNull(KEY_STATUS))
-					userDetails.setStatus(jUserObject.getString(KEY_STATUS));
-				if (!jUserObject.isNull(KEY_CAMPAIGN_START_DATE))
+				if (!jUserObject.isNull(ParserKeysConstants.KEY_STATUS))
+					userDetails.setStatus(jUserObject.getString(ParserKeysConstants.KEY_STATUS));
+				if (!jUserObject.isNull(ParserKeysConstants.KEY_CAMPAIGN_START_DATE))
 					userDetails.setCampaign_start_date(jUserObject
-							.getString(KEY_CAMPAIGN_START_DATE));
+							.getString(ParserKeysConstants.KEY_CAMPAIGN_START_DATE));
 
-				if (!jUserObject.isNull(KEY_CAMPAIGN_END_DATE))
+				if (!jUserObject.isNull(ParserKeysConstants.KEY_CAMPAIGN_END_DATE))
 					userDetails.setCampaign_end_date(jUserObject
-							.getString(KEY_CAMPAIGN_END_DATE));
+							.getString(ParserKeysConstants.KEY_CAMPAIGN_END_DATE));
 
-				if (!jUserObject.isNull(KEY_STORE_START_DATE))
+				if (!jUserObject.isNull(ParserKeysConstants.KEY_STORE_START_DATE))
 					userDetails.setStore_start_date(jUserObject
-							.getString(KEY_STORE_START_DATE));
+							.getString(ParserKeysConstants.KEY_STORE_START_DATE));
 
-				if (!jUserObject.isNull(KEY_STORE_END_DATE))
+				if (!jUserObject.isNull(ParserKeysConstants.KEY_STORE_END_DATE))
 					userDetails.setStore_end_date(jUserObject
-							.getString(KEY_STORE_END_DATE));
+							.getString(ParserKeysConstants.KEY_STORE_END_DATE));
 
 				// if(!jUserObject.isNull(KEY_STORE_ID))
 				// userDetails.setAddress(jUserObject.getString(KEY_STORE_ID));

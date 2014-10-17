@@ -15,6 +15,7 @@ import android.os.Build;
 
 import com.pulp.campaigntracker.beans.UserNotification;
 import com.pulp.campaigntracker.listeners.UserNotificationsRecieved;
+import com.pulp.campaigntracker.utils.ParserKeysConstants;
 import com.pulp.campaigntracker.utils.TLog;
 import com.pulp.campaigntracker.utils.UtilityMethods;
 
@@ -26,10 +27,7 @@ public class JsonGetUserNotification {
 
 	private String url;
 
-	// JSON Response node names
-	private final String KEY_MESSAGE_LIST = "message_list";
-	private final String KEY_MESSAGE = "message";
-	private final String KEY_TITLE = "title";
+
 
 	private Context mContext;
 	private List<UserNotification> notificationList;
@@ -86,9 +84,9 @@ public class JsonGetUserNotification {
 
 		try {
 
-			if(!jsonFullObject.isNull(KEY_MESSAGE_LIST)  && jsonFullObject.getJSONArray(KEY_MESSAGE_LIST) instanceof JSONArray)
+			if(!jsonFullObject.isNull(ParserKeysConstants.KEY_MESSAGE_LIST)  && jsonFullObject.getJSONArray(ParserKeysConstants.KEY_MESSAGE_LIST) instanceof JSONArray)
 			{
-				JSONArray jMessageList = jsonFullObject.getJSONArray(KEY_MESSAGE_LIST);
+				JSONArray jMessageList = jsonFullObject.getJSONArray(ParserKeysConstants.KEY_MESSAGE_LIST);
 				notificationList = new ArrayList<UserNotification>();
 				for(int i=0;i<jMessageList.length();i++)
 				{
@@ -116,11 +114,11 @@ public class JsonGetUserNotification {
 
 		UserNotification userNotificationDetails = new UserNotification();
 
-		if(!jsonObject.isNull(KEY_MESSAGE))
-			userNotificationDetails.setMessage(jsonObject.getString(KEY_MESSAGE));
+		if(!jsonObject.isNull(ParserKeysConstants.KEY_MESSAGE))
+			userNotificationDetails.setMessage(jsonObject.getString(ParserKeysConstants.KEY_MESSAGE));
 
-		if(!jsonObject.isNull(KEY_TITLE))
-			userNotificationDetails.setTitle(jsonObject.getString(KEY_TITLE));
+		if(!jsonObject.isNull(ParserKeysConstants.KEY_TITLE))
+			userNotificationDetails.setTitle(jsonObject.getString(ParserKeysConstants.KEY_TITLE));
 		
 		return userNotificationDetails;
 
