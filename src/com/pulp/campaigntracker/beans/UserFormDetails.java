@@ -11,6 +11,7 @@ public class UserFormDetails implements Parcelable{
 	private String fieldType;
 	private String fieldLength;
 	private String fieldValue;
+	private String fieldId;
 	private Date feildDate;
 	public Date getFeildDate() {
 		return feildDate;
@@ -22,6 +23,13 @@ public class UserFormDetails implements Parcelable{
 	private byte[] image;
 
 	
+	public String getFieldId() {
+		return fieldId;
+	}
+	public void setFieldId(String fieldId) {
+		this.fieldId = fieldId;
+	}
+		
 	public String getFieldValue() {
 		return fieldValue;
 	}
@@ -95,5 +103,6 @@ public class UserFormDetails implements Parcelable{
 			return new UserFormDetails(source);
 		}
 	};
+
 
 }

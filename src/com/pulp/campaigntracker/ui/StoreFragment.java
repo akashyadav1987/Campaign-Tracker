@@ -54,7 +54,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.internal.p;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
@@ -87,6 +87,7 @@ import com.pulp.campaigntracker.listeners.UserLocationManager;
 import com.pulp.campaigntracker.parser.JsonCheckinDataParser;
 import com.pulp.campaigntracker.parser.JsonGetPromotorDetails;
 import com.pulp.campaigntracker.parser.JsonGetStoreDistance;
+import com.pulp.campaigntracker.parser.JsonSendFormFillDetails;
 import com.pulp.campaigntracker.utils.ConstantUtils;
 import com.pulp.campaigntracker.utils.TLog;
 import com.pulp.campaigntracker.utils.UtilityMethods;
@@ -618,7 +619,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 			int numberOfFeilds = userFormListAdapter.getCount();
 			for (int i = 0; i < numberOfFeilds; i++) {
 				String Fvalue = userFormListAdapter.getItem(i).getFieldValue();
-                String FId =userFormListAdapter.getItem(i).getFeildId();
+                String FId =userFormListAdapter.getItem(i).getFieldId();
                 
                 if(Fvalue!=null){
                 	if(Fvalue.trim().length()==0){

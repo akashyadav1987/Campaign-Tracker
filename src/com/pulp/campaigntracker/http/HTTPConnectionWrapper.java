@@ -339,16 +339,32 @@ public class HTTPConnectionWrapper {
 					{
 						TLog.e("HTTP", "Invalid Response",e);
 						e.printStackTrace();
+					
 					}
+	   
+					catch (IOException e)
+					{
+						TLog.e("HTTP", "Unable to perform request",e);
+						e.printStackTrace();
+			
+					}
+	    }
+
+		httpPostRequest.abort();
+		return jsonResponse;
+
+	    }
+	    
+	    
 	public static String postHTTPRequest(String url,
-			JSONObject params) {
+			JSONObject jsonObject) {
 
 
 		String jsonResponse=null;
 		HttpResponse httpResponse=null;	
 		HttpPost httpPostRequest = new HttpPost(url);
 		try {
-			 StringEntity se = new StringEntity( params.toString());  
+			 StringEntity se = new StringEntity( jsonObject.toString());  
 			  se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 			  httpPostRequest.setHeader("Accept", "application/json");
 			  httpPostRequest.setHeader("Content-type", "application/json");

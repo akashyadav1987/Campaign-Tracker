@@ -65,3 +65,4 @@ public class SendOfflineDataReceiver extends BroadcastReceiver {
 		}
 	}
 }
+}

@@ -1,17 +1,13 @@
 package com.pulp.campaigntracker.parser;
 
-import java.util.List;
-
-import org.apache.http.NameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.android.gms.internal.lj;
 import com.pulp.campaigntracker.beans.LoginErrorData;
 import com.pulp.campaigntracker.controllers.JsonResponseAdapter;
 import com.pulp.campaigntracker.dao.DataBaseHandler;
-import com.pulp.campaigntracker.listeners.UpdateLocation;
 import com.pulp.campaigntracker.utils.ConstantUtils;
+import com.pulp.campaigntracker.utils.ParserKeysConstants;
 import com.pulp.campaigntracker.utils.UtilityMethods;
 
 import android.annotation.TargetApi;
@@ -21,12 +17,9 @@ import android.os.Build;
 import android.util.Log;
 
 public class JsonSendFormFillDetails {
-	private final String KEY_RESPONSE = "response";
-	private final String KEY_ERROR = "error";
-	private final String KEY_STATUS = "status";
+
 	private boolean isFromBrodcast;
 	private Context mContext;
-	private boolean isSuccess;
 	private LoginErrorData mLoginErrorData;
 	private JSONObject formData;
 
@@ -46,8 +39,6 @@ public class JsonSendFormFillDetails {
 	private class GetJson extends AsyncTask<JSONObject, String, String> {
 
 		private String status = "fail";
-		private String error;
-
 		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 		private void executeForHoneyComb(JSONObject... params) {
 			executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
@@ -58,12 +49,10 @@ public class JsonSendFormFillDetails {
 		protected String doInBackground(JSONObject... params) {
 
 			JSONObject responseObject = JsonResponseAdapter.postJSONToUrl(
-					ConstantUtils.SUBMIT_FORM, params[0]);
+					ConstantUtils.SUBMIT_FORM_URL, params[0]);
 			if (responseObject != null) {
 				buildCheckinObject(responseObject);
 			} else {
-				isSuccess = false;
-
 				mLoginErrorData = new LoginErrorData();
 				mLoginErrorData
 						.setMessage("Please check your connection settings");
@@ -88,11 +77,11 @@ public class JsonSendFormFillDetails {
 		private void buildCheckinObject(JSONObject jsonObject) {
 
 			try {
-				if (jsonObject != null && !jsonObject.isNull(KEY_RESPONSE)) {
+				if (jsonObject != null && !jsonObject.isNull(ParserKeysConstants.KEY_RESPONSE)) {
 
 					JSONObject jCheckinObject = jsonObject
-							.getJSONObject(KEY_RESPONSE);
-					status = jCheckinObject.getString(KEY_STATUS);
+							.getJSONObject(ParserKeysConstants.KEY_RESPONSE);
+					status = jCheckinObject.getString(ParserKeysConstants.KEY_STATUS);
 					// error = jCheckinObject.getString(KEY_ERROR);
 
 				}
