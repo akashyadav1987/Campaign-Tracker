@@ -24,7 +24,7 @@ public class JsonFormFieldDataParser {
 	private final String TAG = JsonFormFieldDataParser.class.getSimpleName();
 	private UserFormFieldRecieved listener;
 
-	private String url;
+
 
 	// JSON Response node names
 	private final String KEY_FORM_LIST = "form_list";
@@ -44,7 +44,7 @@ public class JsonFormFieldDataParser {
 	@SuppressLint("NewApi")
 	public void getFormDetailsFromURL(String url,UserFormFieldRecieved listener,Context mContext)
 	{
-		this.url = url;
+		
 		this.listener = listener;
 		this.mContext = mContext;
 		GetJson getJson = new GetJson();

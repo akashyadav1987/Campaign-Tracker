@@ -1,27 +1,19 @@
 package com.pulp.campaigntracker.parser;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.widget.Toast;
 
-import com.pulp.campaigntracker.beans.FetchData;
 import com.pulp.campaigntracker.beans.SinglePromotorData;
 import com.pulp.campaigntracker.beans.UserProfile;
 import com.pulp.campaigntracker.controllers.JsonResponseAdapter;
-import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
 import com.pulp.campaigntracker.listeners.UserDetailsRecieved;
 import com.pulp.campaigntracker.utils.ConstantUtils;
 import com.pulp.campaigntracker.utils.ParserKeysConstants;
@@ -31,7 +23,7 @@ public class JsonGetPromotorDetails {
 
 	private final String TAG = JsonGetPromotorDetails.class.getSimpleName();
 	private UserDetailsRecieved listener;
-	private String url;
+
 
 	
 	private Context mContext;

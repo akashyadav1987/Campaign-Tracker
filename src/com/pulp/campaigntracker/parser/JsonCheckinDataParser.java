@@ -20,46 +20,23 @@ import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.beans.LoginErrorData;
 import com.pulp.campaigntracker.controllers.JsonResponseAdapter;
 import com.pulp.campaigntracker.dao.DataBaseHandler;
-import com.pulp.campaigntracker.listeners.LoginDataRecieved;
 import com.pulp.campaigntracker.listeners.MyLocation;
 import com.pulp.campaigntracker.listeners.UpdateLocation;
 import com.pulp.campaigntracker.listeners.UserLocationManager;
 import com.pulp.campaigntracker.utils.ConstantUtils.LocationSyncType;
-import com.pulp.campaigntracker.utils.ParserKeysConstants;
 import com.pulp.campaigntracker.utils.ConstantUtils;
 import com.pulp.campaigntracker.utils.UtilityMethods;
 
 public class JsonCheckinDataParser {
 
 	private final String TAG = JsonCheckinDataParser.class.getSimpleName();
-	private LoginDataRecieved listener;
-	private LoginData mLoginData;
 	private LoginErrorData mLoginErrorData;
-	private String campagin_id;
-	private String store_id;
-	private String id;
-	private String time;
-	private final String KEY_LOGIN = "login";
 	private CheckIn checkIn;
 	private final String KEY_RESPONSE = "response";
-	private final String KEY_ERROR = "error";
 	private final String KEY_STATUS = "status";
-	private final String KEY_ERROR_MSG = "error_message";
-	private final String KEY_EMAIL = "email";
-	private final String KEY_TIME = "time";
-	private final String KEY_ADDRESS = "address";
-	private final String KEY_SUCCESS = "success";
-	private final String KEY_USER = "user";
-	private final String KEY_CHECKIN_STATUS = "checkin_status";
-	private final String KEY_SENT_STATUS = "sent_status";
-	private final String KEY_LATITUDE = "latitude";
-	private final String KEY_LONGITUDE = "longitude";
 	private Context mContext;
-	private String response;
 	private boolean isFromBrodcast;
 
-
-	private boolean isSuccess;
 
 	@SuppressWarnings("unchecked")
 	public void postCheckinDataToURL(Context mContext, String auth_token,
@@ -75,7 +52,6 @@ public class JsonCheckinDataParser {
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-		// params.add(new BasicNameValuePair("email", email));
 		params.add(new BasicNameValuePair("camp_id", campagin_id));
 		params.add(new BasicNameValuePair("time", time));
 		params.add(new BasicNameValuePair("user_id", id));
@@ -94,8 +70,6 @@ public class JsonCheckinDataParser {
 			UpdateLocation {
 
 		private String status = "fail";
-		private String error;
-
 		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 		private void executeForHoneyComb(List<NameValuePair>... params) {
 			executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
@@ -110,8 +84,6 @@ public class JsonCheckinDataParser {
 			if (responseObject != null) {
 				buildCheckinObject(responseObject);
 			} else {
-				isSuccess = false;
-
 				mLoginErrorData = new LoginErrorData();
 				mLoginErrorData
 						.setMessage("Please check your connection settings");
