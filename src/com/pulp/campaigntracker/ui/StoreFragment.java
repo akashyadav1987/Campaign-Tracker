@@ -10,7 +10,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
@@ -52,6 +54,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.internal.p;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
@@ -149,6 +152,14 @@ public class StoreFragment extends Fragment implements OnClickListener,
 	private byte[] imageInByte = null;
 	private String encodedImage;
 	private CampaignDetails mCampaignDetails;
+	private static final String KEY_CAMPAIGN_ID="campaign_id";
+	private static final String KEY_STORE_ID="store_id";
+	private static final String KEY_SUPERVISOR_ID="supervisor_id";
+	private static final String KEY_PRAMOTOR_ID="pramotor_id";
+	private static final String KEY_FORM_DATA="form_data";
+	private static final String KEY_FIELD_ID="field_id";
+	private static final String KEY_FIELD_VALUE="field_value";
+	private static final String KEY_TIME="time";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -562,43 +573,75 @@ public class StoreFragment extends Fragment implements OnClickListener,
 			break;
 		case R.id.submitFormButton:
 			hideSoftInput(getActivity(), submitButton);
-			int numberOfFeilds = userFormListAdapter.getCount();
-			System.out.println("numberOfFeilds:::::" + numberOfFeilds);
-			for (int i = 0; i < numberOfFeilds; i++) {
-				String Fvalue = userFormListAdapter.getItem(i).getFieldValue();
-
-				System.out.println("Fvalue is :  " + Fvalue);
-				// formSubmitValues = new ArrayList<NameValuePair>();
-				// formSubmitValues
-				// .add(new BasicNameValuePair("Feild" + i, Fvalue));
-
-			}
-			// JsonSubmitSucessParser jsonSubmitSucessParser = new
-			// JsonSubmitSucessParser();
-			// jsonSubmitSucessParser.submitFormToDb(formSubmitValues,
-			// mContext);
-			// if (mResponseData != null) {
-			// if (mResponseData.getSuccess()) {
-			// Toast.makeText(mContext, "Success", Toast.LENGTH_LONG)
-			// .show();
-			// } else {
-			// Toast.makeText(mContext, "Upload Failed", Toast.LENGTH_LONG)
-			// .show();
-			// }
-			// }
+	      	JSONObject formDataToSend =	getJsonForFormDetails();
+	      	if(formDataToSend!=null){
+	      	JsonSendFormFillDetails formFillDetails =new JsonSendFormFillDetails();
+	      	formFillDetails.sendFormFillupDetails(getActivity(), formDataToSend, false);
 			userForm.setVisibility(View.INVISIBLE);
 			mUserList.setVisibility(View.VISIBLE);
+	      	}
 			break;
 
 		case R.id.retryButton:
 			executeQuery();
-
 			// view.requestLayout();
 			break;
 
 		default:
 			break;
 		}
+	}
+
+	private JSONObject getJsonForFormDetails() {
+		boolean isAllValuesNotFilled=false;
+		JSONObject parentJson =new JSONObject();
+		try {
+			Calendar calendar = Calendar.getInstance();
+			String currentDate = new SimpleDateFormat("yyyy-MM-dd ",Locale.getDefault()).format(calendar.getTime());
+			String currentTime = new SimpleDateFormat("hh:mm:ss",Locale.getDefault()).format(calendar.getTime());
+
+			parentJson.put(KEY_CAMPAIGN_ID, mCampaignDetails.getId());
+			parentJson.put(KEY_STORE_ID, mStoreDetails.getId());
+			parentJson.put(KEY_TIME,currentDate + currentTime);
+			if(LoginData.getInstance().getRole().equals("supervisor")){
+				parentJson.put(KEY_SUPERVISOR_ID,LoginData.getInstance().getId());
+				parentJson.put(KEY_PRAMOTOR_ID, "0");
+			}
+			
+			else if(LoginData.getInstance().getRole().equals("pramotor")){
+				parentJson.put(KEY_PRAMOTOR_ID, LoginData.getInstance().getId());
+				parentJson.put(KEY_SUPERVISOR_ID, "0");
+			}
+			
+			JSONArray formDataJsonArray =new JSONArray();
+			
+			int numberOfFeilds = userFormListAdapter.getCount();
+			for (int i = 0; i < numberOfFeilds; i++) {
+				String Fvalue = userFormListAdapter.getItem(i).getFieldValue();
+                String FId =userFormListAdapter.getItem(i).getFeildId();
+                
+                if(Fvalue!=null){
+                	if(Fvalue.trim().length()==0){
+                		isAllValuesNotFilled=true;
+                		Toast.makeText(getActivity(), "please fill values", Toast.LENGTH_SHORT).show();
+                		break;
+                	}
+                }
+                JSONObject formValue =new JSONObject();
+				formValue.put(KEY_FIELD_ID, FId);
+				formValue.put(KEY_FIELD_VALUE, Fvalue);
+				formDataJsonArray.put(formValue);
+			}
+			parentJson.put(KEY_FORM_DATA, formDataJsonArray);
+			
+			if(isAllValuesNotFilled){
+				parentJson=null;
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return parentJson;
 	}
 
 	private void showOnMap() {
