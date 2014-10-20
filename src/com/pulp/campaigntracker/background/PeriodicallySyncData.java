@@ -56,7 +56,7 @@ public class PeriodicallySyncData extends Service{
 		
 		
 		AUTH_TOKEN = pref.getString(ConstantUtils.AUTH_TOKEN, "");
-		pushLocationUnsentData(ConstantUtils.POST_LOCATION_URL + AUTH_TOKEN);
+//		pushLocationUnsentData(ConstantUtils.POST_LOCATION_URL + AUTH_TOKEN);
 		/*
 		 * Get LoginDatabase and push all unsent data to server.
 		 */
@@ -73,25 +73,22 @@ public class PeriodicallySyncData extends Service{
 		
 		return super.onStartCommand(intent, flags, startId);
 	}
-
-	public List<NameValuePair> getLocationJSONObjectToPost(MyLocation loc)
-	{
-		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair(TIME,loc.getTimeStamp()));
-		nameValuePairs.add(new BasicNameValuePair(ADMIN,loc.getAdmin()));
-		nameValuePairs.add(new BasicNameValuePair(SUBADMIN,loc.getSubAdmin()));
-		nameValuePairs.add(new BasicNameValuePair(ADDRES_LINE,loc.getAddressLine()));
-		nameValuePairs.add(new BasicNameValuePair(LOCALITY,loc.getLocality()));
-		nameValuePairs.add(new BasicNameValuePair(LATITUDE,Double.toString(loc.getLatitude())));
-		nameValuePairs.add(new BasicNameValuePair(LONGITIUE,Double.toString(loc.getLongitude())));
-		
-		nameValuePairs.add(new BasicNameValuePair(ID,pref.getString(ConstantUtils.LOGIN_ID, "")));
-		nameValuePairs.add(new BasicNameValuePair(DEVICEID,pref.getString(ConstantUtils.DEVICEID, "")));
-		nameValuePairs.add(new BasicNameValuePair(HASH, UtilityMethods
-				.calculateSyncHash(nameValuePairs)));
-		TLog.v(TAG, "nameValuePairs : "+nameValuePairs);
-		return nameValuePairs;
-	}
+//
+//	public List<NameValuePair> getLocationJSONObjectToPost(MyLocation loc)
+//	{
+//		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+//		nameValuePairs.add(new BasicNameValuePair(TIME,loc.getTimeStamp()));
+//		
+//		nameValuePairs.add(new BasicNameValuePair(LATITUDE,Double.toString(loc.getLatitude())));
+//		nameValuePairs.add(new BasicNameValuePair(LONGITIUE,Double.toString(loc.getLongitude())));
+//		
+//		nameValuePairs.add(new BasicNameValuePair(ID,pref.getString(ConstantUtils.LOGIN_ID, "")));
+//		nameValuePairs.add(new BasicNameValuePair(DEVICEID,pref.getString(ConstantUtils.DEVICEID, "")));
+//		nameValuePairs.add(new BasicNameValuePair(HASH, UtilityMethods
+//				.calculateSyncHash(nameValuePairs)));
+//		TLog.v(TAG, "nameValuePairs : "+nameValuePairs);
+//		return nameValuePairs;
+//	}
 	public List<NameValuePair> getLoginStatusJSONObjectToPost(String time,byte[] image,int loginStatus)
 	{
 		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -123,31 +120,29 @@ public class PeriodicallySyncData extends Service{
 		return nameValuePairs;
 	}
 
-	public void pushLocationUnsentData(String url)
-	{
-		LocationDatabase locationDatabase = new LocationDatabase(getBaseContext());
-		locationDatabase.open();
-		Cursor cursor = locationDatabase.getAllInfo();
-
-		if (cursor.getCount() > 0) {
-			cursor.moveToPosition(-1);
-			while (cursor.moveToNext()) {
-				MyLocation loc = new MyLocation();
-				loc.setTimeStamp(cursor.getString(1));
-				loc.setAdmin(cursor.getString(2));
-				loc.setSubAdmin(cursor.getString(3));
-				loc.setAddressLine(cursor.getString(4));
-				loc.setLocality(cursor.getString(5));
-				loc.setLatitude(cursor.getDouble(6));
-				loc.setLongitude(cursor.getDouble(7));
-				List<NameValuePair> nameValuePair = getLocationJSONObjectToPost(loc);
-				int response = UtilityMethods.postJsonToServer(url, nameValuePair);
-				if(response==1)
-					locationDatabase.updateSentStatus(cursor.getString(0));
-			}
-		}
-		locationDatabase.close();
-	}
+	// public void pushLocationUnsentData(String url)
+	// {
+	// LocationDatabase locationDatabase = new
+	// LocationDatabase(getBaseContext());
+	// locationDatabase.open();
+	// Cursor cursor = locationDatabase.getAllInfo();
+	//
+	// if (cursor.getCount() > 0) {
+	// cursor.moveToPosition(-1);
+	// while (cursor.moveToNext()) {
+	// MyLocation loc = new MyLocation();
+	// loc.setTimeStamp(cursor.getString(1));
+	//
+	// loc.setLatitude(cursor.getDouble(6));
+	// loc.setLongitude(cursor.getDouble(7));
+	// List<NameValuePair> nameValuePair = getLocationJSONObjectToPost(loc);
+	// int response = UtilityMethods.postJsonToServer(url, nameValuePair);
+	// if(response==1)
+	// locationDatabase.updateSentStatus(cursor.getString(0));
+	// }
+	// }
+	// locationDatabase.close();
+	// }
 	public void pushFormUnsentData(String url)
 	{
 		LocationDatabase locationDatabase = new LocationDatabase(getBaseContext());

@@ -36,7 +36,7 @@ public class UserListAdapter extends BaseAdapter {
 			R.drawable.place_holder_red, R.drawable.place_holder_orange,
 			R.drawable.place_holder_yellow };
 
-
+	private ImageLoader imageLoader;
 	private Typeface icomoon;
 
 
@@ -47,7 +47,7 @@ public class UserListAdapter extends BaseAdapter {
 		this.mUserList = mUserList;
 		this.layoutInflater = (LayoutInflater) mContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+		imageLoader = ImageLoader.getInstance();
 		icomoon = Typeface.createFromAsset(mContext.getAssets(), "icomoon.ttf");
 		this.mAllUserList = new ArrayList<UserProfile>();
 		mAllUserList.addAll(mUserList);
@@ -109,7 +109,7 @@ public class UserListAdapter extends BaseAdapter {
 
 		viewHolder.userName = (TextView) convertView
 				.findViewById(R.id.promotorName);
-		viewHolder.type =(TextView) convertView.findViewById(R.id.role);
+		viewHolder.type =(TextView) convertView.findViewById(R.id.type);
 		viewHolder.userNameIcon = (TextView) convertView
 				.findViewById(R.id.promotorNameIcon);
 		viewHolder.phoneIcon = (TextView) convertView

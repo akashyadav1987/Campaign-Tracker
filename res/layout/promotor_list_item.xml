@@ -62,7 +62,7 @@
             android:textSize="@dimen/heading_textsize" />
         
         <TextView   
-            android:id="@+id/role"
+            android:id="@+id/type"
             android:layout_width="wrap_content"
             android:layout_height="20dip"
             android:layout_centerHorizontal="true"

@@ -74,6 +74,14 @@ public class ParserKeysConstants {
 	public final static String KEY_AUTH_TOKEN = "auth_token";
 	public final static String KEY_TAG = "response";
 
+	
+	public final static String KEY_CID = "cid";
+	public final static String KEY_LAC = "lac";
+	public final static String KEY_TYPE = "type";
+	public final static String KEY_TIME = "time";
+	public final static String KEY_CHECKIN_STATUS = "checkin_status";
+	public final static String KEY_SENT_STATUS = "sent_status";
+
 
 
 

@@ -17,8 +17,7 @@ import com.pulp.campaigntracker.beans.UserFormDetails;
 import com.pulp.campaigntracker.listeners.UserFormFieldRecieved;
 import com.pulp.campaigntracker.utils.TLog;
 import com.pulp.campaigntracker.utils.UtilityMethods;
-import com.pulp.campaigntracker.utils.ParserKeysConstants;
-;
+
 public class JsonFormFieldDataParser {
 
 
@@ -28,7 +27,10 @@ public class JsonFormFieldDataParser {
 	private String url;
 
 	// JSON Response node names
-
+	private final String KEY_FORM_LIST = "form_list";
+	private final String KEY_FIELD_NAME = "field_name";
+	private final String KEY_FIELD_TYPE = "field_type";
+	private final String KEY_FIELD_LENGTH = "field_length";
 
 	private Context mContext;
 	private List<UserFormDetails> userFormDetailsList;
@@ -85,9 +87,9 @@ public class JsonFormFieldDataParser {
 
 		try {
 
-			if(!jsonFullObject.isNull(ParserKeysConstants.KEY_FORM_LIST)  && jsonFullObject.getJSONArray(ParserKeysConstants.KEY_FORM_LIST) instanceof JSONArray)
+			if(!jsonFullObject.isNull(KEY_FORM_LIST)  && jsonFullObject.getJSONArray(KEY_FORM_LIST) instanceof JSONArray)
 			{
-				JSONArray jMessageList = jsonFullObject.getJSONArray(ParserKeysConstants.KEY_FORM_LIST);
+				JSONArray jMessageList = jsonFullObject.getJSONArray(KEY_FORM_LIST);
 				userFormDetailsList = new ArrayList<UserFormDetails>();
 				for(int i=0;i<jMessageList.length();i++)
 				{
@@ -115,14 +117,14 @@ public class JsonFormFieldDataParser {
 
 		UserFormDetails userFormDetails = new UserFormDetails();
 
-		if(!jsonObject.isNull(ParserKeysConstants.KEY_FIELD_NAME))
-			userFormDetails.setFieldName(jsonObject.getString(ParserKeysConstants.KEY_FIELD_NAME));
+		if(!jsonObject.isNull(KEY_FIELD_NAME))
+			userFormDetails.setFieldName(jsonObject.getString(KEY_FIELD_NAME));
 
-		if(!jsonObject.isNull(ParserKeysConstants.KEY_FIELD_TYPE))
-			userFormDetails.setFieldType(jsonObject.getString(ParserKeysConstants.KEY_FIELD_TYPE));
+		if(!jsonObject.isNull(KEY_FIELD_TYPE))
+			userFormDetails.setFieldType(jsonObject.getString(KEY_FIELD_TYPE));
 
-		if(!jsonObject.isNull(ParserKeysConstants.KEY_FIELD_LENGTH))
-			userFormDetails.setFieldLength(jsonObject.getString(ParserKeysConstants.KEY_FIELD_LENGTH));
+		if(!jsonObject.isNull(KEY_FIELD_LENGTH))
+			userFormDetails.setFieldLength(jsonObject.getString(KEY_FIELD_LENGTH));
 
 		return userFormDetails;
 	}

@@ -59,10 +59,10 @@ public class JsonResponseAdapter {
 		// Making HTTP post request
 
 		try {
-
+			System.out.println(params.toString());
 			jsonString = HTTPConnectionWrapper.postHTTPRequest(
 					url.toLowerCase(), params);
-
+			System.out.println("jsonString:::::::::::::" + jsonString);
 			jObj = new JSONObject(jsonString);
 
 		} catch (Exception ex) {

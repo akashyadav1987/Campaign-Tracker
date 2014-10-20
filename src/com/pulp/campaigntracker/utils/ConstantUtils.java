@@ -16,13 +16,13 @@ public class ConstantUtils {
 
 	public static String SUBMIT_FORM_URL = SERVER + "LFRTrack/api/SubmitForm/";
 
-	
-	public static final String POST_LOCATION_URL = SERVER + "";
+	public static final String POST_LOCATION_URL = "http://www.promotadka.in/task_manager/api3/index.php/locationsync";
 	public static final String POST_LOGIN_STATUS_URL = SERVER + "";
 	public static final String POST_FORM_DATA_URL = SERVER + "";
 	public static final String INIT_URL = SERVER + "";
 	public static final String IMAGE_UPLOAD_URL = SERVER;
 	public static final String USER_NOTIFICATION_URL = SERVER + "";
+	public static final String CHECK_OUT_URL = PROD_SERVER + "checkout.php/checkout";
 
 
 	public static String NO_PICTURE_ERROR_MESSAGE = "Picture not found please click again";
@@ -82,8 +82,9 @@ public class ConstantUtils {
 	public static final int SERVER_AUTH_FAIL = 0;
 	public static final int SERVER_MISSING_PARAM = 400;
 	public static final int SERVER_ERROR = -1;
-
-
-
+	
+	public static enum LocationSyncType {
+		checkIn, checkOut, formFill, general
+	};
 
 }

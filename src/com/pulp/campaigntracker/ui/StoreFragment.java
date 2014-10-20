@@ -40,6 +40,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -99,10 +100,10 @@ public class StoreFragment extends Fragment implements OnClickListener,
 	private TextView addLine1;
 	private TextView storeState;
 	private TextView storePincode;
-	private ListView promotorList;
+	private ListView mUserList;
 	private StoreDetails mStoreDetails;
 	private ArrayList<UserProfile> mPromotorList;
-	private UserListAdapter userListAdapter;
+	private UserListAdapter mUserListAdapter;
 	private FrameLayout mapFrame;
 	private RelativeLayout checkInLayout;
 	private TextView userIcon;
@@ -155,6 +156,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		mActivity = getActivity();
 		mContext = getActivity().getBaseContext();
+
 		setHasOptionsMenu(true);
 
 	}
@@ -255,13 +257,13 @@ public class StoreFragment extends Fragment implements OnClickListener,
 		promotorListProgressBar = (ProgressBar) view
 				.findViewById(R.id.promotorListProgressBar);
 
-		promotorList = (ListView) view.findViewById(R.id.promotorList);
+		mUserList = (ListView) view.findViewById(R.id.promotorList);
 
 		userIcon = (TextView) view.findViewById(R.id.userIcon);
 
 		executeQuery();
 
-		promotorList.setOnItemClickListener(this);
+		mUserList.setOnItemClickListener(this);
 		CheckInIcon.setOnClickListener(this);
 		RouteMapIcon.setOnClickListener(this);
 		checkInLayout.setOnClickListener(this);
@@ -352,7 +354,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 
 		switch (v.getId()) {
 		case R.id.storeCheckInIcon:
-			promotorList.setVisibility(View.GONE);
+			mUserList.setVisibility(View.GONE);
 			checkInLayout.setVisibility(View.VISIBLE);
 			mapFrame.setVisibility(View.INVISIBLE);
 			userForm.setVisibility(View.INVISIBLE);
@@ -391,7 +393,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 			break;
 
 		case R.id.userListIcon:
-			promotorList.setVisibility(View.VISIBLE);
+			mUserList.setVisibility(View.VISIBLE);
 			checkInLayout.setVisibility(View.INVISIBLE);
 			mapFrame.setVisibility(View.INVISIBLE);
 			userForm.setVisibility(View.INVISIBLE);
@@ -421,7 +423,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 
 		case R.id.storeRouteMapIcon:
 
-			promotorList.setVisibility(View.GONE);
+			mUserList.setVisibility(View.GONE);
 			checkInLayout.setVisibility(View.INVISIBLE);
 			mapFrame.setVisibility(View.VISIBLE);
 			userForm.setVisibility(View.INVISIBLE);
@@ -451,7 +453,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 			break;
 		case R.id.compaginLogo:
 
-			promotorList.setVisibility(View.VISIBLE);
+			mUserList.setVisibility(View.VISIBLE);
 			checkInLayout.setVisibility(View.GONE);
 			mapFrame.setVisibility(View.GONE);
 			break;
@@ -490,7 +492,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 			} else {
 				checkInLayout.setVisibility(View.INVISIBLE);
 				mapFrame.setVisibility(View.INVISIBLE);
-				promotorList.setVisibility(View.INVISIBLE);
+				mUserList.setVisibility(View.INVISIBLE);
 				userForm.setVisibility(View.VISIBLE);
 
 				/**
@@ -559,14 +561,18 @@ public class StoreFragment extends Fragment implements OnClickListener,
 					ConstantUtils.SELECT_PICTURE_REQUEST_CODE);
 			break;
 		case R.id.submitFormButton:
-			// int numberOfFeilds = userFormListAdapter.getCount();
-			// for (int i = 1; i < numberOfFeilds; i++) {
-			// String Fvalue = userFormListAdapter.getItem(i).getFieldValue();
-			// formSubmitValues = new ArrayList<NameValuePair>();
-			// formSubmitValues
-			// .add(new BasicNameValuePair("Feild" + i, Fvalue));
-			//
-			// }
+			hideSoftInput(getActivity(), submitButton);
+			int numberOfFeilds = userFormListAdapter.getCount();
+			System.out.println("numberOfFeilds:::::" + numberOfFeilds);
+			for (int i = 0; i < numberOfFeilds; i++) {
+				String Fvalue = userFormListAdapter.getItem(i).getFieldValue();
+
+				System.out.println("Fvalue is :  " + Fvalue);
+				// formSubmitValues = new ArrayList<NameValuePair>();
+				// formSubmitValues
+				// .add(new BasicNameValuePair("Feild" + i, Fvalue));
+
+			}
 			// JsonSubmitSucessParser jsonSubmitSucessParser = new
 			// JsonSubmitSucessParser();
 			// jsonSubmitSucessParser.submitFormToDb(formSubmitValues,
@@ -581,7 +587,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 			// }
 			// }
 			userForm.setVisibility(View.INVISIBLE);
-			promotorList.setVisibility(View.VISIBLE);
+			mUserList.setVisibility(View.VISIBLE);
 			break;
 
 		case R.id.retryButton:
@@ -680,7 +686,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		TLog.v(TAG, "onActivityResult : " + requestCode);
-
+		String urlForChekinCheckOut = "";
 		switch (requestCode) {
 		case ConstantUtils.ACTION_PICTURE:
 
@@ -706,6 +712,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 							return;
 
 						}
+						urlForChekinCheckOut = ConstantUtils.CHECK_IN_URL;
 
 						checkInText.setText(getString(R.string.check_out));
 						fillReportIcon.setTextColor(mContext.getResources()
@@ -720,6 +727,8 @@ public class StoreFragment extends Fragment implements OnClickListener,
 						mContext.startService(i);
 
 					} else {
+
+						urlForChekinCheckOut = ConstantUtils.CHECK_OUT_URL;
 						checkInText.setText(getString(R.string.check_in));
 						fillReportIcon.setTextColor(mContext.getResources()
 								.getColor(R.color.GreyLineColor));
@@ -731,7 +740,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 						mCheckInStatus.clearCheckInStatusForStore(mStoreDetails
 								.getId());
 						userForm.setVisibility(View.INVISIBLE);
-						promotorList.setVisibility(View.VISIBLE);
+						mUserList.setVisibility(View.VISIBLE);
 
 						Intent intent = new Intent(mContext,
 								PeriodicLocation.class);
@@ -750,7 +759,7 @@ public class StoreFragment extends Fragment implements OnClickListener,
 					myImage.setVisibility(View.VISIBLE);
 					postAnImage.setVisibility(View.INVISIBLE);
 					checkInLayout.setVisibility(View.VISIBLE);
-					promotorList.setVisibility(View.INVISIBLE);
+					mUserList.setVisibility(View.INVISIBLE);
 
 					myImage.setImageBitmap(myBitmap);
 					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -776,8 +785,9 @@ public class StoreFragment extends Fragment implements OnClickListener,
 					JsonCheckinDataParser jsonCheckinDataParser = new JsonCheckinDataParser();
 					jsonCheckinDataParser.postCheckinDataToURL(mContext,
 							auth_token, role, encodedImage,
-							ConstantUtils.CHECK_IN_URL, id, timeofcheckin,
-							mCampaignDetails.getId(), mStoreDetails.getId());
+							urlForChekinCheckOut, id, timeofcheckin,
+							mCampaignDetails.getId(), mStoreDetails.getId(),
+							false);
 
 				}
 			} catch (Exception e) {
@@ -829,15 +839,15 @@ public class StoreFragment extends Fragment implements OnClickListener,
 
 	public void executeQuery() {
 		promotorListProgressBar.setVisibility(View.VISIBLE);
-		promotorList.setVisibility(View.GONE);
+		mUserList.setVisibility(View.GONE);
 
 		JsonGetPromotorDetails jsonGetPromotorDetails = new JsonGetPromotorDetails();
 		StringBuilder url = new StringBuilder();
 		url.append(ConstantUtils.USER_DETAILS_URL);
 		url.append(mStoreDetails.getId());
 		jsonGetPromotorDetails.getPromotorDetailsFromURL(url.toString(), this,
-				mContext, "", mStoreDetails.getId(), 0,
-				ConstantUtils.MAX_USER_RESPONSE_COUNT);
+				mContext, mCampaignDetails.getId(), mStoreDetails.getId(),
+				0, ConstantUtils.MAX_USER_RESPONSE_COUNT);
 	}
 
 	@Override
@@ -929,16 +939,24 @@ public class StoreFragment extends Fragment implements OnClickListener,
 
 	@Override
 	public void onUserDetailsRecieved(SinglePromotorData mSinglePromotorData) {
-		if (mSinglePromotorData != null
-				&& mSinglePromotorData.getPersonalDetails().size() > 0) {
+		if (promotorListProgressBar != null) {
 			promotorListProgressBar.setVisibility(View.GONE);
-			promotorList.setVisibility(View.VISIBLE);
-			mPromotorList = mSinglePromotorData.getPersonalDetails();
-			if (userListAdapter == null)
-				userListAdapter = new UserListAdapter(mContext,
-						mSinglePromotorData.getPersonalDetails());
-			userListAdapter.notifyDataSetChanged();
-			promotorList.setAdapter(userListAdapter);
+			if (mSinglePromotorData != null) {
+
+				if (mSinglePromotorData.getPersonalDetails() != null) {
+					if (mSinglePromotorData.getPersonalDetails().size() > 0) {
+
+						mUserList.setVisibility(View.VISIBLE);
+						mPromotorList = mSinglePromotorData
+								.getPersonalDetails();
+						if (mUserListAdapter == null)
+							mUserListAdapter = new UserListAdapter(mContext,
+									mSinglePromotorData.getPersonalDetails());
+						mUserListAdapter.notifyDataSetChanged();
+						mUserList.setAdapter(mUserListAdapter);
+					}
+				}
+			}
 		}
 
 	}
@@ -985,6 +1003,12 @@ public class StoreFragment extends Fragment implements OnClickListener,
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	public void hideSoftInput(Context context, View view) {
+		InputMethodManager imm = (InputMethodManager) context
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
 }

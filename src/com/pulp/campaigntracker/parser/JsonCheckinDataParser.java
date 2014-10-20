@@ -12,10 +12,19 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.pulp.campaigntracker.beans.CheckIn;
+import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.beans.LoginErrorData;
 import com.pulp.campaigntracker.controllers.JsonResponseAdapter;
+import com.pulp.campaigntracker.dao.DataBaseHandler;
+import com.pulp.campaigntracker.listeners.LoginDataRecieved;
+import com.pulp.campaigntracker.listeners.MyLocation;
+import com.pulp.campaigntracker.listeners.UpdateLocation;
+import com.pulp.campaigntracker.listeners.UserLocationManager;
+import com.pulp.campaigntracker.utils.ConstantUtils.LocationSyncType;
 import com.pulp.campaigntracker.utils.ParserKeysConstants;
 import com.pulp.campaigntracker.utils.ConstantUtils;
 import com.pulp.campaigntracker.utils.UtilityMethods;
@@ -23,20 +32,46 @@ import com.pulp.campaigntracker.utils.UtilityMethods;
 public class JsonCheckinDataParser {
 
 	private final String TAG = JsonCheckinDataParser.class.getSimpleName();
+	private LoginDataRecieved listener;
+	private LoginData mLoginData;
 	private LoginErrorData mLoginErrorData;
-	
+	private String campagin_id;
+	private String store_id;
+	private String id;
+	private String time;
+	private final String KEY_LOGIN = "login";
+	private CheckIn checkIn;
+	private final String KEY_RESPONSE = "response";
+	private final String KEY_ERROR = "error";
+	private final String KEY_STATUS = "status";
+	private final String KEY_ERROR_MSG = "error_message";
+	private final String KEY_EMAIL = "email";
+	private final String KEY_TIME = "time";
+	private final String KEY_ADDRESS = "address";
+	private final String KEY_SUCCESS = "success";
+	private final String KEY_USER = "user";
+	private final String KEY_CHECKIN_STATUS = "checkin_status";
+	private final String KEY_SENT_STATUS = "sent_status";
+	private final String KEY_LATITUDE = "latitude";
+	private final String KEY_LONGITUDE = "longitude";
 	private Context mContext;
+	private String response;
+	private boolean isFromBrodcast;
+
+
+	private boolean isSuccess;
+
 	@SuppressWarnings("unchecked")
 	public void postCheckinDataToURL(Context mContext, String auth_token,
 			String role, String encodedimage, String url, String id,
-			String time, String campagin_id, String store_id) {
-		// // this.listener = listener;
-		// this.campagin_id = campagin_id;
-		// this.store_id = store_id;
-		// this.id = id;
-		// this.time = time;
+			String time, String campagin_id, String store_id,
+			boolean isFromBrodcast) {
+
 		this.mContext = mContext;
+		this.isFromBrodcast = isFromBrodcast;
 		GetJson getJson = new GetJson();
+		checkIn = new CheckIn(auth_token, role, encodedimage, url, id,
+				store_id, campagin_id, time);
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 
@@ -54,9 +89,13 @@ public class JsonCheckinDataParser {
 			getJson.execute(params);
 	}
 
-	private class GetJson extends AsyncTask<List<NameValuePair>, Void, Void> {
+	private class GetJson extends
+			AsyncTask<List<NameValuePair>, String, String> implements
+			UpdateLocation {
 
-		private String status;
+		private String status = "fail";
+		private String error;
+
 		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 		private void executeForHoneyComb(List<NameValuePair>... params) {
 			executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
@@ -64,35 +103,44 @@ public class JsonCheckinDataParser {
 		}
 
 		@Override
-		protected Void doInBackground(List<NameValuePair>... params) {
+		protected String doInBackground(List<NameValuePair>... params) {
 
 			JSONObject responseObject = JsonResponseAdapter.postJSONToUrl(
-					ConstantUtils.CHECK_IN_URL, params[0]);
-
-			if (responseObject != null)
+					checkIn.getUrl(), params[0]);
+			if (responseObject != null) {
 				buildCheckinObject(responseObject);
-			else {
+			} else {
+				isSuccess = false;
+
 				mLoginErrorData = new LoginErrorData();
 				mLoginErrorData
 						.setMessage("Please check your connection settings");
-
+				DataBaseHandler dataBaseHandler = new DataBaseHandler(mContext);
+				if (checkIn != null) {
+					if (!isFromBrodcast)
+						dataBaseHandler.addCheckin(checkIn);
+					Log.i("added to database is:  ", checkIn + "");
+					Log.i("database checin:  ",
+							dataBaseHandler.getAllCheckins() + "");
+					dataBaseHandler.close();
+				}
 			}
 
 			/*
 			 * For Testing purpose replace with the above code
 			 */
 
-			return null;
+			return status;
 		}
 
 		private void buildCheckinObject(JSONObject jsonObject) {
 
 			try {
-				if (jsonObject != null && !jsonObject.isNull(ParserKeysConstants.KEY_RESPONSE)) {
+				if (jsonObject != null && !jsonObject.isNull(KEY_RESPONSE)) {
 
 					JSONObject jCheckinObject = jsonObject
-							.getJSONObject(ParserKeysConstants.KEY_RESPONSE);
-					status = jCheckinObject.getString(ParserKeysConstants.KEY_STATUS);
+							.getJSONObject(KEY_RESPONSE);
+					status = jCheckinObject.getString(KEY_STATUS);
 					// error = jCheckinObject.getString(KEY_ERROR);
 
 				}
@@ -111,15 +159,45 @@ public class JsonCheckinDataParser {
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
-			if (status.equals("200"))
 
+			if (status.equals("200"))
 				Toast.makeText(mContext, "Image uploaded successfully",
-						Toast.LENGTH_SHORT).show();
+						Toast.LENGTH_LONG).show();
 			else
 				// listener.onLoginErrorDataRecieved(mLoginErrorData);
-				Toast.makeText(mContext, "Error", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, "Image upload Error",
+						Toast.LENGTH_SHORT).show();
+			UserLocationManager ulm1 = new UserLocationManager(this, mContext);
+			ulm1.getAddress();
+
 		}
-	}
+
+		@Override
+		public void showLocation(MyLocation loc) {
+			
+			if (loc != null) {
+				if (checkIn.getUrl().equals(ConstantUtils.CHECK_IN_URL))
+					loc.setType(LocationSyncType.checkIn);
+				else
+					loc.setType(LocationSyncType.checkOut);
+				JsonLocationDataParser jsonLocationDataParser = new JsonLocationDataParser();
+				jsonLocationDataParser.postLocationDataToURL(mContext,
+						LoginData.getInstance().getAuthToken(),
+						loc.getCellId(), loc.getLacId(), loc.getType(),
+						loc.getTimeStamp(), loc.getLatitude(),
+						loc.getLongitude(), false);
+			
+				}
+		
+		}
+		
+		@Override
+		public void showMap(double latitude, double longitude) {
+			// TODO Auto-generated method stub
+
+		}
+		
+   }
 }
