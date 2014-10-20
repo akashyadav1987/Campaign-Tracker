@@ -14,9 +14,10 @@ public class ConstantUtils {
 	public static final String CHECK_IN_URL = PROD_SERVER +"checkin.php/checkin";
 
 
-	public static String SUBMIT_FORM_URL = SERVER + "LFRTrack/api/SubmitForm/";
+	public static String SUBMIT_FORM_URL = PROD_SERVER + "form.php/formdata";
+	
 
-	public static final String POST_LOCATION_URL = "http://www.promotadka.in/task_manager/api3/index.php/locationsync";
+	public static final String POST_LOCATION_URL = PROD_SERVER+"index.php/locationsync";
 	public static final String POST_LOGIN_STATUS_URL = SERVER + "";
 	public static final String POST_FORM_DATA_URL = SERVER + "";
 	public static final String INIT_URL = SERVER + "";

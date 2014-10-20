@@ -596,7 +596,7 @@ public class PromotorDetailsFragment extends Fragment implements
 			int numberOfFeilds = userFormListAdapter.getCount();
 			for (int i = 0; i < numberOfFeilds; i++) {
 				String Fvalue = userFormListAdapter.getItem(i).getFieldValue();
-                String FId =userFormListAdapter.getItem(i).getFeildId();
+                String FId =userFormListAdapter.getItem(i).getFieldId();
                 
                 if(Fvalue==null){
                 	if(Fvalue.trim().length()==0){
