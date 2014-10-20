@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
-import java.net.UnknownHostException;
 import java.nio.CharBuffer;
 import java.util.List;
 
@@ -25,18 +24,21 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
+import org.json.JSONObject;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 
-import com.pulp.campaigntracker.utils.ConstantUtils;
 import com.pulp.campaigntracker.utils.TLog;
 
 
@@ -338,20 +340,47 @@ public class HTTPConnectionWrapper {
 						TLog.e("HTTP", "Invalid Response",e);
 						e.printStackTrace();
 					}
+	public static String postHTTPRequest(String url,
+			JSONObject params) {
+
+
+		String jsonResponse=null;
+		HttpResponse httpResponse=null;	
+		HttpPost httpPostRequest = new HttpPost(url);
+		try {
+			 StringEntity se = new StringEntity( params.toString());  
+			  se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+			  httpPostRequest.setHeader("Accept", "application/json");
+			  httpPostRequest.setHeader("Content-type", "application/json");
+			  httpPostRequest.setEntity(se);
+			//httpPostRequest.setEntity(new UrlEncodedFormEntity(params));
+		} catch (UnsupportedEncodingException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
+		httpPostRequest.addHeader("Accept-Encoding", "gzip");
+		
+		HttpClient httpClient = getClient();
+	    for (int attempt = 0; attempt < 3; attempt++)
+	    {
+				try {
 					
-					catch (UnknownHostException e)
+					httpResponse = httpClient.execute(httpPostRequest);
+					HttpEntity httpEntity = httpResponse.getEntity();
+					return getResponse(httpEntity.getContent());
+				
+				}catch (ClientProtocolException e)
 					{
-						TLog.e("HTTP", "Server Error",e);
+						TLog.e("HTTP", "Invalid Response",e);
 						e.printStackTrace();
-					
-					}catch (IOException e)
+					}
+					catch (IOException e)
 					{
 						TLog.e("HTTP", "Unable to perform request",e);
 						e.printStackTrace();
-						
 	
 					}
-				
 	    	}
 
 	    httpPostRequest.abort();

@@ -3,14 +3,14 @@ package com.pulp.campaigntracker.background;
 import java.util.List;
 
 import com.pulp.campaigntracker.beans.CheckIn;
+import com.pulp.campaigntracker.beans.FormData;
 import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.dao.DataBaseHandler;
 import com.pulp.campaigntracker.http.HTTPConnectionWrapper;
 import com.pulp.campaigntracker.listeners.MyLocation;
 import com.pulp.campaigntracker.parser.JsonCheckinDataParser;
 import com.pulp.campaigntracker.parser.JsonLocationDataParser;
-import com.pulp.campaigntracker.utils.ConstantUtils;
-
+import com.pulp.campaigntracker.parser.JsonSendFormFillDetails;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -51,7 +51,15 @@ public class SendOfflineDataReceiver extends BroadcastReceiver {
 									.getLatitude(), loc.getLongitude(), true);
 					// deleting this record from database
 					dataBaseHandler.deletelocation(loc);
+					//Fetching record from database to send it to server
+					List<FormData> allFormData = dataBaseHandler.getAllFormData();
+					JsonSendFormFillDetails formFillDetails = new JsonSendFormFillDetails();
+					for (FormData formData : allFormData) {
+						// sending post allFormData request to server in receiver
 
+						formFillDetails.sendFormFillupDetails(context, formData.getFormDataObject(), true);
+						// deleting this record from database
+						dataBaseHandler.deleteFormData(formData);
 				}
 			}
 		}

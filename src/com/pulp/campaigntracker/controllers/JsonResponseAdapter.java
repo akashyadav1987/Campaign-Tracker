@@ -72,6 +72,28 @@ public class JsonResponseAdapter {
 		return jObj;
 
 	}
+	public static JSONObject postJSONToUrl(String url,
+			JSONObject params) {
+
+		JSONObject jObj = null;
+		String jsonString = null;
+
+		// Making HTTP post request
+
+		try {
+			System.out.println(params.toString());
+			jsonString = HTTPConnectionWrapper.postHTTPRequest(
+					url.toLowerCase(), params);
+			System.out.println("jsonString:::::::::::::" + jsonString);
+			jObj = new JSONObject(jsonString);
+
+		} catch (Exception ex) {
+
+			ex.printStackTrace();
+		}
+		return jObj;
+
+	}
 
 	/**
 	 * Takes url and NameValuePair as params and return the JSONObject for the

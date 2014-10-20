@@ -3,7 +3,11 @@ package com.pulp.campaigntracker.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.pulp.campaigntracker.beans.CheckIn;
+import com.pulp.campaigntracker.beans.FormData;
 import com.pulp.campaigntracker.listeners.MyLocation;
 import com.pulp.campaigntracker.utils.ConstantUtils.LocationSyncType;
 
@@ -26,6 +30,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 	// Contacts table name
 	private static final String TABLE_CHECKIN = "checkin";
 	private static final String TABLE_LOCATION = "location";
+	private static final String TABLE_FROM_DATA="form_data_table";
 
 	// Contacts Table Columns names
 	private static final String KEY_ID = "id";
@@ -46,6 +51,10 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 	private static final String CID = "cid";
 	private static final String LAC = "lac";
 	private static final String TYPE = "type";
+	
+	//Form Data values
+	private static final String FORM_DATA="form_data";
+	private static final String FORM_DATA_ID="form_data_id";
 
 	public DataBaseHandler(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -66,8 +75,12 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 				+ " TEXT," + LAC + " TEXT," + TYPE + " TEXT," + KEY_TIME
 				+ " TEXT" + ")";
 
+		String CREATE_FORM_DATA_TABLE = "CREATE TABLE " + TABLE_FROM_DATA + "("
+				+ FORM_DATA_ID + " INTEGER PRIMARY KEY," + FORM_DATA + " TEXT" + ")";
+		
 		db.execSQL(CREATE_CHECKIN_TABLE);
 		db.execSQL(CREATE_LOCATION_TABLE);
+		db.execSQL(CREATE_FORM_DATA_TABLE);
 	}
 
 	// Upgrading database
@@ -76,6 +89,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 		// Drop older table if existed
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHECKIN);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOCATION);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_FROM_DATA);
 		// Create tables again
 		onCreate(db);
 	}
@@ -101,6 +115,20 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 		// Inserting Checkin Row
 		long id = db.insert(TABLE_CHECKIN, null, values);
 		Log.i("inside add", checkin + "");
+		db.close(); // Closing database connection
+		return id;
+	}
+	
+	// Adding new FormData
+	public long addFormData(JSONObject formData) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		ContentValues values = new ContentValues();
+		values.put(FORM_DATA, formData.toString());
+
+		// Inserting FormData Row
+		long id = db.insert(TABLE_FROM_DATA, null, values);
+		Log.i("inside add", formData + "");
 		db.close(); // Closing database connection
 		return id;
 	}
@@ -222,6 +250,36 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 		return locationList;
 	}
 
+	// Getting All Location
+	public List<FormData> getAllFormData() {
+		List<FormData> formDataList = new ArrayList<FormData>();
+		// Select All Query
+		String selectQuery = "SELECT * FROM " + TABLE_FROM_DATA;
+
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+
+			 FormData formData =new FormData();
+			 formData.setId(cursor.getLong(0));
+			 try {
+				formData.setFormDataObject(new JSONObject(cursor.getString(1)));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+				// Adding form data to list
+				formDataList.add(formData);
+			} while (cursor.moveToNext());
+		}
+
+		// return contact list
+		return formDataList;
+	}
+	
 	// Updating single contact
 	public int updateCheckin(CheckIn checkin) {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -248,7 +306,13 @@ public class DataBaseHandler extends SQLiteOpenHelper {
 				new String[] { String.valueOf(checkIn.getStore_id()) });
 		db.close();
 	}
-
+	// Deleting single Form DATA
+		public void deleteFormData(FormData jsonFormData) {
+			SQLiteDatabase db = this.getWritableDatabase();
+			db.delete(TABLE_FROM_DATA, FORM_DATA_ID + " = ?",
+					new String[] { String.valueOf(jsonFormData.getId()) });
+			db.close();
+		}
 	// Deleting single Location
 	public void deletelocation(MyLocation myLoc) {
 		SQLiteDatabase db = this.getWritableDatabase();

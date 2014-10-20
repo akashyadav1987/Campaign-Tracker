@@ -1,7 +1,13 @@
 package com.pulp.campaigntracker.ui;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -32,6 +38,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.pulp.campaigntracker.R;
 import com.pulp.campaigntracker.beans.CampaignDetails;
+import com.pulp.campaigntracker.beans.LoginData;
 import com.pulp.campaigntracker.beans.StoreDetails;
 import com.pulp.campaigntracker.beans.UserFormDetails;
 import com.pulp.campaigntracker.beans.UserNotification;
@@ -41,6 +48,7 @@ import com.pulp.campaigntracker.controllers.PromoterTimeLineListAdapter;
 import com.pulp.campaigntracker.controllers.UserFormAdapter;
 import com.pulp.campaigntracker.listeners.UserNotificationsRecieved;
 import com.pulp.campaigntracker.parser.JsonGetUserNotification;
+import com.pulp.campaigntracker.parser.JsonSendFormFillDetails;
 import com.pulp.campaigntracker.utils.ConstantUtils;
 import com.pulp.campaigntracker.utils.UtilityMethods;
 
@@ -114,6 +122,14 @@ public class PromotorDetailsFragment extends Fragment implements
 	private ArrayList<StoreDetails> storeDetailsList;
 	private ArrayList<UserProfile> mInactivePromotorList;
 	private boolean formButtonClicked;
+	private static final String KEY_CAMPAIGN_ID="campaign_id";
+	private static final String KEY_STORE_ID="store_id";
+	private static final String KEY_SUPERVISOR_ID="supervisor_id";
+	private static final String KEY_PRAMOTOR_ID="pramotor_id";
+	private static final String KEY_FORM_DATA="form_data";
+	private static final String KEY_FIELD_ID="field_id";
+	private static final String KEY_FIELD_VALUE="field_value";
+	private static final String KEY_TIME="time";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -413,6 +429,10 @@ public class PromotorDetailsFragment extends Fragment implements
 						R.color.lightest_orange));
 				contactIcon.setTextColor(mContext.getResources().getColor(
 						R.color.lightest_orange));
+				JSONObject formDataToSend =	getJsonForFormDetails();
+		      	
+		      	JsonSendFormFillDetails formFillDetails =new JsonSendFormFillDetails();
+		      	formFillDetails.sendFormFillupDetails(getActivity(), formDataToSend, false);
 			}
 			break;
 
@@ -542,6 +562,62 @@ public class PromotorDetailsFragment extends Fragment implements
 		}
 	}
 
+	
+	private JSONObject getJsonForFormDetails() {
+		
+		JSONObject parentJson =new JSONObject();
+		try {
+			Calendar calendar = Calendar.getInstance();
+			String currentDate = new SimpleDateFormat("yyyy-MM-dd ",Locale.getDefault()).format(calendar.getTime());
+			String currentTime = new SimpleDateFormat("hh:mm:ss",Locale.getDefault()).format(calendar.getTime());
+
+			
+			for (int i = 0; i < campaignDetailsList.size(); i++) {
+				if (campaignDisplayName.equals(campaignDetailsList.get(i)
+						.getName())) {
+					
+					parentJson.put(KEY_CAMPAIGN_ID, campaignDetailsList.get(i).getId());
+					break;
+				}
+
+			}
+			
+			parentJson.put(KEY_STORE_ID, mStoreDetails.getId());
+			parentJson.put(KEY_TIME,currentDate + currentTime);
+			if(LoginData.getInstance().getRole().equals("supervisor")){
+				parentJson.put(KEY_SUPERVISOR_ID,LoginData.getInstance().getId());
+				parentJson.put(KEY_PRAMOTOR_ID, userDetails.getUid());
+			}
+			
+			
+			
+			JSONArray formDataJsonArray =new JSONArray();
+			
+			int numberOfFeilds = userFormListAdapter.getCount();
+			for (int i = 0; i < numberOfFeilds; i++) {
+				String Fvalue = userFormListAdapter.getItem(i).getFieldValue();
+                String FId =userFormListAdapter.getItem(i).getFeildId();
+                
+                if(Fvalue==null){
+                	if(Fvalue.trim().length()==0){
+                		Toast.makeText(getActivity(), "please fill values", 5).show();
+                		break;
+                	}
+                }
+                JSONObject formValue =new JSONObject();
+				formValue.put(KEY_FIELD_ID, FId);
+				formValue.put(KEY_FIELD_VALUE, Fvalue);
+				formDataJsonArray.put(formValue);
+
+			}
+			parentJson.put(KEY_FORM_DATA, formDataJsonArray);
+			
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return parentJson;
+	}
 	public void executeQuery() {
 		JsonGetUserNotification jsonGetUserNotification = new JsonGetUserNotification();
 		jsonGetUserNotification.getCampaignDetailsFromURL(
